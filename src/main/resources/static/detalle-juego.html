@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="paginaTitulo">Nexus Store - Detalle del Juego</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    body {
+      background-color: #080b11;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .glass-panel {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1rem;
+    }
+    .hero-banner-main {
+      width: 100%;
+      height: 480px;
+      object-fit: cover;
+      border-radius: 1rem;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(13, 110, 253, 0.2);
+    }
+    .edition-card {
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      transition: all 0.2s ease;
+    }
+    .edition-card:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .edition-card.selected {
+      border-color: #0d6efd;
+      background: rgba(13, 110, 253, 0.1);
+    }
+    .star-rating {
+      color: #f59e0b;
+    }
+    .star-select-btn {
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: #4b5563;
+      transition: color 0.2s;
+    }
+    .star-select-btn.active, .star-select-btn:hover {
+      color: #f59e0b;
+    }
+    .progress-bar-rating {
+      height: 8px;
+      border-radius: 4px;
+      background-color: #1f2937;
+    }
+    .nav-pills .nav-link {
+      color: #94a3b8;
+      font-weight: 600;
+      border-radius: 0.5rem;
+      padding: 0.6rem 1.2rem;
+    }
+    .nav-pills .nav-link.active {
+      background-color: #0d6efd;
+      color: #fff;
+    }
+    .spec-card {
+      background: rgba(15, 23, 42, 0.6);
+      border-left: 3px solid #0d6efd;
+      border-radius: 0.5rem;
+      padding: 1.2rem;
+    }
+    .avatar-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="sticky-top bg-black border-bottom border-secondary border-opacity-25">
+    <nav class="navbar navbar-expand-lg navbar-dark container-fluid px-4 py-2">
+      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html">
+        <i class="bi bi-controller fs-3 text-primary"></i>
+        <span>Nexus</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Descubrir</a></li>
+          <li class="nav-item"><a class="nav-link text-primary fw-bold" href="juegos.html">Juegos</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="biblioteca.html">Biblioteca</a></li>
+          <li class="nav-item"><a class="nav-link" href="cuenta.html">Cuenta</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-3">
+          <a href="juegos.html" class="btn btn-outline-secondary btn-sm px-3 py-2 border-opacity-50 text-light">
+            <i class="bi bi-arrow-left me-1"></i> Explorar Catálogo
+          </a>
+          <a href="cuenta.html" class="btn btn-outline-light btn-sm d-flex align-items-center gap-2 px-3 py-2 border-opacity-50">
+            <i class="bi bi-person-circle fs-6 text-info"></i>
+            <span>@bryanhd</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- PANTALLA DE CARGA -->
+  <div class="container py-5 text-center" id="seccionCargando">
+    <div class="spinner-border text-primary my-5" style="width: 3.5rem; height: 3.5rem;" role="status"></div>
+    <p class="text-secondary fs-5">Obteniendo ficha técnica desde Oracle...</p>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="container-fluid px-lg-5 py-4 d-none" id="seccionDetalle">
+
+    <!-- CABECERA PRINCIPAL -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
+      <div>
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+          <span class="badge bg-secondary text-uppercase fw-bold px-3 py-1" id="juegoTipo">JUEGO BASE</span>
+          <span class="badge bg-primary text-uppercase fw-bold px-3 py-1" id="juegoCategoria">ACCIÓN</span>
+          <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50 px-2 py-1 small">
+            <i class="bi bi-shield-exclamation me-1"></i> PEGI 18 / Adultos
+          </span>
+          <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-2 py-1 small">
+            <i class="bi bi-hdd-network me-1"></i> Multijugador Online
+          </span>
+        </div>
+        <h1 class="display-4 fw-bold text-light mb-1" id="juegoTitulo">Título del Juego</h1>
+        <div class="d-flex flex-wrap align-items-center gap-3 text-secondary small">
+          <div class="star-rating fs-6">
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-half"></i>
+          </div>
+          <span class="text-light fw-bold fs-6">4.8</span>
+          <span>•</span>
+          <span id="labelTotalResenas">2,410 valoraciones de jugadores</span>
+          <span>•</span>
+          <span class="text-info"><i class="bi bi-check2-circle"></i> Optimizado para PC</span>
+        </div>
+      </div>
+
+      <!-- BOTÓN COMPARTIR Y WISHLIST -->
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary border-opacity-50 text-light px-3 py-2" id="btnCompartir">
+          <i class="bi bi-share-fill me-1"></i> Compartir
+        </button>
+        <button class="btn btn-outline-danger border-opacity-50 px-3 py-2" id="btnWishlist">
+          <i class="bi bi-heart" id="iconoWishlist"></i> <span id="textoWishlist">Deseados</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      
+      <!-- COLUMNA IZQUIERDA: IMAGEN PRINCIPAL, EDICIONES Y PESTAÑAS -->
+      <div class="col-xl-8 col-lg-7">
+        
+        <!-- Una Sola Imagen Principal -->
+        <div class="mb-4">
+          <img id="imgPrincipal" src="" alt="Portada" class="hero-banner-main">
+        </div>
+
+        <!-- SELECTOR DE EDICIONES -->
+        <div class="glass-panel p-4 mb-4">
+          <h5 class="fw-bold text-light mb-3"><i class="bi bi-boxes text-primary me-2"></i>Selecciona tu edición</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="edition-card selected" id="edicionEstandar" onclick="seleccionarEdicion('estandar')">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <span class="fw-bold text-light">Edición Estándar</span>
+                  <span class="badge bg-primary">Incluida</span>
+                </div>
+                <small class="text-secondary d-block mb-2">Juego base digital completo y clave de activación inmediata.</small>
+                <span class="fw-bold text-info" id="precioEdicionEstandar">US$0.00</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="edition-card" id="edicionDeluxe" onclick="seleccionarEdicion('deluxe')">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <span class="fw-bold text-light">Edición Deluxe</span>
+                  <span class="badge bg-warning text-dark fw-bold">+ Pase de Expansión</span>
+                </div>
+                <small class="text-secondary d-block mb-2">Incluye Pase de Temporada, Banda Sonora Digital y contenido extra.</small>
+                <span class="fw-bold text-info" id="precioEdicionDeluxe">US$0.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PESTAÑAS DETALLADAS -->
+        <ul class="nav nav-pills gap-2 mb-3 p-2 glass-panel" id="pills-tab" role="tablist">
+          <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-info" type="button">
+              <i class="bi bi-card-text me-1"></i> Resumen
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-idiomas" type="button">
+              <i class="bi bi-translate me-1"></i> Idiomas y Audio
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-specs" type="button">
+              <i class="bi bi-cpu me-1"></i> Requisitos de Hardware
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-reviews" type="button">
+              <i class="bi bi-star me-1"></i> Valoraciones (<span id="totalResenas">3</span>)
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- TAB 1: RESUMEN -->
+          <div class="tab-pane fade show active" id="tab-info">
+            <div class="glass-panel p-4 mb-4">
+              <h5 class="fw-bold mb-3 text-light">Sinopsis oficial</h5>
+              <p class="lead fs-6 text-secondary lh-lg mb-4" id="juegoDescripcion"></p>
+              
+              <h6 class="fw-bold text-light mb-3">Prestaciones de la versión para PC</h6>
+              <div class="row g-3">
+                <div class="col-sm-6">
+                  <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-10 d-flex align-items-center gap-3">
+                    <i class="bi bi-controller text-primary fs-3"></i>
+                    <div>
+                      <span class="d-block fw-bold text-light small">Gatillos Adaptativos</span>
+                      <small class="text-secondary">Retroalimentación háptica DualSense™ y mandos Xbox</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-10 d-flex align-items-center gap-3">
+                    <i class="bi bi-display text-primary fs-3"></i>
+                    <div>
+                      <span class="d-block fw-bold text-light small">Pantalla Ultra-Wide</span>
+                      <small class="text-secondary">Soporte panorámico para 21:9 y 32:9</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: IDIOMAS -->
+          <div class="tab-pane fade" id="tab-idiomas">
+            <div class="glass-panel p-4 mb-4">
+              <h5 class="fw-bold mb-3 text-light">Localización y Doblaje</h5>
+              <div class="table-responsive">
+                <table class="table table-dark table-borderless align-middle small mb-0">
+                  <thead class="text-secondary border-bottom border-secondary border-opacity-25">
+                    <tr>
+                      <th>Idioma</th>
+                      <th>Interfaz</th>
+                      <th>Audio (Voces)</th>
+                      <th>Subtítulos</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-light fw-semibold">Español (Latinoamérica)</td>
+                      <td><i class="bi bi-check-lg text-success"></i></td>
+                      <td><i class="bi bi-check-lg text-success"></i></td>
+                      <td><i class="bi bi-check-lg text-success"></i></td>
+                    </tr>
+                    <tr>
+                      <td class="text-light fw-semibold">Español (España)</td>
+                      <td><i class="bi bi-check-lg text-success"></i></td>
+                      <td><i class="bi bi-check-lg text-success"></i></td>
+                      <td><i class="bi bi-check-lg text-success"></i></td>
+                    </tr>
+                    <tr>
+                      <td class="text-light fw-semibold">Inglés</td>
+                      <td><i class="bi bi-check-lg text-success"></i></td>
+                      <td><i class="bi bi-check-lg text-success"></i></td>
+                      <td><i class="bi bi-check-lg text-success"></i></td>
+                    </tr>
+                    <tr>
+                      <td class="text-light fw-semibold">Portugués (Brasil)</td>
+                      <td><i class="bi bi-check-lg text-success"></i></td>
+                      <td><i class="bi bi-dash text-secondary"></i></td>
+                      <td><i class="bi bi-check-lg text-success"></i></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: REQUISITOS -->
+          <div class="tab-pane fade" id="tab-specs">
+            <div class="glass-panel p-4 mb-4">
+              <h5 class="fw-bold mb-4 text-light">Especificaciones técnicas para PC</h5>
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div class="spec-card h-100">
+                    <span class="badge bg-secondary mb-3">CONFIGURACIÓN MÍNIMA</span>
+                    <ul class="list-unstyled text-secondary small d-flex flex-column gap-2 mb-0">
+                      <li><strong class="text-light">Sistema Operativo:</strong> Windows 10 (64-bit)</li>
+                      <li><strong class="text-light">Procesador:</strong> Intel Core i5-8400 o AMD Ryzen 5 2600</li>
+                      <li><strong class="text-light">Memoria RAM:</strong> 12 GB</li>
+                      <li><strong class="text-light">Gráfica:</strong> NVIDIA GTX 1060 (6 GB) o AMD Radeon RX 580</li>
+                      <li><strong class="text-light">DirectX:</strong> Versión 12</li>
+                      <li><strong class="text-light">Almacenamiento:</strong> 75 GB libres (SSD recomendado)</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="spec-card h-100" style="border-left-color: #10b981;">
+                    <span class="badge bg-success mb-3">CONFIGURACIÓN RECOMENDADA</span>
+                    <ul class="list-unstyled text-secondary small d-flex flex-column gap-2 mb-0">
+                      <li><strong class="text-light">Sistema Operativo:</strong> Windows 11 (64-bit)</li>
+                      <li><strong class="text-light">Procesador:</strong> Intel Core i7-10700K o AMD Ryzen 7 3700X</li>
+                      <li><strong class="text-light">Memoria RAM:</strong> 16 GB Dual-Channel</li>
+                      <li><strong class="text-light">Gráfica:</strong> NVIDIA RTX 3070 (8 GB) o RX 6800 XT</li>
+                      <li><strong class="text-light">DirectX:</strong> Versión 12 Ultimate</li>
+                      <li><strong class="text-light">Almacenamiento:</strong> 75 GB SSD NVMe M.2</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: VALORACIONES -->
+          <div class="tab-pane fade" id="tab-reviews">
+            <div class="glass-panel p-4 mb-4">
+              
+              <!-- Desglose de estrellas -->
+              <div class="row g-4 align-items-center mb-4 pb-4 border-bottom border-secondary border-opacity-25">
+                <div class="col-md-4 text-center border-end border-secondary border-opacity-25">
+                  <h1 class="display-3 fw-bold text-light mb-0">4.8</h1>
+                  <div class="star-rating fs-5 mb-1">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                  </div>
+                  <small class="text-secondary">Promedio de satisfacción 96%</small>
+                </div>
+                <div class="col-md-8">
+                  <div class="d-flex align-items-center gap-2 mb-1 small text-secondary">
+                    <span>5★</span>
+                    <div class="progress flex-grow-1 progress-bar-rating"><div class="progress-bar bg-warning" style="width: 85%"></div></div>
+                    <span>85%</span>
+                  </div>
+                  <div class="d-flex align-items-center gap-2 mb-1 small text-secondary">
+                    <span>4★</span>
+                    <div class="progress flex-grow-1 progress-bar-rating"><div class="progress-bar bg-warning" style="width: 10%"></div></div>
+                    <span>10%</span>
+                  </div>
+                  <div class="d-flex align-items-center gap-2 mb-1 small text-secondary">
+                    <span>3★</span>
+                    <div class="progress flex-grow-1 progress-bar-rating"><div class="progress-bar bg-warning" style="width: 3%"></div></div>
+                    <span>3%</span>
+                  </div>
+                  <div class="d-flex align-items-center gap-2 small text-secondary">
+                    <span>1-2★</span>
+                    <div class="progress flex-grow-1 progress-bar-rating"><div class="progress-bar bg-warning" style="width: 2%"></div></div>
+                    <span>2%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Formulario de Reseña -->
+              <div class="p-3 bg-dark bg-opacity-75 rounded-3 border border-secondary border-opacity-25 mb-4">
+                <h6 class="text-light fw-bold mb-2">Escribe tu opinión sobre el título</h6>
+                <div class="d-flex align-items-center gap-1 mb-3" id="selectorEstrellas">
+                  <i class="bi bi-star-fill star-select-btn active" data-v="1"></i>
+                  <i class="bi bi-star-fill star-select-btn active" data-v="2"></i>
+                  <i class="bi bi-star-fill star-select-btn active" data-v="3"></i>
+                  <i class="bi bi-star-fill star-select-btn active" data-v="4"></i>
+                  <i class="bi bi-star-fill star-select-btn active" data-v="5"></i>
+                  <span class="ms-2 small text-secondary" id="calificacionTexto">(5 de 5 estrellas)</span>
+                </div>
+                <div class="row g-2">
+                  <div class="col-md-5">
+                    <input type="text" id="nombreResena" class="form-control bg-secondary bg-opacity-25 text-light border-0" placeholder="Tu Gamertag o Nombre">
+                  </div>
+                  <div class="col-md-7">
+                    <textarea id="mensajeResena" class="form-control bg-secondary bg-opacity-25 text-light border-0" rows="2" placeholder="Comparte qué tal te corrió el juego o qué te pareció la historia..."></textarea>
+                  </div>
+                </div>
+                <button class="btn btn-primary btn-sm mt-3 px-4 fw-bold" id="btnPublicarResena">Publicar Comentario</button>
+              </div>
+
+              <!-- Lista de comentarios -->
+              <div class="d-flex flex-column gap-3" id="contenedorResenas">
+                <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-10">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="avatar-circle bg-primary text-light">VG</div>
+                      <div>
+                        <span class="fw-bold text-light d-block">Vicente González</span>
+                        <span class="badge bg-secondary bg-opacity-25 text-info small" style="font-size: 0.65rem;">COMPRA CERTIFICADA</span>
+                      </div>
+                    </div>
+                    <span class="text-secondary small">Hace 2 días</span>
+                  </div>
+                  <div class="star-rating small mb-2">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                  </div>
+                  <p class="text-secondary small mb-0">Rendimiento impecable en PC con mando DualSense. Se aprovechan al 100% los gatillos adaptativos y las texturas en 4K son de otro nivel.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COLUMNA DERECHA: CAJA LATERAL DE COMPRA -->
+      <div class="col-xl-4 col-lg-5">
+        <div class="glass-panel p-4 sticky-top" style="top: 80px;">
+          
+          <div class="mb-3">
+            <span class="badge bg-danger d-none px-2 py-1 mb-2 fw-bold" id="juegoBadgeDescuento"></span>
+            <div class="d-flex align-items-baseline gap-2">
+              <h2 class="display-6 fw-bold text-light mb-0" id="juegoPrecio">US$0.00</h2>
+              <span class="text-decoration-line-through text-secondary fs-5 d-none" id="juegoPrecioOriginal"></span>
+            </div>
+            <small class="text-secondary d-block mt-1">Precio aplicable a la <span class="text-light fw-bold" id="labelEdicionActual">Edición Estándar</span></small>
+          </div>
+
+          <!-- Botones de compra -->
+          <div class="d-flex flex-column gap-2 mb-4">
+            <button class="btn btn-primary btn-lg py-3 fw-bold d-flex justify-content-center align-items-center gap-2" id="btnComprarAhora">
+              <i class="bi bi-lightning-charge-fill"></i> COMPRAR AHORA
+            </button>
+            <button class="btn btn-outline-light btn-lg py-3 fw-bold d-flex justify-content-center align-items-center gap-2" id="btnCarrito">
+              <i class="bi bi-cart-plus"></i> AÑADIR AL CARRO
+            </button>
+          </div>
+
+          <!-- Ficha de entrega e información de compra -->
+          <div class="border-top border-secondary border-opacity-25 pt-3 d-flex flex-column gap-3 text-secondary small">
+            <div class="d-flex align-items-center gap-3">
+              <i class="bi bi-key-fill text-primary fs-4"></i>
+              <div>
+                <span class="d-block text-light fw-semibold">Activación Instantánea</span>
+                <span>Clave oficial canjeable directamente en tu cuenta Nexus.</span>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+              <i class="bi bi-arrow-repeat text-info fs-4"></i>
+              <div>
+                <span class="d-block text-light fw-semibold">Garantía de Devolución</span>
+                <span>Reembolso automático durante las primeras 2 semanas si jugaste menos de 2 horas.</span>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+              <i class="bi bi-shield-check text-success fs-4"></i>
+              <div>
+                <span class="d-block text-light fw-semibold">Pago Seguro y Cifrado</span>
+                <span>Tus datos bancarios nunca se almacenan en nuestros servidores.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL DE CHECKOUT DIRECTO (PERSISTENCIA ORACLE) -->
+  <div class="modal fade" id="modalPagoDirecto" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light border border-secondary border-opacity-50 shadow-lg" style="border-radius: 1rem;">
+        <div class="modal-header border-bottom border-secondary border-opacity-25 bg-black">
+          <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
+            <i class="bi bi-shield-lock-fill text-primary"></i> Finalizar Compra Segura
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          
+          <!-- Resumen del Producto -->
+          <div class="p-3 mb-3 rounded-3 bg-black border border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+            <div>
+              <span class="fw-bold d-block text-light" id="modalJuegoTitulo">Cargando juego...</span>
+              <small class="text-secondary" id="modalJuegoEdicion">Edición Estándar</small>
+            </div>
+            <span class="fs-4 fw-bold text-info" id="modalJuegoPrecio">US$0.00</span>
+          </div>
+
+          <!-- Formulario de Transacción -->
+          <form id="formCheckoutDirecto">
+            <div class="mb-3">
+              <label class="form-label text-secondary small fw-semibold">Nombre del Titular</label>
+              <input type="text" id="titularNombre" class="form-control bg-black text-light border-secondary border-opacity-50" placeholder="Ej. Vicente González" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label text-secondary small fw-semibold">Método de Pago</label>
+              <select id="metodoSeleccionado" class="form-select bg-black text-light border-secondary border-opacity-50">
+                <option value="Tarjeta de Crédito" selected>Tarjeta de Crédito (Visa / Mastercard)</option>
+                <option value="Tarjeta de Débito">Tarjeta de Débito / Redcompra</option>
+                <option value="Prepago Digital">MACH / Tenpo</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label text-secondary small fw-semibold">Número de Tarjeta ficticio</label>
+              <div class="input-group">
+                <span class="input-group-text bg-black border-secondary border-opacity-50 text-secondary"><i class="bi bi-credit-card-2-front"></i></span>
+                <input type="text" id="inputNumTarjeta" class="form-control bg-black text-light border-secondary border-opacity-50" placeholder="4500 1234 5678 9010" required maxlength="19">
+              </div>
+            </div>
+
+            <div class="row g-2 mb-4">
+              <div class="col-6">
+                <label class="form-label text-secondary small fw-semibold">Vencimiento</label>
+                <input type="text" id="inputVencimiento" class="form-control bg-black text-light border-secondary border-opacity-50" placeholder="MM/AA" required maxlength="5">
+              </div>
+              <div class="col-6">
+                <label class="form-label text-secondary small fw-semibold">CVV</label>
+                <input type="password" class="form-control bg-black text-light border-secondary border-opacity-50" placeholder="123" required maxlength="4">
+              </div>
+            </div>
+
+            <button type="submit" id="btnEnviarPago" class="btn btn-primary w-100 py-3 fw-bold d-flex justify-content-center align-items-center gap-2">
+              <i class="bi bi-lock-fill"></i> CONFIRMAR Y PAGAR
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST DE NOTIFICACIÓN FLOTANTE -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+    <div id="toastAviso" class="toast bg-dark text-light border border-secondary border-opacity-50 shadow-lg rounded-3" role="alert">
+      <div class="toast-header bg-black text-light border-bottom border-secondary border-opacity-25">
+        <i class="bi bi-bell-fill text-primary me-2"></i>
+        <strong class="me-auto">Nexus Store</strong>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+      </div>
+      <div class="toast-body" id="toastTexto">¡Acción realizada con éxito!</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- CONTROL DINÁMICO DE DETALLE Y CHECKOUT -->
+  <script>
+    let juego = null;
+    let edicionActual = 'estandar';
+    let puntajeSeleccionado = 5;
+
+    async function iniciar() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+
+      if (!id) {
+        window.location.href = 'juegos.html';
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/juegos/${id}`);
+        if (!res.ok) throw new Error('No encontrado');
+        juego = await res.json();
+
+        // Títulos y etiquetas
+        document.getElementById('paginaTitulo').textContent = `Nexus - ${juego.titulo}`;
+        document.getElementById('juegoTitulo').textContent = juego.titulo;
+        document.getElementById('juegoDescripcion').textContent = juego.descripcion || 'Sin descripción disponible.';
+        document.getElementById('juegoTipo').textContent = juego.tipoJuego || 'JUEGO BASE';
+        document.getElementById('juegoCategoria').textContent = juego.categoria || 'ACCIÓN';
+
+        // Imagen principal
+        const imgEl = document.getElementById('imgPrincipal');
+        imgEl.src = juego.imagenUrl || 'CyberPunk.avif';
+        imgEl.onerror = () => { imgEl.src = 'CyberPunk.avif'; };
+
+        // Precios en las ediciones
+        actualizarPreciosEdicion();
+
+        // Estado inicial Wishlist
+        comprobarWishlist();
+
+        // Mostrar pantalla principal
+        document.getElementById('seccionCargando').classList.add('d-none');
+        document.getElementById('seccionDetalle').classList.remove('d-none');
+
+      } catch (err) {
+        document.getElementById('seccionCargando').innerHTML = `
+          <div class="py-5">
+            <i class="bi bi-exclamation-triangle-fill text-warning display-2 mb-3"></i>
+            <h3>No pudimos cargar los datos del juego</h3>
+            <p class="text-secondary">El juego con identificador ${id} no existe en la base de datos Oracle.</p>
+            <a href="juegos.html" class="btn btn-primary mt-2">Regresar a la Tienda</a>
+          </div>
+        `;
+      }
+    }
+
+    // Alternar Edición (Estándar vs Deluxe)
+    function seleccionarEdicion(tipo) {
+      edicionActual = tipo;
+      document.getElementById('edicionEstandar').classList.toggle('selected', tipo === 'estandar');
+      document.getElementById('edicionDeluxe').classList.toggle('selected', tipo === 'deluxe');
+      document.getElementById('labelEdicionActual').textContent = tipo === 'estandar' ? 'Edición Estándar' : 'Edición Deluxe';
+      actualizarPreciosEdicion();
+    }
+
+    function actualizarPreciosEdicion() {
+      if (!juego) return;
+      const basePrice = Number(juego.precio) || 0;
+      const descuento = juego.descuento || 0;
+
+      const precioEstandarFinal = descuento > 0 ? (basePrice * (1 - descuento / 100)) : basePrice;
+      const precioDeluxeBase = basePrice > 0 ? basePrice + 24.99 : 19.99;
+      const precioDeluxeFinal = descuento > 0 ? (precioDeluxeBase * (1 - descuento / 100)) : precioDeluxeBase;
+
+      // Actualizar precios en las tarjetas de edición
+      document.getElementById('precioEdicionEstandar').textContent = basePrice === 0 ? 'Gratuito' : `US$${precioEstandarFinal.toFixed(2)}`;
+      document.getElementById('precioEdicionDeluxe').textContent = `US$${precioDeluxeFinal.toFixed(2)}`;
+
+      // Actualizar precio en la barra lateral
+      const precioLateral = document.getElementById('juegoPrecio');
+      const precioOriginalEl = document.getElementById('juegoPrecioOriginal');
+      const badgeDescuento = document.getElementById('juegoBadgeDescuento');
+
+      const precioFinalActual = edicionActual === 'estandar' ? precioEstandarFinal : precioDeluxeFinal;
+      const precioOriginalActual = edicionActual === 'estandar' ? basePrice : precioDeluxeBase;
+
+      if (precioFinalActual === 0) {
+        precioLateral.textContent = 'Gratuito';
+        precioOriginalEl.classList.add('d-none');
+        badgeDescuento.classList.add('d-none');
+      } else if (descuento > 0) {
+        precioLateral.textContent = `US$${precioFinalActual.toFixed(2)}`;
+        precioOriginalEl.textContent = `US$${precioOriginalActual.toFixed(2)}`;
+        precioOriginalEl.classList.remove('d-none');
+        badgeDescuento.textContent = `AHORRA UN ${descuento}%`;
+        badgeDescuento.classList.remove('d-none');
+      } else {
+        precioLateral.textContent = `US$${precioFinalActual.toFixed(2)}`;
+        precioOriginalEl.classList.add('d-none');
+        badgeDescuento.classList.add('d-none');
+      }
+    }
+
+    // Copiar enlace al portapapeles
+    document.getElementById('btnCompartir')?.addEventListener('click', () => {
+      navigator.clipboard.writeText(window.location.href);
+      mostrarNotificacion('¡Enlace del juego copiado al portapapeles!');
+    });
+
+    // Lista de Deseos (Wishlist) con almacenamiento local
+    const btnWish = document.getElementById('btnWishlist');
+    btnWish?.addEventListener('click', () => {
+      let deseos = JSON.parse(localStorage.getItem('nexus_wishlist') || '[]');
+      const index = deseos.indexOf(juego.id);
+
+      if (index === -1) {
+        deseos.push(juego.id);
+        localStorage.setItem('nexus_wishlist', JSON.stringify(deseos));
+        mostrarNotificacion(`"${juego.titulo}" agregado a tu lista de deseados ❤️`);
+      } else {
+        deseos.splice(index, 1);
+        localStorage.setItem('nexus_wishlist', JSON.stringify(deseos));
+        mostrarNotificacion(`"${juego.titulo}" eliminado de deseados`);
+      }
+      comprobarWishlist();
+    });
+
+    function comprobarWishlist() {
+      if (!juego) return;
+      const deseos = JSON.parse(localStorage.getItem('nexus_wishlist') || '[]');
+      const existe = deseos.includes(juego.id);
+      const icon = document.getElementById('iconoWishlist');
+      const text = document.getElementById('textoWishlist');
+
+      if (existe) {
+        icon.className = 'bi bi-heart-fill text-danger';
+        text.textContent = 'En Deseados';
+      } else {
+        icon.className = 'bi bi-heart';
+        text.textContent = 'Deseados';
+      }
+    }
+
+    // Selector de estrellas para reseña
+    document.querySelectorAll('.star-select-btn').forEach(star => {
+      star.addEventListener('click', () => {
+        puntajeSeleccionado = parseInt(star.getAttribute('data-v'));
+        document.querySelectorAll('.star-select-btn').forEach(s => {
+          const v = parseInt(s.getAttribute('data-v'));
+          s.classList.toggle('active', v <= puntajeSeleccionado);
+        });
+        document.getElementById('calificacionTexto').textContent = `(${puntajeSeleccionado} de 5 estrellas)`;
+      });
+    });
+
+    // Publicar comentario
+    document.getElementById('btnPublicarResena')?.addEventListener('click', () => {
+      const nombre = document.getElementById('nombreResena').value.trim() || 'Jugador Nexus';
+      const mensaje = document.getElementById('mensajeResena').value.trim();
+
+      if (!mensaje) {
+        alert('Por favor escribe tu reseña antes de enviar.');
+        return;
+      }
+
+      let estrellasHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        estrellasHTML += `<i class="bi bi-star${i <= puntajeSeleccionado ? '-fill' : ''}"></i>`;
+      }
+
+      const itemHTML = `
+        <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-10">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div class="d-flex align-items-center gap-2">
+              <div class="avatar-circle bg-success text-light">${nombre.substring(0, 2).toUpperCase()}</div>
+              <div>
+                <span class="fw-bold text-light d-block">${nombre}</span>
+                <span class="badge bg-secondary bg-opacity-25 text-info small" style="font-size: 0.65rem;">COMPRA CERTIFICADA</span>
+              </div>
+            </div>
+            <span class="text-secondary small">Justo ahora</span>
+          </div>
+          <div class="star-rating small mb-2">${estrellasHTML}</div>
+          <p class="text-secondary small mb-0">${mensaje}</p>
+        </div>
+      `;
+
+      document.getElementById('contenedorResenas').insertAdjacentHTML('afterbegin', itemHTML);
+      document.getElementById('mensajeResena').value = '';
+      document.getElementById('nombreResena').value = '';
+      
+      const contador = document.getElementById('totalResenas');
+      contador.textContent = parseInt(contador.textContent) + 1;
+
+      mostrarNotificacion('¡Tu reseña ha sido publicada con éxito!');
+    });
+
+    // Añadir al Carro (Persistencia en localStorage)
+    document.getElementById('btnCarrito')?.addEventListener('click', () => {
+      if (!juego) return;
+      
+      let carrito = JSON.parse(localStorage.getItem('nexus_carrito') || '[]');
+      const textoPrecio = document.getElementById('juegoPrecio').textContent;
+      const precioNumerico = parseFloat(textoPrecio.replace(/[^0-9.]/g, '')) || 0;
+
+      carrito.push({
+        id: juego.id,
+        titulo: `${juego.titulo} (${edicionActual.toUpperCase()})`,
+        precio: precioNumerico,
+        imagenUrl: juego.imagenUrl
+      });
+      localStorage.setItem('nexus_carrito', JSON.stringify(carrito));
+
+      mostrarNotificacion(`¡${juego.titulo} (${edicionActual.toUpperCase()}) añadido al carrito!`);
+    });
+
+    // Notificación Toast
+    function mostrarNotificacion(texto) {
+      document.getElementById('toastTexto').textContent = texto;
+      const el = document.getElementById('toastAviso');
+      const toast = new bootstrap.Toast(el);
+      toast.show();
+    }
+
+    // --- INTEGRACIÓN CHECKOUT Y PERSISTENCIA ORACLE / BIBLIOTECA ---
+
+    // Abrir Modal de Checkout al pulsar "COMPRAR AHORA"
+    document.getElementById('btnComprarAhora')?.addEventListener('click', () => {
+      if (!juego) return;
+
+      const precioTexto = document.getElementById('juegoPrecio').textContent;
+      
+      document.getElementById('modalJuegoTitulo').textContent = juego.titulo;
+      document.getElementById('modalJuegoEdicion').textContent = edicionActual === 'estandar' ? 'Edición Estándar' : 'Edición Deluxe';
+      document.getElementById('modalJuegoPrecio').textContent = precioTexto;
+
+      const modal = new bootstrap.Modal(document.getElementById('modalPagoDirecto'));
+      modal.show();
+    });
+
+    // Formateo visual del número de tarjeta
+    document.getElementById('inputNumTarjeta')?.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+      e.target.value = val.replace(/(\d{4})(?=\d)/g, '$1 ');
+    });
+
+    // Formateo visual de fecha MM/AA
+    document.getElementById('inputVencimiento')?.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '').substring(0, 4);
+      if (val.length >= 3) {
+        e.target.value = val.substring(0, 2) + '/' + val.substring(2);
+      } else {
+        e.target.value = val;
+      }
+    });
+
+    // Enviar el pedido a Spring Boot, registrar en Oracle y sincronizar Biblioteca
+    document.getElementById('formCheckoutDirecto')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const btn = document.getElementById('btnEnviarPago');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Procesando en Oracle...`;
+
+      const nombre = document.getElementById('titularNombre').value.trim();
+      const metodo = document.getElementById('metodoSeleccionado').value;
+      const textoPrecio = document.getElementById('modalJuegoPrecio').textContent;
+      const totalNumerico = parseFloat(textoPrecio.replace(/[^0-9.]/g, '')) || 0;
+
+      const payload = {
+        nombreCliente: nombre,
+        metodoPago: metodo,
+        tipoTarjeta: 'Transbank / Webpay',
+        total: totalNumerico
+      };
+
+      try {
+        const respuesta = await fetch('/api/pedidos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (respuesta.ok) {
+          const orden = await respuesta.json();
+          
+          // Sincronizar juego adquirido con la biblioteca en localStorage
+          let biblioteca = JSON.parse(localStorage.getItem('nexus_mis_juegos') || '[]');
+          const yaExiste = biblioteca.some(j => j.titulo.toLowerCase() === juego.titulo.toLowerCase());
+          
+          if (!yaExiste) {
+            biblioteca.unshift({
+              id: juego.id,
+              titulo: juego.titulo,
+              imagenUrl: juego.imagenUrl || 'CyberPunk.avif',
+              horas: 0,
+              logros: '0/50',
+              porcentaje: 0,
+              estado: 'instalado',
+              favorito: false
+            });
+            localStorage.setItem('nexus_mis_juegos', JSON.stringify(biblioteca));
+          }
+
+          // Cerrar modal
+          const modalEl = document.getElementById('modalPagoDirecto');
+          const instModal = bootstrap.Modal.getInstance(modalEl);
+          if (instModal) instModal.hide();
+
+          alert(`¡Transacción Exitosa!\n\nOrden #${orden.id} guardada en Oracle para ${nombre}.\nTotal: US$${totalNumerico.toFixed(2)}\n\nEl juego ya está disponible en tu Biblioteca.`);
+          window.location.href = 'biblioteca.html';
+        } else {
+          alert('Error: El backend no pudo registrar la transacción en la base de datos.');
+          btn.disabled = false;
+          btn.innerHTML = `<i class="bi bi-lock-fill"></i> CONFIRMAR Y PAGAR`;
+        }
+      } catch (err) {
+        console.error('Error procesando pago:', err);
+        alert('No se pudo conectar con el servidor Spring Boot.');
+        btn.disabled = false;
+        btn.innerHTML = `<i class="bi bi-lock-fill"></i> CONFIRMAR Y PAGAR`;
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', iniciar);
+  </script>
+</body>
+</html>

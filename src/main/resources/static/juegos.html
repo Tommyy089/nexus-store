@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus - Todos los juegos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    /* 1. Animación de entrada inicial para las tarjetas */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-juego {
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+    
+    .card-juego:nth-child(1) { animation-delay: 0.05s; }
+    .card-juego:nth-child(2) { animation-delay: 0.10s; }
+    .card-juego:nth-child(3) { animation-delay: 0.15s; }
+    .card-juego:nth-child(4) { animation-delay: 0.20s; }
+    .card-juego:nth-child(5) { animation-delay: 0.25s; }
+    .card-juego:nth-child(6) { animation-delay: 0.30s; }
+    .card-juego:nth-child(7) { animation-delay: 0.35s; }
+    .card-juego:nth-child(8) { animation-delay: 0.40s; }
+    .card-juego:nth-child(n+9) { animation-delay: 0.45s; }
+
+    /* 2. Efecto Hover Profesional para las Tarjetas */
+    .game-clean-card {
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: block;
+    }
+    
+    .game-clean-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .ratio {
+      overflow: hidden;
+      transition: box-shadow 0.4s ease;
+    }
+    
+    .ratio img {
+      transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    .game-clean-card:hover .ratio img {
+      transform: scale(1.08);
+    }
+
+    .game-clean-card:hover .ratio {
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(13, 110, 253, 0.2);
+    }
+
+    .text-muted-custom {
+      color: #9ca3af !important;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.5); }
+      70% { box-shadow: 0 0 0 10px rgba(13, 110, 253, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
+    }
+    #carritoLateral .btn-primary {
+      animation: pulseGlow 2s infinite;
+      transition: all 0.3s ease;
+    }
+    #carritoLateral .btn-primary:hover {
+      transform: scale(1.03);
+      background-color: #0b5ed7;
+    }
+
+    .input-group:focus-within {
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+      border-color: rgba(13, 110, 253, 0.5) !important;
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body class="bg-dark text-light">
+
+  <header class="sticky-top bg-black border-bottom border-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark container-fluid px-4 py-2">
+      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html">
+        <i class="bi bi-controller fs-3 text-primary"></i>
+        <span>Nexus</span>
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
+          <li class="nav-item"><a class="nav-link" href="index.html">Descubrir</a></li>
+          <li class="nav-item"><a class="nav-link active text-primary fw-bold" href="juegos.html">Juegos</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="biblioteca.html">Biblioteca</a></li>
+          <li class="nav-item"><a class="nav-link" href="cuenta.html">Cuenta</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-3">
+          <!-- Botón del Carrito -->
+          <button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2 px-3 py-2 position-relative" data-bs-toggle="offcanvas" data-bs-target="#carritoLateral" aria-controls="carritoLateral">
+            <i class="bi bi-cart3 fs-6"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary badge-contador-carrito" style="display: none;">
+              0
+            </span>
+          </button>
+          
+          <a href="cuenta.html" class="btn btn-primary btn-sm d-flex align-items-center gap-2 px-3 py-2">
+            <i class="bi bi-person-fill fs-6"></i><span>Mi Perfil</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container-fluid px-4 py-5">
+    
+    <div class="mb-4">
+      <h1 class="fw-light mb-4" style="font-size: 2.5rem;">Todos los juegos</h1>
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center text-muted-custom pb-3 border-bottom border-secondary border-opacity-25">
+        <span class="mb-2 mb-md-0" id="contadorResultados">Cargando catálogo desde Oracle...</span>
+      </div>
+    </div>
+
+    <!-- BARRA DE BÚSQUEDA Y FILTROS -->
+    <div class="row mb-5 g-3 align-items-center">
+      <div class="col-lg-6">
+        <div class="input-group input-group-lg bg-secondary bg-opacity-10 rounded-3 overflow-hidden border border-secondary border-opacity-25">
+          <span class="input-group-text bg-transparent border-0 text-secondary ps-3">
+            <i class="bi bi-search"></i>
+          </span>
+          <input type="text" id="inputBuscarJuego" class="form-control bg-transparent text-light border-0 shadow-none ps-2" placeholder="Buscar juego por título...">
+        </div>
+      </div>
+
+      <div class="col-lg-6 d-flex flex-wrap gap-2 justify-content-lg-end" id="grupoFiltros">
+        <button class="btn btn-primary btn-sm px-3 py-2 fw-semibold" data-filtro="todos">Todos</button>
+        <button class="btn btn-outline-secondary btn-sm px-3 py-2 fw-semibold border-opacity-50 text-light" data-filtro="accion">Acción / Aventura</button>
+        <button class="btn btn-outline-secondary btn-sm px-3 py-2 fw-semibold border-opacity-50 text-light" data-filtro="deportes">Deportes</button>
+        <button class="btn btn-outline-secondary btn-sm px-3 py-2 fw-semibold border-opacity-50 text-light" data-filtro="mundo-abierto">Mundo Abierto</button>
+      </div>
+    </div>
+
+    <!-- GRILLA DE JUEGOS DINÁMICA -->
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-4 pt-2" id="gridJuegos">
+      <!-- Los juegos se insertan automáticamente vía API desde Oracle -->
+    </div>
+  </main>
+
+  <!-- OFFCANVAS DEL CARRITO -->
+  <div class="offcanvas offcanvas-end bg-dark text-light border-start border-secondary border-opacity-25 shadow-lg" tabindex="-1" id="carritoLateral" aria-labelledby="carritoLabel">
+    <div class="offcanvas-header border-bottom border-secondary border-opacity-25 bg-black">
+      <h5 class="offcanvas-title fw-bold d-flex align-items-center gap-2" id="carritoLabel">
+        <i class="bi bi-cart-check-fill text-primary"></i> Tu Carrito
+      </h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    
+    <div class="offcanvas-body d-flex flex-column bg-black">
+      <div class="flex-grow-1" id="contenedorCarritoItems"></div>
+      
+      <div class="mt-auto pt-3 border-top border-secondary border-opacity-25">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-secondary fw-semibold">Subtotal</span>
+          <span class="fs-4 fw-bold text-light" id="carritoSubtotal">US$0.00</span>
+        </div>
+        <button class="btn btn-primary w-100 py-3 fw-bold mb-2 d-flex justify-content-center align-items-center gap-2">
+          <i class="bi bi-credit-card-fill"></i> PROCEDER AL PAGO
+        </button>
+        <button class="btn btn-outline-secondary w-100 py-2 fw-semibold border-opacity-50 hover-white" data-bs-dismiss="offcanvas">
+          Seguir comprando
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE PASARELA DE PAGO (CHECKOUT) -->
+  <div class="modal fade" id="modalPago" tabindex="-1" aria-labelledby="modalPagoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light border border-secondary border-opacity-25 shadow-lg rounded-4">
+        
+        <div class="modal-header border-bottom border-secondary border-opacity-25 bg-black rounded-top-4">
+          <h5 class="modal-title fw-bold d-flex align-items-center gap-2" id="modalPagoLabel">
+            <i class="bi bi-shield-lock-fill text-primary"></i> Pasarela de Pago Segura
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body p-4">
+          <form id="formCheckout">
+            <div class="bg-secondary bg-opacity-10 p-3 rounded-3 mb-4 d-flex justify-content-between align-items-center">
+              <span class="text-secondary">Total a Pagar:</span>
+              <span class="fs-4 fw-bold text-light" id="modalTotalPagar">US$0.00</span>
+            </div>
+
+            <label class="form-label text-secondary small fw-bold text-uppercase mb-2">Método de pago</label>
+            <div class="row g-2 mb-4">
+              <div class="col-4">
+                <input type="radio" class="btn-check" name="metodoPago" id="pagoCredito" checked>
+                <label class="btn btn-outline-secondary w-100 py-2 border-opacity-50 text-light d-flex flex-column align-items-center gap-1" for="pagoCredito">
+                  <i class="bi bi-credit-card fs-5"></i> <span style="font-size: 0.75rem;">Crédito</span>
+                </label>
+              </div>
+              <div class="col-4">
+                <input type="radio" class="btn-check" name="metodoPago" id="pagoDebito">
+                <label class="btn btn-outline-secondary w-100 py-2 border-opacity-50 text-light d-flex flex-column align-items-center gap-1" for="pagoDebito">
+                  <i class="bi bi-credit-card-2-front fs-5"></i> <span style="font-size: 0.75rem;">Débito</span>
+                </label>
+              </div>
+              <div class="col-4">
+                <input type="radio" class="btn-check" name="metodoPago" id="pagoPaypal">
+                <label class="btn btn-outline-secondary w-100 py-2 border-opacity-50 text-light d-flex flex-column align-items-center gap-1" for="pagoPaypal">
+                  <i class="bi bi-paypal fs-5"></i> <span style="font-size: 0.75rem;">PayPal</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="tipoTarjeta" class="form-label text-secondary small">Tipo de Tarjeta</label>
+              <select class="form-select bg-secondary bg-opacity-25 text-light border-0 shadow-none" id="tipoTarjeta" required>
+                <option value="" class="text-dark" selected disabled>Selecciona tu tarjeta...</option>
+                <option value="visa" class="text-dark">Visa</option>
+                <option value="mastercard" class="text-dark">Mastercard</option>
+                <option value="amex" class="text-dark">American Express</option>
+                <option value="redcompra" class="text-dark">Redcompra / Cuenta RUT</option>
+                <option value="mach" class="text-dark">MACH / Tarjeta Digital</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="nombreTitular" class="form-label text-secondary small">Nombre del Titular</label>
+              <input type="text" class="form-control bg-secondary bg-opacity-25 text-light border-0 shadow-none" id="nombreTitular" placeholder="Ej. Vicente González" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="numeroTarjeta" class="form-label text-secondary small">Número de Tarjeta</label>
+              <input type="text" class="form-control bg-secondary bg-opacity-25 text-light border-0 shadow-none" id="numeroTarjeta" placeholder="4532 •••• •••• 8890" maxlength="19" required>
+            </div>
+
+            <div class="row">
+              <div class="col-6 mb-3">
+                <label for="expTarjeta" class="form-label text-secondary small">Expiración</label>
+                <input type="text" class="form-control bg-secondary bg-opacity-25 text-light border-0 shadow-none" id="expTarjeta" placeholder="MM/AA" maxlength="5" required>
+              </div>
+              <div class="col-6 mb-3">
+                <label for="cvvTarjeta" class="form-label text-secondary small">CVV</label>
+                <input type="password" class="form-control bg-secondary bg-opacity-25 text-light border-0 shadow-none" id="cvvTarjeta" placeholder="123" maxlength="4" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold mt-2 d-flex align-items-center justify-content-center gap-2">
+              <i class="bi bi-check-circle-fill"></i> CONFIRMAR Y PAGAR
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST DE NOTIFICACIÓN FLOTANTE -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+    <div id="toastCarrito" class="toast bg-dark text-light border border-secondary border-opacity-50 shadow-lg rounded-3" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header bg-black text-light border-bottom border-secondary border-opacity-25 rounded-top-3">
+        <i class="bi bi-cart-check-fill text-primary me-2 fs-6"></i>
+        <strong class="me-auto">Nexus Store</strong>
+        <small class="text-secondary">Justo ahora</small>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+      </div>
+      <div class="toast-body py-3" id="toastMensajeTexto">
+        ¡Juego añadido al carrito con éxito!
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-black text-secondary py-4 mt-5 border-top border-dark">
+    <div class="container text-center text-md-start">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <p class="m-0 fs-7">© 2026 GameZone Store. Todos los derechos reservados.</p>
+        <div class="d-flex gap-3">
+          <a href="#" class="text-secondary text-decoration-none hover-white"><i class="bi bi-twitter-x fs-5"></i></a>
+          <a href="#" class="text-secondary text-decoration-none hover-white"><i class="bi bi-discord fs-5"></i></a>
+          <a href="#" class="text-secondary text-decoration-none hover-white"><i class="bi bi-youtube fs-5"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- INTEGRACIÓN CON ORACLE (SPRING BOOT) -->
+  <script>
+    let todosLosJuegos = [];
+    let filtroActual = 'todos';
+
+    async function cargarJuegosDesdeOracle() {
+      const contenedor = document.getElementById('gridJuegos');
+      const contador = document.getElementById('contadorResultados');
+
+      try {
+        const res = await fetch('/api/juegos');
+        if (!res.ok) throw new Error('Error al conectar con la API');
+        
+        todosLosJuegos = await res.json();
+        renderizarJuegos(todosLosJuegos);
+        
+        if (contador) {
+          contador.textContent = `Mostrando ${todosLosJuegos.length} juegos cargados desde la base de datos Oracle.`;
+        }
+      } catch (err) {
+        console.error('Error cargando juegos:', err);
+        if (contenedor) {
+          contenedor.innerHTML = `
+            <div class="col-12 py-5 text-center text-secondary">
+              <i class="bi bi-exclamation-triangle fs-1 text-warning d-block mb-3"></i>
+              <h5>No se pudieron cargar los juegos desde la base de datos</h5>
+              <p class="small">Verifica que el servidor de Spring Boot siga ejecutándose.</p>
+            </div>
+          `;
+        }
+      }
+    }
+
+    function renderizarJuegos(lista) {
+      const contenedor = document.getElementById('gridJuegos');
+      if (!contenedor) return;
+
+      if (lista.length === 0) {
+        contenedor.innerHTML = `
+          <div class="col-12 py-5 text-center text-secondary">
+            <i class="bi bi-search fs-2 d-block mb-2"></i>
+            <p>No se encontraron juegos que coincidan con la búsqueda.</p>
+          </div>
+        `;
+        return;
+      }
+
+      contenedor.innerHTML = lista.map((juego, index) => {
+        const esGratis = !juego.precio || juego.precio === 0;
+        const precioDisplay = esGratis ? 'Gratuito' : `US$${Number(juego.precio).toFixed(2)}`;
+        
+        const badgeDescuento = (juego.descuento && juego.descuento > 0) 
+          ? `<span class="text-danger mb-1"><i class="bi bi-tag-fill"></i> Ahorra un ${juego.descuento} %</span>` 
+          : '';
+
+        const categoriaSlug = (juego.categoria || '').toLowerCase();
+        const delay = Math.min((index + 1) * 0.05, 0.45).toFixed(2);
+
+        return `
+          <div class="col card-juego" data-titulo="${(juego.titulo || '').toLowerCase()}" data-genero="${categoriaSlug}" style="animation-delay: ${delay}s;">
+            <a href="detalle-juego.html?id=${juego.id}" class="text-decoration-none text-light game-clean-card d-block">
+              <div class="ratio ratio-1x1 mb-3">
+                <img src="${juego.imagenUrl}" class="rounded-4 object-fit-cover w-100 h-100" alt="${juego.titulo}" onerror="this.src='CyberPunk.avif'">
+              </div>
+              <h6 class="mb-1 text-truncate fw-normal fs-6">${juego.titulo}</h6>
+              <div class="d-flex flex-column text-muted-custom small">
+                ${badgeDescuento}
+                <span>${precioDisplay}</span>
+              </div>
+            </a>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Buscador interactivo en tiempo real
+    document.getElementById('inputBuscarJuego')?.addEventListener('input', (e) => {
+      const termino = e.target.value.toLowerCase().trim();
+      aplicarFiltros(termino, filtroActual);
+    });
+
+    // Filtros por categorías
+    document.getElementById('grupoFiltros')?.addEventListener('click', (e) => {
+      const boton = e.target.closest('button');
+      if (!boton) return;
+
+      document.querySelectorAll('#grupoFiltros button').forEach(b => {
+        b.classList.remove('btn-primary');
+        b.classList.add('btn-outline-secondary', 'border-opacity-50', 'text-light');
+      });
+
+      boton.classList.remove('btn-outline-secondary', 'border-opacity-50', 'text-light');
+      boton.classList.add('btn-primary');
+
+      filtroActual = boton.getAttribute('data-filtro');
+      const termino = document.getElementById('inputBuscarJuego')?.value.toLowerCase().trim() || '';
+      aplicarFiltros(termino, filtroActual);
+    });
+
+    function aplicarFiltros(termino, filtro) {
+      const filtrados = todosLosJuegos.filter(j => {
+        const coincideTitulo = (j.titulo || '').toLowerCase().includes(termino);
+        const coincideCategoria = (filtro === 'todos') || ((j.categoria || '').toLowerCase().includes(filtro));
+        return coincideTitulo && coincideCategoria;
+      });
+      renderizarJuegos(filtrados);
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarJuegosDesdeOracle);
+  </script>
+
+  <script src="js/buscador.js"></script>
+  <script src="js/carrito.js"></script>
+</body>
+</html>

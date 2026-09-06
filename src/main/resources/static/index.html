@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus - Tienda de Videojuegos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    body {
+      background-color: #0b0e14;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Hero Principal con Degradado Cinematográfico */
+    .hero-wrapper {
+      position: relative;
+      height: 520px;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.5s ease-in-out;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(11, 14, 20, 0.95) 0%, rgba(11, 14, 20, 0.6) 50%, rgba(11, 14, 20, 0.2) 100%),
+                  linear-gradient(0deg, rgba(11, 14, 20, 1) 0%, rgba(11, 14, 20, 0) 40%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 580px;
+    }
+
+    /* Lista lateral de navegación del Banner */
+    .hero-nav-item {
+      cursor: pointer;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1rem;
+      transition: all 0.25s ease;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .hero-nav-item:hover, .hero-nav-item.active {
+      background: rgba(13, 110, 253, 0.15);
+      border-color: #0d6efd;
+      transform: translateX(6px);
+    }
+
+    /* Tarjetas de Juegos Destacados */
+    .featured-card {
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      border-radius: 1rem;
+      overflow: hidden;
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: block;
+      text-decoration: none;
+    }
+
+    .featured-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(13, 110, 253, 0.5);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(13, 110, 253, 0.25);
+    }
+
+    .featured-card img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .featured-card:hover img {
+      transform: scale(1.06);
+    }
+
+    .btn-glow {
+      box-shadow: 0 0 20px rgba(13, 110, 253, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .btn-glow:hover {
+      box-shadow: 0 0 30px rgba(13, 110, 253, 0.8);
+      transform: scale(1.02);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="sticky-top bg-black border-bottom border-secondary border-opacity-25">
+    <nav class="navbar navbar-expand-lg navbar-dark container-fluid px-4 py-2">
+      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html">
+        <i class="bi bi-controller fs-3 text-primary"></i>
+        <span>Nexus</span>
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active text-primary fw-bold" href="index.html">Descubrir</a></li>
+          <li class="nav-item"><a class="nav-link" href="juegos.html">Juegos</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="biblioteca.html">Biblioteca</a></li>
+          <li class="nav-item"><a class="nav-link" href="cuenta.html">Cuenta</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-3">
+          <a href="juegos.html" class="btn btn-outline-secondary btn-sm px-3 py-2 border-opacity-50 text-light">
+            <i class="bi bi-grid-3x3-gap-fill me-1"></i> Ver Catálogo Completo
+          </a>
+          <a href="cuenta.html" class="btn btn-primary btn-sm px-3 py-2">
+            <i class="bi bi-person-fill me-1"></i> Mi Perfil
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container-fluid px-lg-5 py-4">
+
+    <!-- SECCIÓN HERO ESTILO EPIC GAMES -->
+    <div class="row g-4 mb-5 align-items-center">
+      <!-- Columna Principal del Banner -->
+      <div class="col-xl-9 col-lg-8">
+        <div class="hero-wrapper d-flex align-items-center p-4 p-md-5" id="heroBannerPrincipal" style="background-image: url('CyberPunk.avif');">
+          <div class="hero-overlay"></div>
+          
+          <div class="hero-content">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge bg-primary text-uppercase fw-bold px-3 py-1" id="heroBadge">DESTACADO</span>
+              <span class="badge bg-danger d-none px-2 py-1 fw-bold" id="heroDescuento"></span>
+            </div>
+            
+            <h1 class="display-4 fw-bold text-light mb-3" id="heroTitulo">Cyberpunk 2077</h1>
+            
+            <p class="text-secondary lead fs-6 mb-4 line-clamp-3" id="heroDescripcion">
+              En una metrópolis dominada por megacorporaciones, la tecnología es tu única arma y tu humanidad, la moneda de cambio.
+            </p>
+
+            <div class="d-flex align-items-center gap-3">
+              <a href="detalle-juego.html?id=1" id="heroBtnComprar" class="btn btn-primary btn-lg btn-glow fw-bold px-4 py-3 d-flex align-items-center gap-2">
+                <i class="bi bi-bag-fill"></i> Comprar Ahora <span id="heroPrecio">US$49.99</span>
+              </a>
+              <a href="juegos.html" class="btn btn-outline-light btn-lg px-4 py-3 fw-semibold">
+                Explorar Más
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Lateral de Selección de Destacados -->
+      <div class="col-xl-3 col-lg-4">
+        <div class="d-flex flex-column gap-2" id="heroListaLateral">
+          <!-- Items generados dinámicamente con JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN DE JUEGOS DESTACADOS -->
+    <div class="mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center gap-2">
+          <span style="width: 4px; height: 28px; background: #0d6efd; border-radius: 2px;"></span>
+          <h3 class="fw-bold m-0 text-light">Juegos Destacados</h3>
+        </div>
+        <a href="juegos.html" class="text-decoration-none text-secondary small fw-semibold hover-white">
+          Ver todos los juegos <i class="bi bi-chevron-right ms-1"></i>
+        </a>
+      </div>
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-5 g-4" id="gridDestacados">
+        <!-- Renderizado dinámico desde la API -->
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="bg-black text-secondary py-4 mt-5 border-top border-dark">
+    <div class="container text-center text-md-start">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <p class="m-0 fs-7">© 2026 Nexus Store. Todos los derechos reservados.</p>
+        <div class="d-flex gap-3">
+          <a href="#" class="text-secondary text-decoration-none"><i class="bi bi-twitter-x fs-5"></i></a>
+          <a href="#" class="text-secondary text-decoration-none"><i class="bi bi-discord fs-5"></i></a>
+          <a href="#" class="text-secondary text-decoration-none"><i class="bi bi-youtube fs-5"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- LÓGICA DE CARGA DESDE ORACLE -->
+  <script>
+    let juegos = [];
+
+    async function cargarInicio() {
+      try {
+        const res = await fetch('/api/juegos');
+        if (!res.ok) throw new Error('Error al conectar con la API');
+        juegos = await res.json();
+
+        if (juegos.length > 0) {
+          montarHero(juegos.slice(0, 5)); // Primeros 5 juegos para el hero
+          montarDestacados(juegos.slice(0, 10)); // Primeros 10 para la cuadrícula
+        }
+      } catch (err) {
+        console.error('Error al cargar la página principal:', err);
+      }
+    }
+
+    function montarHero(lista) {
+      const contenedorLista = document.getElementById('heroListaLateral');
+      contenedorLista.innerHTML = '';
+
+      lista.forEach((juego, index) => {
+        const item = document.createElement('div');
+        item.className = `hero-nav-item d-flex align-items-center gap-3 ${index === 0 ? 'active' : ''}`;
+        item.innerHTML = `
+          <img src="${juego.imagenUrl}" class="rounded-3" style="width: 50px; height: 50px; object-fit: cover;" onerror="this.src='CyberPunk.avif'">
+          <div class="text-truncate">
+            <span class="d-block fw-bold text-light text-truncate small">${juego.titulo}</span>
+            <span class="text-secondary" style="font-size: 0.75rem;">${juego.precio === 0 ? 'Gratuito' : 'US$' + Number(juego.precio).toFixed(2)}</span>
+          </div>
+        `;
+
+        item.addEventListener('click', () => {
+          document.querySelectorAll('.hero-nav-item').forEach(el => el.classList.remove('active'));
+          item.classList.add('active');
+          actualizarHeroBanner(juego);
+        });
+
+        contenedorLista.appendChild(item);
+      });
+
+      // Cargar el primer juego en el banner
+      actualizarHeroBanner(lista[0]);
+    }
+
+    function actualizarHeroBanner(juego) {
+      const banner = document.getElementById('heroBannerPrincipal');
+      banner.style.backgroundImage = `url('${juego.imagenUrl}')`;
+
+      document.getElementById('heroTitulo').textContent = juego.titulo;
+      document.getElementById('heroDescripcion').textContent = juego.descripcion || 'Sin descripción disponible.';
+      document.getElementById('heroBadge').textContent = juego.tipoJuego || 'DESTACADO';
+      
+      const precioEl = document.getElementById('heroPrecio');
+      const badgeDesc = document.getElementById('heroDescuento');
+      const btnComprar = document.getElementById('heroBtnComprar');
+
+      btnComprar.href = `detalle-juego.html?id=${juego.id}`;
+
+      if (!juego.precio || juego.precio === 0) {
+        precioEl.textContent = 'Gratuito';
+        badgeDesc.classList.add('d-none');
+      } else if (juego.descuento && juego.descuento > 0) {
+        const precioFinal = (juego.precio * (1 - juego.descuento / 100)).toFixed(2);
+        precioEl.textContent = `US$${precioFinal}`;
+        badgeDesc.textContent = `-${juego.descuento}%`;
+        badgeDesc.classList.remove('d-none');
+      } else {
+        precioEl.textContent = `US$${Number(juego.precio).toFixed(2)}`;
+        badgeDesc.classList.add('d-none');
+      }
+    }
+
+    function montarDestacados(lista) {
+      const grid = document.getElementById('gridDestacados');
+      grid.innerHTML = lista.map(juego => {
+        const esGratis = !juego.precio || juego.precio === 0;
+        const precioTxt = esGratis ? 'Gratuito' : `US$${Number(juego.precio).toFixed(2)}`;
+        const badgeDescuento = (juego.descuento && juego.descuento > 0)
+          ? `<span class="badge bg-danger position-absolute top-0 end-0 m-2">-${juego.descuento}%</span>`
+          : '';
+
+        return `
+          <div class="col">
+            <a href="detalle-juego.html?id=${juego.id}" class="featured-card position-relative text-light h-100 d-flex flex-column">
+              ${badgeDescuento}
+              <div class="overflow-hidden">
+                <img src="${juego.imagenUrl}" alt="${juego.titulo}" onerror="this.src='CyberPunk.avif'">
+              </div>
+              <div class="p-3 d-flex flex-column justify-content-between flex-grow-1">
+                <div>
+                  <small class="text-secondary text-uppercase fw-bold" style="font-size: 0.7rem;">${juego.categoria || 'JUEGO'}</small>
+                  <h6 class="fw-bold mt-1 text-truncate text-light">${juego.titulo}</h6>
+                </div>
+                <div class="mt-2 pt-2 border-top border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                  <span class="fw-bold text-info small">${precioTxt}</span>
+                  <span class="text-secondary small"><i class="bi bi-arrow-right-circle"></i></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarInicio);
+  </script>
+</body>
+</html>

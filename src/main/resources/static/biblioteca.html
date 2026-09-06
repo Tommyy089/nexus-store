@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus - Mi Biblioteca</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    body {
+      background-color: #080b11;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1rem;
+    }
+    .game-library-card {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1rem;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .game-library-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(13, 110, 253, 0.4);
+      box-shadow: 0 16px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(13, 110, 253, 0.15);
+    }
+    .game-banner {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+    }
+    .btn-action-play {
+      background: #198754;
+      border: none;
+      color: #fff;
+      font-weight: 700;
+    }
+    .btn-action-play:hover {
+      background: #157347;
+      color: #fff;
+    }
+    .search-library {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      color: #fff;
+      padding-left: 2.75rem;
+    }
+    .filter-btn {
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.45rem 1rem;
+      color: #94a3b8;
+      border: 1px solid transparent;
+      background: transparent;
+    }
+    .filter-btn.active {
+      background: #0d6efd;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="sticky-top bg-black border-bottom border-secondary border-opacity-25">
+    <nav class="navbar navbar-expand-lg navbar-dark container-fluid px-4 py-2">
+      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html">
+        <i class="bi bi-controller fs-3 text-primary"></i>
+        <span>Nexus</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Descubrir</a></li>
+          <li class="nav-item"><a class="nav-link" href="juegos.html">Juegos</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link active text-primary fw-bold" href="biblioteca.html">Biblioteca</a></li>
+          <li class="nav-item"><a class="nav-link" href="cuenta.html">Cuenta</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-3">
+          <a href="cuenta.html" class="btn btn-outline-light btn-sm d-flex align-items-center gap-2 px-3 py-2 border-opacity-50">
+            <i class="bi bi-person-circle fs-6 text-info"></i>
+            <span>@bryanhd</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container-fluid px-4 px-lg-5 pt-5 mt-3">
+
+    <!-- METRICAS -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3 col-sm-6">
+        <div class="glass-card p-3 d-flex align-items-center gap-3">
+          <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-3 fs-4">
+            <i class="bi bi-collection-play-fill"></i>
+          </div>
+          <div>
+            <span class="d-block text-secondary small">Juegos Adquiridos</span>
+            <h4 class="fw-bold m-0 text-light" id="totalJuegosBadge">0</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="glass-card p-3 d-flex align-items-center gap-3">
+          <div class="p-3 bg-success bg-opacity-10 text-success rounded-3 fs-4">
+            <i class="bi bi-clock-history"></i>
+          </div>
+          <div>
+            <span class="d-block text-secondary small">Horas Totales</span>
+            <h4 class="fw-bold m-0 text-light" id="totalHorasBadge">0 hrs</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="glass-card p-3 d-flex align-items-center gap-3">
+          <div class="p-3 bg-warning bg-opacity-10 text-warning rounded-3 fs-4">
+            <i class="bi bi-trophy-fill"></i>
+          </div>
+          <div>
+            <span class="d-block text-secondary small">Platinos</span>
+            <h4 class="fw-bold m-0 text-light">1 Trofeo</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="glass-card p-3 d-flex align-items-center gap-3">
+          <div class="p-3 bg-info bg-opacity-10 text-info rounded-3 fs-4">
+            <i class="bi bi-cloud-check-fill"></i>
+          </div>
+          <div>
+            <span class="d-block text-secondary small">Nexus Cloud</span>
+            <h4 class="fw-bold m-0 text-light">Sincronizado</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CABECERA -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+      <div>
+        <h2 class="fw-bold text-light m-0">Mi Biblioteca</h2>
+        <small class="text-secondary">Colección digital vinculada a tu cuenta.</small>
+      </div>
+
+      <div class="position-relative" style="min-width: 280px;">
+        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary"></i>
+        <input type="text" id="buscadorBiblioteca" class="form-control search-library" placeholder="Buscar en mi colección...">
+      </div>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="d-flex flex-wrap gap-2 mb-4" id="filtrosBiblioteca">
+      <button class="filter-btn active" data-filtro="todos">Todos (<span id="contTodos">0</span>)</button>
+      <button class="filter-btn" data-filtro="instalado">Instalados (<span id="contInstalados">0</span>)</button>
+      <button class="filter-btn" data-filtro="favorito"><i class="bi bi-star-fill text-warning me-1"></i> Favoritos</button>
+    </div>
+
+    <!-- GRID DINAMICO -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4 pb-5" id="gridBiblioteca">
+      <!-- Carga dinámica por JS -->
+    </div>
+  </main>
+
+  <footer class="bg-black text-secondary py-4 border-top border-dark">
+    <div class="container text-center text-md-start">
+      <p class="m-0 fs-7">© 2026 Nexus Store. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Lista inicial predeterminada si no hay datos en localStorage
+    const juegosBase = [
+      { id: 101, titulo: 'Cyberpunk 2077', imagenUrl: 'CyberPunk.avif', horas: 124, logros: '45/60', porcentaje: 75, estado: 'instalado', favorito: false },
+      { id: 102, titulo: 'God of War Ragnarök', imagenUrl: 'Portada_God_of_War_Ragnarok.webp', horas: 15, logros: '12/72', porcentaje: 16, estado: 'instalado', favorito: false },
+      { id: 103, titulo: 'Valorant', imagenUrl: 'valorant.avif', horas: 340, logros: 'Platino 2', porcentaje: 60, estado: 'instalado', favorito: true },
+      { id: 104, titulo: 'God of War', imagenUrl: 'God.avif', horas: 62, logros: '37/37', porcentaje: 100, estado: 'instalado', favorito: true }
+    ];
+
+    function obtenerColeccion() {
+      const guardados = localStorage.getItem('nexus_mis_juegos');
+      if (!guardados) {
+        localStorage.setItem('nexus_mis_juegos', JSON.stringify(juegosBase));
+        return juegosBase;
+      }
+      return JSON.parse(guardados);
+    }
+
+    function renderizarBiblioteca(lista) {
+      const grid = document.getElementById('gridBiblioteca');
+      grid.innerHTML = '';
+
+      let horasTotales = 0;
+      let instaladosCont = 0;
+
+      lista.forEach(juego => {
+        horasTotales += (juego.horas || 0);
+        if (juego.estado === 'instalado') instaladosCont++;
+
+        const col = document.createElement('div');
+        col.className = 'col item-biblioteca';
+        col.setAttribute('data-titulo', juego.titulo.toLowerCase());
+        col.setAttribute('data-estado', juego.estado || 'instalado');
+        col.setAttribute('data-favorito', juego.favorito ? 'true' : 'false');
+
+        col.innerHTML = `
+          <div class="game-library-card h-100 position-relative">
+            ${juego.favorito ? '<span class="badge bg-dark bg-opacity-75 text-warning position-absolute top-0 end-0 m-2 z-3 border border-warning border-opacity-50"><i class="bi bi-star-fill"></i></span>' : ''}
+            <div class="overflow-hidden position-relative">
+              <img src="${juego.imagenUrl}" alt="${juego.titulo}" class="game-banner" onerror="this.src='CyberPunk.avif'">
+            </div>
+            <div class="p-3 d-flex flex-column justify-content-between flex-grow-1">
+              <div>
+                <h5 class="fw-bold text-light mb-1 text-truncate">${juego.titulo}</h5>
+                <small class="text-secondary d-block mb-3">Estado: Listo para jugar</small>
+                
+                <div class="d-flex justify-content-between align-items-center small text-secondary mb-1">
+                  <span>Progreso</span>
+                  <span class="text-info fw-semibold">${juego.porcentaje || 0}%</span>
+                </div>
+                <div class="progress mb-3" style="height: 6px; background-color: rgba(255,255,255,0.08);">
+                  <div class="progress-bar bg-info" style="width: ${juego.porcentaje || 0}%;"></div>
+                </div>
+                <small class="text-secondary"><i class="bi bi-clock me-1"></i> ${juego.horas || 0} horas jugadas</small>
+              </div>
+              
+              <div class="mt-3 pt-2 border-top border-secondary border-opacity-25">
+                <button class="btn btn-action-play w-100 py-2 rounded-3" onclick="toggleJuego(this)">
+                  <i class="bi bi-play-fill me-1"></i> JUGAR
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(col);
+      });
+
+      // Actualizar contadores
+      document.getElementById('totalJuegosBadge').textContent = lista.length;
+      document.getElementById('contTodos').textContent = lista.length;
+      document.getElementById('contInstalados').textContent = instaladosCont;
+      document.getElementById('totalHorasBadge').textContent = `${horasTotales} hrs`;
+    }
+
+    function toggleJuego(boton) {
+      if (boton.classList.contains('bg-warning')) {
+        boton.className = 'btn btn-action-play w-100 py-2 rounded-3';
+        boton.innerHTML = '<i class="bi bi-play-fill me-1"></i> JUGAR';
+      } else {
+        boton.className = 'btn bg-warning text-dark fw-bold w-100 py-2 rounded-3 border-0';
+        boton.innerHTML = '<i class="bi bi-gear-wide-connected spin me-1"></i> EJECUTANDO...';
+      }
+    }
+
+    // Buscador interactivo
+    document.getElementById('buscadorBiblioteca')?.addEventListener('input', (e) => {
+      const termino = e.target.value.toLowerCase().trim();
+      document.querySelectorAll('.item-biblioteca').forEach(item => {
+        const titulo = item.getAttribute('data-titulo');
+        item.style.display = titulo.includes(termino) ? 'block' : 'none';
+      });
+    });
+
+    // Pestañas de filtro
+    document.getElementById('filtrosBiblioteca')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      document.querySelectorAll('#filtrosBiblioteca button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filtro = btn.getAttribute('data-filtro');
+      document.querySelectorAll('.item-biblioteca').forEach(item => {
+        const esFav = item.getAttribute('data-favorito') === 'true';
+        if (filtro === 'todos') item.style.display = 'block';
+        else if (filtro === 'instalado') item.style.display = 'block';
+        else if (filtro === 'favorito') item.style.display = esFav ? 'block' : 'none';
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderizarBiblioteca(obtenerColeccion());
+    });
+  </script>
+</body>
+</html>
