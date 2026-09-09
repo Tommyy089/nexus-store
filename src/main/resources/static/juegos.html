@@ -295,7 +295,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- INTEGRACIÓN CON ORACLE (SPRING BOOT) -->
+  <!-- INTEGRACIÓN CON ORACLE Y FILTROS NORMALIZADOS -->
   <script>
     let todosLosJuegos = [];
     let filtroActual = 'todos';
@@ -350,7 +350,13 @@
           ? `<span class="text-danger mb-1"><i class="bi bi-tag-fill"></i> Ahorra un ${juego.descuento} %</span>` 
           : '';
 
-        const categoriaSlug = (juego.categoria || '').toLowerCase();
+        // Mapeo preciso de categoría para coincidir con data-genero
+        const categoriaNorm = (juego.categoria || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        let categoriaSlug = "otros";
+        if (categoriaNorm.includes("accion")) categoriaSlug = "accion";
+        else if (categoriaNorm.includes("mundo")) categoriaSlug = "mundo-abierto";
+        else if (categoriaNorm.includes("deportes")) categoriaSlug = "deportes";
+
         const delay = Math.min((index + 1) * 0.05, 0.45).toFixed(2);
 
         return `
@@ -372,7 +378,7 @@
 
     // Buscador interactivo en tiempo real
     document.getElementById('inputBuscarJuego')?.addEventListener('input', (e) => {
-      const termino = e.target.value.toLowerCase().trim();
+      const termino = e.target.value;
       aplicarFiltros(termino, filtroActual);
     });
 
@@ -390,14 +396,32 @@
       boton.classList.add('btn-primary');
 
       filtroActual = boton.getAttribute('data-filtro');
-      const termino = document.getElementById('inputBuscarJuego')?.value.toLowerCase().trim() || '';
+      const termino = document.getElementById('inputBuscarJuego')?.value || '';
       aplicarFiltros(termino, filtroActual);
     });
 
     function aplicarFiltros(termino, filtro) {
+      // Normalizar texto del input quitando tildes
+      const terminoNorm = termino.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
       const filtrados = todosLosJuegos.filter(j => {
-        const coincideTitulo = (j.titulo || '').toLowerCase().includes(termino);
-        const coincideCategoria = (filtro === 'todos') || ((j.categoria || '').toLowerCase().includes(filtro));
+        // Normalizar los textos de la base de datos
+        const tituloNorm = (j.titulo || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        const categoriaNorm = (j.categoria || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        
+        const coincideTitulo = tituloNorm.includes(terminoNorm);
+        
+        let coincideCategoria = false;
+        if (filtro === 'todos') {
+          coincideCategoria = true;
+        } else if (filtro === 'accion' && categoriaNorm.includes('accion')) {
+          coincideCategoria = true;
+        } else if (filtro === 'deportes' && categoriaNorm.includes('deportes')) {
+          coincideCategoria = true;
+        } else if (filtro === 'mundo-abierto' && categoriaNorm.includes('mundo')) {
+          coincideCategoria = true;
+        }
+
         return coincideTitulo && coincideCategoria;
       });
       renderizarJuegos(filtrados);

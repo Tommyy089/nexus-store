@@ -1,0 +1,9 @@
+package com.nexus.backend;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+public interface JuegoRepository extends JpaRepository<Juego, Long> {
+    List<Juego> findByTituloContainingIgnoreCase(String titulo);
+    List<Juego> findByCategoriaContainingIgnoreCase(String categoria);
+}

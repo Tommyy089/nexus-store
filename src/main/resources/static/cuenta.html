@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexus - Mi Perfil</title>
+  <title>Nexus - Mi Cuenta</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="css/estilos.css">
@@ -13,45 +13,228 @@
       color: #e2e8f0;
       font-family: system-ui, -apple-system, sans-serif;
     }
-    .glass-card {
-      background: rgba(17, 24, 39, 0.7);
+    
+    /* Panel lateral */
+    .nav-pills-custom .nav-link {
+      color: #94a3b8;
+      font-weight: 600;
+      padding: 1rem 1.25rem;
+      border-radius: 0.75rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 0.5rem;
+      border: 1px solid transparent;
+    }
+    .nav-pills-custom .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.03);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.05);
+      transform: translateX(5px);
+    }
+    .nav-pills-custom .nav-link.active {
+      background: linear-gradient(90deg, #0d6efd 0%, #0b5ed7 100%);
+      color: #fff;
+      border-color: rgba(13, 110, 253, 0.5);
+      box-shadow: 0 4px 20px rgba(13, 110, 253, 0.4);
+    }
+
+    /* Tarjetas de contenido */
+    .dashboard-card {
+      background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 1rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    .avatar-large {
-      width: 90px;
-      height: 90px;
+
+    /* TARJETA PRINCIPAL PREMIUM */
+    .profile-card {
+      position: relative;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.9) 0%, rgba(8, 11, 17, 0.95) 100%);
+      border: 1px solid rgba(13, 110, 253, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(13, 110, 253, 0.1);
+      overflow: hidden;
+    }
+
+    .profile-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(13, 110, 253, 0.15) 0%, transparent 40%);
+      animation: rotateOrb 15s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes rotateOrb {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .profile-bg-icon {
+      position: absolute;
+      right: -10px;
+      bottom: -30px;
+      font-size: 18rem;
+      color: rgba(255, 255, 255, 0.03);
+      z-index: 0;
+      pointer-events: none;
+      animation: floatIcon 6s ease-in-out infinite;
+    }
+    @keyframes floatIcon {
+      0%, 100% { transform: rotate(-15deg) translateY(0px); }
+      50% { transform: rotate(-15deg) translateY(-25px); }
+    }
+
+    .text-gradient {
+      background: linear-gradient(90deg, #ffffff 0%, #0dcaf0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 10px rgba(13, 202, 240, 0.3);
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 0.75rem;
+      padding: 1rem 1.5rem;
+      min-width: 150px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(5px);
+    }
+    .stat-box:hover {
+      background: rgba(13, 110, 253, 0.08);
+      border-color: rgba(13, 110, 253, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(13, 110, 253, 0.15);
+    }
+
+    /* AVATAR INTERACTIVO Y FOTO */
+    .avatar-lg {
+      width: 110px;
+      height: 110px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+      background: linear-gradient(135deg, #0dcaf0, #0d6efd);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.2rem;
-      font-weight: bold;
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: white;
+      border: 3px solid #080b11;
+      position: relative;
+      z-index: 1;
+      animation: pulseGlow 3s ease-in-out infinite;
+      cursor: pointer;
+      overflow: hidden; 
+    }
+    
+    .avatar-img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 2;
+      display: none; 
+    }
+
+    .avatar-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.8rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 3;
+    }
+
+    .avatar-lg:hover .avatar-overlay {
+      opacity: 1;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(13, 110, 253, 0.4), 0 0 30px rgba(13, 110, 253, 0.2); }
+      50% { box-shadow: 0 0 25px rgba(13, 110, 253, 0.7), 0 0 50px rgba(13, 110, 253, 0.4); }
+    }
+
+    .form-control-dark {
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       color: #fff;
-      box-shadow: 0 0 25px rgba(13, 110, 253, 0.5);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s;
     }
-    .table-dark-custom {
+    .form-control-dark:focus {
+      background-color: rgba(0, 0, 0, 0.7);
+      border-color: #0dcaf0;
+      box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25);
+      color: #fff;
+    }
+
+    .table-transparent {
       --bs-table-bg: transparent;
-      color: #cbd5e1;
+      margin-bottom: 0;
     }
-    .table-dark-custom th {
-      color: #94a3b8;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-    }
-    .table-dark-custom td {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    .table-transparent th,
+    .table-transparent td {
+      background-color: transparent !important;
+      color: #e2e8f0 !important; 
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       vertical-align: middle;
+      padding: 1.2rem 0.5rem;
+    }
+    .table-transparent thead th {
+      color: #94a3b8 !important; 
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      font-weight: 600;
+    }
+    .table-transparent tbody tr {
+      transition: background-color 0.2s ease;
+    }
+    .table-transparent tbody tr:hover td {
+      background-color: rgba(255, 255, 255, 0.04) !important;
+    }
+    
+    .btn-premium {
+      background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+      border: none;
+      color: white;
+      transition: all 0.3s ease;
+    }
+    .btn-premium:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(13, 202, 240, 0.4);
+      color: white;
+    }
+
+    .tab-pane {
+      animation: fadeIn 0.4s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
   <!-- NAVBAR -->
-  <header class="sticky-top bg-black border-bottom border-secondary border-opacity-25">
+  <header class="sticky-top bg-black border-bottom border-secondary border-opacity-25 shadow-sm">
     <nav class="navbar navbar-expand-lg navbar-dark container-fluid px-4 py-2">
       <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html">
         <i class="bi bi-controller fs-3 text-primary"></i>
@@ -71,80 +254,226 @@
         </ul>
         <div class="d-flex align-items-center gap-3">
           <a href="juegos.html" class="btn btn-outline-secondary btn-sm px-3 py-2 border-opacity-50 text-light">
-            <i class="bi bi-grid-fill me-1"></i> Catálogo
+            <i class="bi bi-grid-3x3-gap-fill me-1"></i> Catálogo
           </a>
         </div>
       </div>
     </nav>
   </header>
 
-  <main class="container py-5">
-
-    <!-- CABECERA DEL PERFIL -->
-    <div class="glass-card p-4 mb-4">
-      <div class="d-flex flex-column flex-md-row align-items-center gap-4">
-        <div class="avatar-large">B</div>
-        <div class="text-center text-md-start flex-grow-1">
-          <div class="d-flex flex-wrap justify-content-center justify-content-md-start align-items-center gap-2 mb-1">
-            <h3 class="fw-bold text-light mb-0">@bryanhd</h3>
-            <span class="badge bg-primary px-3 py-1">MIEMBRO FOUNDER</span>
-            <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-2 py-1">
-              <i class="bi bi-shield-fill-check me-1"></i> Cuenta Verificada
-            </span>
-          </div>
-          <p class="text-secondary small mb-2">Miembro desde Noviembre 2025 • Región: Chile (CLT)</p>
-          <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-3 small text-secondary">
-            <span><i class="bi bi-wallet2 text-info me-1"></i> Saldo Nexus: <strong class="text-light">US$15.00</strong></span>
-            <span><i class="bi bi-trophy-fill text-warning me-1"></i> Nivel de Jugador: <strong class="text-light">Nivel 28</strong></span>
-          </div>
-        </div>
-        <div>
-          <a href="biblioteca.html" class="btn btn-outline-primary px-4 py-2 fw-semibold">
-            <i class="bi bi-collection-play me-1"></i> Ver Mi Biblioteca
-          </a>
-        </div>
-      </div>
+  <main class="container-fluid px-4 px-lg-5 pt-5 pb-5">
+    
+    <div class="mb-5">
+      <h2 class="fw-bold text-light m-0">Ajustes de Cuenta</h2>
+      <small class="text-secondary">Administra tu perfil, preferencias y revisa tus transacciones de Oracle.</small>
     </div>
 
-    <!-- TABLA DE PEDIDOS EN ORACLE -->
-    <div class="glass-card p-4">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h4 class="fw-bold text-light mb-1"><i class="bi bi-receipt text-primary me-2"></i>Historial de Pedidos</h4>
-          <small class="text-secondary">Transacciones registradas en tiempo real en la base de datos Oracle 21c XE.</small>
+    <div class="row g-4">
+      
+      <!-- MENU LATERAL -->
+      <div class="col-lg-3">
+        <div class="nav flex-column nav-pills nav-pills-custom" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <button class="nav-link active" id="v-pills-perfil-tab" data-bs-toggle="pill" data-bs-target="#v-pills-perfil" type="button" role="tab">
+            <i class="bi bi-person-badge fs-5"></i> Vista General
+          </button>
+          <button class="nav-link" id="v-pills-editar-tab" data-bs-toggle="pill" data-bs-target="#v-pills-editar" type="button" role="tab">
+            <i class="bi bi-pencil-square fs-5"></i> Editar Perfil
+          </button>
+          <button class="nav-link" id="v-pills-historial-tab" data-bs-toggle="pill" data-bs-target="#v-pills-historial" type="button" role="tab">
+            <i class="bi bi-receipt fs-5"></i> Historial de Pedidos
+          </button>
+          
+          <!-- BOTÓN CERRAR SESIÓN MODIFICADO -->
+          <button class="nav-link text-danger mt-4 border border-danger border-opacity-25 bg-danger bg-opacity-10" type="button" data-bs-toggle="modal" data-bs-target="#modalLogout">
+            <i class="bi bi-box-arrow-left fs-5"></i> Cerrar Sesión
+          </button>
         </div>
-        <button class="btn btn-sm btn-outline-secondary border-opacity-50 text-light" onclick="cargarHistorialPedidos()">
-          <i class="bi bi-arrow-clockwise me-1"></i> Actualizar
-        </button>
       </div>
 
-      <div class="table-responsive">
-        <table class="table table-dark-custom mb-0">
-          <thead>
-            <tr>
-              <th>ID Pedido</th>
-              <th>Titular</th>
-              <th>Método de Pago</th>
-              <th>Fecha y Hora</th>
-              <th>Total Pagado</th>
-              <th class="text-center">Estado</th>
-            </tr>
-          </thead>
-          <tbody id="tablaPedidosBody">
-            <tr>
-              <td colspan="6" class="text-center py-4 text-secondary">
-                <div class="spinner-border spinner-border-sm text-primary me-2"></div>
-                Consultando transacciones en Oracle...
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- ÁREA DE CONTENIDO -->
+      <div class="col-lg-9">
+        <div class="tab-content" id="v-pills-tabContent">
+          
+          <!-- TAB 1: VISTA GENERAL -->
+          <div class="tab-pane fade show active" id="v-pills-perfil" role="tabpanel" tabindex="0">
+            <div class="dashboard-card profile-card p-4 p-md-5 mb-4">
+              
+              <i class="bi bi-controller profile-bg-icon"></i>
+              
+              <div class="d-flex flex-column flex-xl-row align-items-center align-items-xl-start gap-4 position-relative z-1">
+                
+                <div class="avatar-lg flex-shrink-0" id="btnCambiarFoto" title="Cambiar foto de perfil">
+                  <span id="displayAvatarLetra">V</span>
+                  <img src="" id="displayAvatarImg" class="avatar-img" alt="Foto de perfil">
+                  <div class="avatar-overlay">
+                    <i class="bi bi-camera-fill"></i>
+                  </div>
+                </div>
+                
+                <input type="file" id="inputFotoPerfil" accept="image/png, image/jpeg, image/webp" style="display: none;">
+                
+                <div class="flex-grow-1 text-center text-xl-start w-100">
+                  <div class="d-flex flex-column flex-xl-row justify-content-between align-items-center align-items-xl-start mb-3 gap-3">
+                    <div>
+                      <div class="d-flex flex-wrap justify-content-center justify-content-xl-start align-items-center gap-2 mb-2">
+                        <h2 class="fw-bolder m-0 text-gradient" id="displayUsername" style="letter-spacing: -0.5px;">@usuario</h2>
+                        <span class="badge bg-primary text-uppercase shadow-sm" style="font-size: 0.7rem; letter-spacing: 1px;">Miembro Founder</span>
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25" style="font-size: 0.7rem;">
+                          <i class="bi bi-patch-check-fill me-1"></i> Verificada
+                        </span>
+                      </div>
+                      <p class="text-secondary mb-0 fs-6">
+                        <span id="displayNombreLegal" class="text-light fw-medium">Nombre de Usuario</span><br>
+                        <small>Miembro desde Noviembre 2025 • Región: <span id="displayRegion" class="text-info fw-medium">Chile (CLT)</span></small>
+                      </p>
+                    </div>
+                    
+                    <div class="flex-shrink-0 mt-3 mt-xl-0">
+                      <a href="biblioteca.html" class="btn btn-premium px-4 py-2 fw-bold d-flex align-items-center gap-2" style="border-radius: 0.5rem;">
+                        <i class="bi bi-collection-play-fill fs-5"></i> Ver Biblioteca
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-wrap justify-content-center justify-content-xl-start gap-3 mt-4 pt-4 border-top border-secondary border-opacity-25">
+                    <div class="stat-box text-start">
+                      <span class="d-block text-secondary small fw-bold text-uppercase mb-1" style="letter-spacing: 1px; font-size: 0.7rem;">Saldo Nexus</span>
+                      <strong class="text-white fs-4">US$15.00</strong>
+                    </div>
+                    <div class="stat-box text-start">
+                      <span class="d-block text-secondary small fw-bold text-uppercase mb-1" style="letter-spacing: 1px; font-size: 0.7rem;">Nivel de Jugador</span>
+                      <strong class="text-warning fs-4" style="text-shadow: 0 0 10px rgba(255, 193, 7, 0.4);"><i class="bi bi-star-fill me-2 fs-5"></i>Nivel 28</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: EDITAR PERFIL -->
+          <div class="tab-pane fade" id="v-pills-editar" role="tabpanel" tabindex="0">
+            <div class="dashboard-card p-4 p-md-5">
+              <h4 class="fw-bold text-light mb-4"><i class="bi bi-person-lines-fill text-primary me-2"></i>Información Personal</h4>
+              
+              <form id="formEditarPerfil">
+                <div class="row g-4 mb-4">
+                  <div class="col-md-6">
+                    <label class="form-label text-secondary small fw-bold text-uppercase">Nombre Completo</label>
+                    <input type="text" class="form-control form-control-dark" id="inputNombre" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label text-secondary small fw-bold text-uppercase">Nombre de Usuario (Alias)</label>
+                    <div class="input-group shadow-sm">
+                      <span class="input-group-text bg-black border-secondary border-opacity-25 text-secondary">@</span>
+                      <input type="text" class="form-control form-control-dark" id="inputAlias" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label text-secondary small fw-bold text-uppercase">Correo Electrónico</label>
+                    <input type="email" class="form-control form-control-dark" id="inputEmail" readonly style="opacity: 0.7; cursor: not-allowed;" title="El correo no se puede cambiar">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label text-secondary small fw-bold text-uppercase">País / Región</label>
+                    <select class="form-select form-control-dark" id="inputRegion">
+                      <option value="Chile (CLT)">Chile</option>
+                      <option value="Argentina (ART)">Argentina</option>
+                      <option value="México (MX)">México</option>
+                      <option value="España (ES)">España</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <hr class="border-secondary border-opacity-25 my-4">
+                
+                <div class="d-flex justify-content-end gap-3">
+                  <button type="button" class="btn btn-outline-secondary px-4">Cancelar</button>
+                  <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm" id="btnGuardarPerfil">
+                    <i class="bi bi-floppy-fill me-2"></i> Guardar Cambios
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- TAB 3: HISTORIAL DE PEDIDOS -->
+          <div class="tab-pane fade" id="v-pills-historial" role="tabpanel" tabindex="0">
+            <div class="dashboard-card p-4 p-md-5">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                  <h4 class="fw-bold text-light m-0"><i class="bi bi-receipt text-primary me-2"></i>Historial de Pedidos</h4>
+                  <small class="text-secondary">Transacciones registradas en tiempo real en la base de datos Oracle.</small>
+                </div>
+                <button class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2 shadow-sm" onclick="cargarHistorialOracle()">
+                  <i class="bi bi-arrow-clockwise"></i> Actualizar
+                </button>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table table-transparent w-100">
+                  <thead>
+                    <tr>
+                      <th>ID Pedido</th>
+                      <th>Titular</th>
+                      <th>Método de Pago</th>
+                      <th>Fecha de Emisión</th>
+                      <th>Total Pagado</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tablaHistorialBody">
+                    <tr>
+                      <td colspan="6" class="text-center py-5 text-secondary">
+                        <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                        Consultando transacciones en Oracle...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
+
     </div>
-
   </main>
 
-  <footer class="bg-black text-secondary py-4 border-top border-dark mt-5">
+  <!-- MODAL PROFESIONAL DE CERRAR SESIÓN -->
+  <div class="modal fade" id="modalLogout" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light border border-secondary border-opacity-50" style="border-radius: 1rem; backdrop-filter: blur(10px);">
+        <div class="modal-header border-bottom border-secondary border-opacity-25">
+          <h5 class="modal-title fw-bold"><i class="bi bi-box-arrow-right text-danger me-2"></i>Cerrar Sesión</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center py-4">
+          <p class="fs-5 mb-0">¿Estás seguro que deseas salir de tu cuenta, <strong class="text-primary" id="logoutUserName">Jugador</strong>?</p>
+          <small class="text-secondary d-block mt-2">Tendrás que volver a iniciar sesión para acceder a tu biblioteca.</small>
+        </div>
+        <div class="modal-footer border-top border-secondary border-opacity-25 justify-content-center gap-3">
+          <button type="button" class="btn btn-outline-secondary px-4 fw-bold" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger px-4 fw-bold shadow-sm" id="btnConfirmarLogout" onclick="ejecutarLogout()">
+            Sí, Salir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST DE NOTIFICACIÓN -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-4" style="z-index: 1080;">
+    <div id="toastAviso" class="toast bg-dark text-light border border-secondary border-opacity-50 shadow-lg rounded-3" role="alert">
+      <div class="toast-header bg-black text-light border-bottom border-secondary border-opacity-25">
+        <i class="bi bi-check-circle-fill text-success me-2"></i>
+        <strong class="me-auto">Nexus Store</strong>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+      </div>
+      <div class="toast-body fw-medium" id="toastTexto">¡Perfil actualizado con éxito!</div>
+    </div>
+  </div>
+
+  <footer class="bg-black text-secondary py-4 border-top border-dark mt-auto">
     <div class="container text-center text-md-start">
       <p class="m-0 fs-7">© 2026 Nexus Store. Todos los derechos reservados.</p>
     </div>
@@ -152,56 +481,197 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+  <!-- SCRIPT DINÁMICO -->
   <script>
-    async function cargarHistorialPedidos() {
-      const tbody = document.getElementById('tablaPedidosBody');
+    const displayImg = document.getElementById('displayAvatarImg');
+    const displayLetra = document.getElementById('displayAvatarLetra');
+    const inputNombre = document.getElementById('inputNombre');
+    const inputAlias = document.getElementById('inputAlias');
+    const inputRegion = document.getElementById('inputRegion');
+    const inputEmail = document.getElementById('inputEmail');
+    
+    // --- 1. CARGAR DATOS AL INICIAR LA PÁGINA ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // Si no hay datos, significa que no ha iniciado sesión. Lo devolvemos al login.
+      if (!localStorage.getItem('nexus_user_email')) {
+         window.location.href = 'login.html';
+         return;
+      }
+
+      const savedNombre = localStorage.getItem('nexus_user_nombre');
+      const savedAlias = localStorage.getItem('nexus_user_alias');
+      const savedRegion = localStorage.getItem('nexus_user_region');
+      const savedEmail = localStorage.getItem('nexus_user_email');
+      const fotoGuardada = localStorage.getItem('nexus_avatar_img');
+
+      // Mostrar datos visuales
+      document.getElementById('displayNombreLegal').textContent = savedNombre;
+      document.getElementById('displayUsername').textContent = `@${savedAlias}`;
+      document.getElementById('displayRegion').textContent = savedRegion;
+      
+      // Llenar formulario de edición
+      inputNombre.value = savedNombre;
+      inputAlias.value = savedAlias;
+      inputRegion.value = savedRegion;
+      inputEmail.value = savedEmail; // El email lo pusimos readonly por seguridad
+
+      // Restaurar avatar
+      if (fotoGuardada) {
+        displayImg.src = fotoGuardada;
+        displayImg.style.display = 'block';
+        displayLetra.style.display = 'none';
+      } else {
+        displayLetra.textContent = savedNombre ? savedNombre.charAt(0).toUpperCase() : savedAlias.charAt(0).toUpperCase();
+      }
+
+      // Preparar el modal de Logout con el nombre del usuario
+      document.getElementById('modalLogout').addEventListener('show.bs.modal', function () {
+        document.getElementById('logoutUserName').textContent = `@${savedAlias}`;
+      });
+
+      // Inicializar pestañas
+      const triggerTabList = document.querySelectorAll('#v-pills-tab button:not([data-bs-toggle="modal"])')
+      triggerTabList.forEach(triggerEl => {
+        const tabTrigger = new bootstrap.Tab(triggerEl)
+        triggerEl.addEventListener('click', event => {
+          event.preventDefault()
+          tabTrigger.show()
+        })
+      });
+
+      cargarHistorialOracle();
+    });
+
+    // --- 2. LÓGICA DEL LOGOUT ---
+    function ejecutarLogout() {
+      const btn = document.getElementById('btnConfirmarLogout');
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Cerrando...`;
+      
+      setTimeout(() => {
+        // Borrar el caché de sesión permanentemente
+        localStorage.removeItem('nexus_user_nombre');
+        localStorage.removeItem('nexus_user_alias');
+        localStorage.removeItem('nexus_user_region');
+        localStorage.removeItem('nexus_user_email');
+        localStorage.removeItem('nexus_avatar_img');
+        
+        // Redirigir a la pantalla de login
+        window.location.href = 'login.html';
+      }, 800);
+    }
+
+    // --- 3. LÓGICA DE FOTO DE PERFIL ---
+    document.getElementById('btnCambiarFoto').addEventListener('click', () => {
+      document.getElementById('inputFotoPerfil').click();
+    });
+
+    document.getElementById('inputFotoPerfil').addEventListener('change', function(e) {
+      const archivo = e.target.files[0];
+      if (archivo) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const resultadoBase64 = event.target.result;
+          displayImg.src = resultadoBase64;
+          displayImg.style.display = 'block';
+          displayLetra.style.display = 'none';
+          
+          localStorage.setItem('nexus_avatar_img', resultadoBase64);
+          
+          document.getElementById('toastTexto').textContent = '¡Foto de perfil actualizada correctamente!';
+          new bootstrap.Toast(document.getElementById('toastAviso')).show();
+        };
+        reader.readAsDataURL(archivo);
+      }
+    });
+
+    // --- 4. LÓGICA DE EDICIÓN DE PERFIL ---
+    document.getElementById('formEditarPerfil')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('btnGuardarPerfil');
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Guardando...`;
+      
+      setTimeout(() => {
+        const nombre = inputNombre.value;
+        const alias = inputAlias.value;
+        const region = inputRegion.value;
+
+        localStorage.setItem('nexus_user_nombre', nombre);
+        localStorage.setItem('nexus_user_alias', alias);
+        localStorage.setItem('nexus_user_region', region);
+
+        document.getElementById('displayNombreLegal').textContent = nombre;
+        document.getElementById('displayUsername').textContent = `@${alias}`;
+        document.getElementById('displayRegion').textContent = region;
+        
+        if (!localStorage.getItem('nexus_avatar_img')) {
+          displayLetra.textContent = nombre ? nombre.charAt(0).toUpperCase() : alias.charAt(0).toUpperCase();
+        }
+
+        document.getElementById('toastTexto').textContent = '¡Datos del perfil guardados correctamente!';
+        new bootstrap.Toast(document.getElementById('toastAviso')).show();
+
+        btn.innerHTML = `<i class="bi bi-floppy-fill me-2"></i> Guardar Cambios`;
+        
+        bootstrap.Tab.getInstance(document.querySelector('#v-pills-perfil-tab')).show();
+      }, 800);
+    });
+
+    // --- 5. LÓGICA DE HISTORIAL DE PEDIDOS (ORACLE) ---
+    async function cargarHistorialOracle() {
+      const tbody = document.getElementById('tablaHistorialBody');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="text-center py-5 text-secondary">
+            <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+            Sincronizando con Oracle...
+          </td>
+        </tr>
+      `;
+
       try {
-        const res = await fetch('/api/pedidos');
-        if (!res.ok) throw new Error('Error al conectar con la API de pedidos');
-        const pedidos = await res.json();
+        const respuesta = await fetch('/api/pedidos');
+        if (!respuesta.ok) throw new Error('Error al conectar con la API');
+        
+        const pedidos = await respuesta.json();
 
         if (pedidos.length === 0) {
           tbody.innerHTML = `
             <tr>
-              <td colspan="6" class="text-center py-4 text-secondary">
-                <i class="bi bi-bag-x fs-3 d-block mb-2"></i>
-                No se registran compras previas en la base de datos.
+              <td colspan="6" class="text-center py-5 text-secondary">
+                <i class="bi bi-inbox fs-2 d-block mb-2 text-muted"></i>
+                No tienes pedidos registrados en la base de datos.
               </td>
             </tr>
           `;
           return;
         }
 
-        tbody.innerHTML = pedidos.map(p => {
-          const fechaFormateada = p.fechaPedido ? new Date(p.fechaPedido).toLocaleString('es-CL') : 'Reciente';
+        tbody.innerHTML = pedidos.map(pedido => {
+          const totalFormateado = pedido.total ? parseFloat(pedido.total).toFixed(2) : '0.00';
           return `
             <tr>
-              <td class="fw-bold text-primary">#NX-${p.id}</td>
-              <td class="text-light fw-semibold">${p.nombreCliente}</td>
-              <td><span class="badge bg-secondary bg-opacity-25 text-light">${p.metodoPago || 'Tarjeta'}</span></td>
-              <td class="small text-secondary">${fechaFormateada}</td>
-              <td class="fw-bold text-info">US$${Number(p.total).toFixed(2)}</td>
-              <td class="text-center">
-                <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50">
-                  <i class="bi bi-check-circle me-1"></i> Aprobado
-                </span>
-              </td>
+              <td class="fw-bold" style="color: #38bdf8;">#NX-${pedido.id}</td>
+              <td class="fw-semibold" style="color: #f8fafc;">${pedido.nombreCliente}</td>
+              <td><span class="badge bg-secondary bg-opacity-25 border border-secondary border-opacity-50" style="color: #cbd5e1;">${pedido.metodoPago}</span></td>
+              <td style="color: #94a3b8; font-size: 0.85rem;">${new Date().toLocaleDateString()} (Transacción)</td>
+              <td class="fw-bold" style="color: #10b981;">US$${totalFormateado}</td>
+              <td><span class="badge bg-success bg-opacity-10 border border-success border-opacity-25 text-success"><i class="bi bi-check-circle me-1"></i> Aprobado</span></td>
             </tr>
           `;
-        }).join('');
+        }).reverse().join(''); 
 
       } catch (err) {
+        console.error('Error cargando historial:', err);
         tbody.innerHTML = `
           <tr>
-            <td colspan="6" class="text-center py-4 text-danger">
-              <i class="bi bi-exclamation-octagon me-1"></i> No se pudo cargar el historial desde Oracle.
+            <td colspan="6" class="text-center py-5 text-danger">
+              <i class="bi bi-exclamation-circle me-2"></i> No se pudo cargar el historial desde Oracle.
             </td>
           </tr>
         `;
       }
     }
-
-    document.addEventListener('DOMContentLoaded', cargarHistorialPedidos);
   </script>
 </body>
 </html>

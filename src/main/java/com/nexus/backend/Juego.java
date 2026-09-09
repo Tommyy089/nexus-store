@@ -5,27 +5,35 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+@Entity
+@Table(name = "JUEGOS")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "juegos")
 public class Juego {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_juego")
     private Long id;
 
+    @Column(name = "TITULO")
     private String titulo;
-    private String descripcion;
-    private Double precio;
-    private Integer descuento;
-    private String categoria;
 
-    @Column(name = "tipo_juego")
+    @Column(name = "TIPO_JUEGO")
     private String tipoJuego;
 
-    @Column(name = "imagen_url")
+    @Column(name = "CATEGORIA")
+    private String categoria;
+
+    @Column(name = "PRECIO")
+    private Double precio;
+
+    @Column(name = "DESCUENTO")
+    private Double descuento;
+
+    @Column(name = "IMAGEN_URL")
     private String imagenUrl;
+
+    @Column(name = "DESCRIPCION")
+    private String descripcion;
 }

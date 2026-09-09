@@ -1,42 +1,41 @@
 package com.nexus.backend;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.ResponseEntity;
-import lombok.RequiredArgsConstructor;
 import java.util.List;
 
-interface JuegoRepository extends JpaRepository<Juego, Long> {}
-interface PedidoRepository extends JpaRepository<Pedido, Long> {}
-
 @RestController
-@RequestMapping("/api")
-@RequiredArgsConstructor
+@RequestMapping("/api/juegos")
+@CrossOrigin(origins = "*")
 public class JuegoController {
 
-    private final JuegoRepository juegoRepository;
-    private final PedidoRepository pedidoRepository;
+    @Autowired
+    private JuegoRepository juegoRepository;
 
-    @GetMapping("/juegos")
+    // Obtener todos (el que ya usas)
+    @GetMapping
     public List<Juego> listarJuegos() {
         return juegoRepository.findAll();
     }
 
-    @GetMapping("/juegos/{id}")
-    public ResponseEntity<Juego> obtenerPorId(@PathVariable Long id) {
-        return juegoRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    // Obtener por ID único
+    @GetMapping("/{id}")
+    public Juego obtenerPorId(@PathVariable Long id) {
+        return juegoRepository.findById(id).orElse(null);
     }
 
-    @PostMapping("/pedidos")
-    public ResponseEntity<Pedido> registrarPedido(@RequestBody Pedido pedido) {
-        Pedido nuevo = pedidoRepository.save(pedido);
-        return ResponseEntity.ok(nuevo);
+    // NUEVO: Buscar por título (?q=...)
+    @GetMapping("/buscar")
+    public List<Juego> buscarPorTitulo(@RequestParam("q") String titulo) {
+        return juegoRepository.findByTituloContainingIgnoreCase(titulo);
     }
 
-    @GetMapping("/pedidos")
-    public List<Pedido> listarPedidos() {
-        return pedidoRepository.findAll();
+    // NUEVO: Filtrar por categoría (?cat=...)
+    @GetMapping("/categoria/{cat}")
+    public List<Juego> filtrarPorCategoria(@PathVariable String cat) {
+        if (cat.equalsIgnoreCase("Todos")) {
+            return juegoRepository.findAll();
+        }
+        return juegoRepository.findByCategoriaContainingIgnoreCase(cat);
     }
 }
