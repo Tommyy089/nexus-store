@@ -1,6 +1,5 @@
 package com.nexus.backend;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -9,10 +8,12 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class JuegoController {
 
-    @Autowired
-    private JuegoRepository juegoRepository;
+    private final JuegoRepository juegoRepository;
 
-    // Obtener todos (el que ya usas)
+    public JuegoController(JuegoRepository juegoRepository) {
+        this.juegoRepository = juegoRepository;
+    }
+
     @GetMapping
     public List<Juego> listarJuegos() {
         return juegoRepository.findAll();

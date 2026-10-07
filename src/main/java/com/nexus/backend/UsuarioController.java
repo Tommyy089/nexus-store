@@ -1,6 +1,5 @@
 package com.nexus.backend;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
@@ -12,8 +11,11 @@ import java.util.HashMap;
 @CrossOrigin(origins = "*")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
+
+    public UsuarioController(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
     @PostMapping("/registro")
     public ResponseEntity<?> registrar(@RequestBody Usuario nuevoUsuario) {

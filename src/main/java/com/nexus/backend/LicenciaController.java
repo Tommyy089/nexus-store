@@ -1,6 +1,5 @@
 package com.nexus.backend;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -9,8 +8,11 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class LicenciaController {
 
-    @Autowired
-    private LicenciaRepository licenciaRepository;
+    private final LicenciaRepository licenciaRepository;
+
+    public LicenciaController(LicenciaRepository licenciaRepository) {
+        this.licenciaRepository = licenciaRepository;
+    }
 
     // Obtener todas las licencias de la base de datos
     @GetMapping

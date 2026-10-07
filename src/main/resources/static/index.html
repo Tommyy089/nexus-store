@@ -211,7 +211,7 @@
 
     async function cargarInicio() {
       try {
-        const res = await fetch('/api/juegos');
+        const res = await fetch('http://localhost:8081/api/juegos');
         if (!res.ok) throw new Error('Error al conectar con la API');
         juegos = await res.json();
 

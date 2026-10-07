@@ -1,9 +1,8 @@
 package com.nexus.backend;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List; // ¡Esta es la importación nueva!
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -12,13 +11,14 @@ import java.util.UUID;
 @CrossOrigin(origins = "*")
 public class PedidoController {
 
-    @Autowired
-    private PedidoRepository pedidoRepository;
+    private final PedidoRepository pedidoRepository;
+    private final LicenciaRepository licenciaRepository;
 
-    @Autowired
-    private LicenciaRepository licenciaRepository;
+    public PedidoController(PedidoRepository pedidoRepository, LicenciaRepository licenciaRepository) {
+        this.pedidoRepository = pedidoRepository;
+        this.licenciaRepository = licenciaRepository;
+    }
 
-    // NUEVO: Este es el método que soluciona el error en tu cuenta.html
     @GetMapping
     public List<Pedido> obtenerHistorial() {
         return pedidoRepository.findAll();
@@ -33,26 +33,22 @@ public class PedidoController {
         Double total = Double.valueOf(payload.get("total").toString());
         String tituloJuego = payload.getOrDefault("juegoTitulo", "Juego Desconocido").toString();
 
-        // 2. Guardar el Pedido normal en Oracle
         Pedido nuevoPedido = new Pedido();
         nuevoPedido.setNombreCliente(nombreCliente);
         nuevoPedido.setMetodoPago(metodoPago);
         nuevoPedido.setTotal(total);
         Pedido pedidoGuardado = pedidoRepository.save(nuevoPedido);
 
-        // 3. Generar una clave única (Ej: NX77-A1B2-C3D4)
         String parte1 = UUID.randomUUID().toString().substring(0, 4).toUpperCase();
         String parte2 = UUID.randomUUID().toString().substring(0, 4).toUpperCase();
         String claveGenerada = "NX77-" + parte1 + "-" + parte2;
 
-        // 4. Guardar la Licencia asociada a ese cliente y juego
         Licencia nuevaLicencia = new Licencia();
         nuevaLicencia.setCliente(nombreCliente);
         nuevaLicencia.setJuegoTitulo(tituloJuego);
         nuevaLicencia.setClaveActivacion(claveGenerada);
         licenciaRepository.save(nuevaLicencia);
 
-        // Devolver el pedido al frontend (con status 200 OK)
         return ResponseEntity.ok(pedidoGuardado);
     }
 }
