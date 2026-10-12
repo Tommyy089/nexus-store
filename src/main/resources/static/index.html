@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexus - Tienda de Videojuegos</title>
+  <title>Nexus Store - Plataforma Digital de Videojuegos</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="css/estilos.css">
@@ -11,29 +11,91 @@
     :root {
       --nexus-blue: #0d6efd;
       --nexus-blue-glow: rgba(13, 110, 253, 0.45);
+      --nexus-cyan: #0dcaf0;
+      --nexus-purple: #8b5cf6;
       --nexus-dark: #080b11;
-      --nexus-surface: #0f1523;
-      --nexus-card: #111726;
+      --nexus-card: #0e1320;
       --nexus-border: rgba(255, 255, 255, 0.08);
-      --ps-blue: #00439c;
-      --xbox-green: #107c10;
-      --nintendo-red: #e60012;
-      --steam-cyan: #171a21;
     }
 
     body {
       background-color: var(--nexus-dark);
       color: #e2e8f0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
       overflow-x: hidden;
-      scroll-behavior: smooth;
     }
 
-    /* --- NAVBAR GLASSMORPHISM & LIVE SEARCH --- */
+    /* =======================================================
+       1. AMBIENTE ANIMADO DE FONDO (ORBES Y LUCES EN MOVIMIENTO)
+       ======================================================= */
+    .ambient-glow-1 {
+      position: fixed;
+      top: -15%;
+      left: -10%;
+      width: 55vw;
+      height: 55vw;
+      background: radial-gradient(circle, rgba(13, 110, 253, 0.16) 0%, transparent 65%);
+      filter: blur(90px);
+      animation: orbDrift1 20s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-glow-2 {
+      position: fixed;
+      bottom: -15%;
+      right: -10%;
+      width: 60vw;
+      height: 60vw;
+      background: radial-gradient(circle, rgba(13, 202, 240, 0.13) 0%, transparent 70%);
+      filter: blur(100px);
+      animation: orbDrift2 24s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-glow-3 {
+      position: fixed;
+      top: 40%;
+      left: 35%;
+      width: 45vw;
+      height: 45vw;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.10) 0%, transparent 65%);
+      filter: blur(95px);
+      animation: orbDrift3 22s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes orbDrift1 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, 80px) scale(1.15); }
+      100% { transform: translate(-40px, 120px) scale(0.95); }
+    }
+
+    @keyframes orbDrift2 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-80px, -60px) scale(1.1); }
+      100% { transform: translate(50px, -90px) scale(0.9); }
+    }
+
+    @keyframes orbDrift3 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-50px, 50px) scale(1.2); }
+      100% { transform: translate(70px, -40px) scale(1); }
+    }
+
+    /* =======================================================
+       2. NAVBAR ESTILO STEAM / GLASS
+       ======================================================= */
     .nexus-navbar {
-      background: rgba(8, 11, 17, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(8, 11, 17, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--nexus-border);
       z-index: 1050;
     }
@@ -44,73 +106,24 @@
       font-size: 1.35rem;
     }
 
-    .search-wrapper {
-      position: relative;
-      width: 300px;
-    }
-
-    .nav-search-input {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #fff;
-      padding-left: 2.4rem;
+    .search-input-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 2rem;
+      padding: 0.35rem 1rem 0.35rem 2.2rem;
+      color: #fff;
       font-size: 0.85rem;
       transition: all 0.25s ease;
+      width: 240px;
     }
 
-    .nav-search-input:focus {
-      background: rgba(255, 255, 255, 0.1);
+    .search-input-pill:focus {
+      background: rgba(0, 0, 0, 0.6);
       border-color: var(--nexus-blue);
-      box-shadow: 0 0 16px var(--nexus-blue-glow);
+      box-shadow: 0 0 15px var(--nexus-blue-glow);
       color: #fff;
-    }
-
-    .nav-search-input::placeholder {
-      color: #64748b;
-    }
-
-    .search-results-dropdown {
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 0;
-      right: 0;
-      background: rgba(15, 21, 35, 0.96);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(13, 110, 253, 0.3);
-      border-radius: 1rem;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.85), 0 0 20px rgba(13, 110, 253, 0.2);
-      max-height: 380px;
-      overflow-y: auto;
-      z-index: 2000;
-    }
-
-    .search-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.65rem 0.85rem;
-      text-decoration: none;
-      color: #e2e8f0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      transition: background 0.2s ease;
-    }
-
-    .search-item:last-child {
-      border-bottom: none;
-    }
-
-    .search-item:hover {
-      background: rgba(13, 110, 253, 0.15);
-      color: #fff;
-    }
-
-    .search-item-thumb {
-      width: 40px;
-      height: 52px;
-      object-fit: cover;
-      border-radius: 0.4rem;
-      flex-shrink: 0;
+      outline: none;
+      width: 280px;
     }
 
     .user-pill-badge {
@@ -121,18 +134,10 @@
       border-radius: 2rem;
       font-size: 0.85rem;
       font-weight: 600;
-      transition: all 0.25s ease;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-    }
-
-    .user-pill-badge:hover {
-      background: rgba(13, 110, 253, 0.2);
-      border-color: var(--nexus-blue);
-      box-shadow: 0 0 16px var(--nexus-blue-glow);
-      color: #fff;
     }
 
     .status-dot {
@@ -140,318 +145,296 @@
       height: 8px;
       background-color: #10b981;
       border-radius: 50%;
-      box-shadow: 0 0 6px #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulseDot 2s infinite;
     }
 
-    /* --- HERO CINEMATOGRÁFICO --- */
-    .hero-wrapper {
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.2); }
+    }
+
+    /* =======================================================
+       3. HERO SHOWCASE CINEMATOGRÁFICO (BANNER PRINCIPAL)
+       ======================================================= */
+    .hero-container {
       position: relative;
-      height: 540px;
+      z-index: 10;
+    }
+
+    .hero-main-banner {
+      position: relative;
+      height: 520px;
       border-radius: 1.5rem;
       overflow: hidden;
-      background-color: #000;
       border: 1px solid var(--nexus-border);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+      background-color: #000;
     }
 
-    .hero-bg {
+    .hero-main-bg {
       position: absolute;
       inset: 0;
-      background-size: cover;
-      background-position: center 20%;
-      transition: background-image 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-      opacity: 0.9;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 25%;
+      filter: brightness(0.85);
+      transform: scale(1);
+      transition: transform 6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
     }
 
-    .hero-overlay {
+    .hero-main-banner:hover .hero-main-bg {
+      transform: scale(1.04);
+    }
+
+    /* Degradado oscuro para que los textos resalten */
+    .hero-overlay-gradient {
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, rgba(8, 11, 17, 0.98) 0%, rgba(8, 11, 17, 0.85) 42%, rgba(8, 11, 17, 0.2) 80%, rgba(8, 11, 17, 0.6) 100%),
-                  linear-gradient(0deg, rgba(8, 11, 17, 1) 0%, rgba(8, 11, 17, 0) 38%);
+      background: linear-gradient(90deg, rgba(8, 11, 17, 0.95) 0%, rgba(8, 11, 17, 0.65) 45%, rgba(8, 11, 17, 0.1) 100%),
+                  linear-gradient(0deg, rgba(8, 11, 17, 0.9) 0%, transparent 40%);
+      pointer-events: none;
     }
 
     .hero-content {
       position: relative;
-      z-index: 2;
-      max-width: 540px;
+      z-index: 5;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem;
+      max-width: 620px;
     }
 
-    /* --- LISTA LATERAL HERO --- */
-    .hero-nav-item {
-      cursor: pointer;
+    .hero-title {
+      font-size: 3.2rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+    }
+
+    .hero-desc {
+      color: #94a3b8;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    }
+
+    .btn-buy-hero {
+      background: var(--nexus-blue);
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      padding: 0.85rem 1.6rem;
+      border-radius: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 6px 20px rgba(13, 110, 253, 0.5);
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+
+    .btn-buy-hero:hover {
+      background: #0b5ed7;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(13, 110, 253, 0.75);
+    }
+
+    .btn-outline-hero {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #fff;
+      font-weight: 600;
+      padding: 0.85rem 1.4rem;
+      border-radius: 0.75rem;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .btn-outline-hero:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* =======================================================
+       4. LISTA LATERAL DERECHA (SHOWCASE PLAYLIST)
+       ======================================================= */
+    .playlist-card {
+      background: rgba(14, 19, 32, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--nexus-border);
       border-radius: 1rem;
-      padding: 0.75rem 0.9rem;
-      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-      background: rgba(18, 25, 39, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      cursor: pointer;
       position: relative;
       overflow: hidden;
+      transition: all 0.25s ease;
+      text-decoration: none;
     }
 
-    .hero-nav-item:hover {
-      background: rgba(255, 255, 255, 0.08);
+    .playlist-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(13, 110, 253, 0.35);
       transform: translateX(4px);
     }
 
-    .hero-nav-item.active {
+    .playlist-card.active {
       background: rgba(13, 110, 253, 0.12);
-      border-color: rgba(13, 110, 253, 0.5);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(13, 110, 253, 0.1);
-      transform: translateX(6px);
+      border-color: var(--nexus-blue);
+      box-shadow: 0 0 20px rgba(13, 110, 253, 0.25);
     }
 
-    .hero-thumb {
-      width: 52px;
-      height: 68px;
+    .playlist-thumb {
+      width: 48px;
+      height: 58px;
+      border-radius: 0.5rem;
       object-fit: cover;
-      border-radius: 0.55rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.08);
       flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .progress-bar-bg {
+    /* Barra animada de tiempo en el juego activo */
+    .playlist-progress-bar {
       position: absolute;
       bottom: 0;
       left: 0;
       height: 3px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.08);
-      display: none;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
+      background: linear-gradient(90deg, var(--nexus-blue), var(--nexus-cyan));
       width: 0%;
-      background: var(--nexus-blue);
+      border-radius: 0 2px 2px 0;
       box-shadow: 0 0 8px var(--nexus-blue);
     }
 
-    .hero-nav-item.active .progress-bar-bg {
-      display: block;
+    .playlist-card.active .playlist-progress-bar {
+      animation: progressTimer 6s linear infinite;
     }
 
-    .hero-nav-item.active .progress-bar-fill {
-      animation: progressFill 6s linear forwards;
+    @keyframes progressTimer {
+      0% { width: 0%; }
+      100% { width: 100%; }
     }
 
-    @keyframes progressFill {
-      from { width: 0%; }
-      to { width: 100%; }
-    }
-
-    /* --- TARJETAS POSTER ELEVADAS --- */
-    .section-header-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.3px;
-    }
-
-    .featured-card {
-      transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
-      border-radius: 1.1rem;
-      overflow: hidden;
+    /* =======================================================
+       5. TARJETAS DE ACCESO RÁPIDO Y SUSCRIPCIONES
+       ======================================================= */
+    .section-card-glow {
       background: var(--nexus-card);
       border: 1px solid var(--nexus-border);
-      display: flex;
-      flex-direction: column;
-      text-decoration: none;
-      height: 100%;
-    }
-
-    .featured-card:hover {
-      transform: translateY(-8px);
-      border-color: rgba(13, 110, 253, 0.5);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(13, 110, 253, 0.2);
-    }
-
-    .card-img-wrapper {
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      height: 250px !important;
-      background-color: #0b0e14;
-    }
-
-    .card-img-wrapper img {
-      width: 100%;
-      height: 100% !important;
-      object-fit: cover !important;
-      object-position: center top !important;
-      transition: transform 0.6s ease;
-    }
-
-    .featured-card:hover .card-img-wrapper img {
-      transform: scale(1.08);
-    }
-
-    .btn-glow {
-      box-shadow: 0 0 18px rgba(13, 110, 253, 0.4);
-      transition: all 0.25s ease;
-    }
-
-    .btn-glow:hover {
-      box-shadow: 0 0 28px rgba(13, 110, 253, 0.75);
-      transform: translateY(-2px);
-    }
-
-    /* --- BANNER PROMOCIONAL --- */
-    .promo-banner {
-      position: relative;
-      border-radius: 1.5rem;
-      overflow: hidden;
-      background: url('GrandTheftAuto6Banner.jpg') center/cover no-repeat;
-      min-height: 310px;
-      display: flex;
-      align-items: center;
-      border: 1px solid var(--nexus-border);
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
-    }
-
-    .promo-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(8, 11, 17, 0.98) 0%, rgba(8, 11, 17, 0.85) 45%, rgba(8, 11, 17, 0.2) 100%);
-    }
-
-    .promo-content {
-      position: relative;
-      z-index: 2;
-      padding: 3rem 4rem;
-      max-width: 620px;
-    }
-
-    /* --- ESTILOS DE TARJETAS DE SUSCRIPCIÓN & GIFTCARDS --- */
-    .sub-card {
       border-radius: 1.25rem;
-      background: #101624;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      transition: all 0.35s ease;
+      padding: 1.75rem;
+      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 100%;
-      text-decoration: none;
-      color: inherit;
     }
 
-    .sub-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.85);
-      color: inherit;
+    .section-card-glow:hover {
+      transform: translateY(-6px);
+      border-color: rgba(13, 110, 253, 0.45);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(13, 110, 253, 0.2);
     }
 
-    .sub-card-ps:hover { border-color: #0070d1; box-shadow: 0 15px 35px rgba(0, 112, 209, 0.35); }
-    .sub-card-xbox:hover { border-color: #107c10; box-shadow: 0 15px 35px rgba(16, 124, 16, 0.35); }
-    .sub-card-nintendo:hover { border-color: #e60012; box-shadow: 0 15px 35px rgba(230, 0, 18, 0.35); }
-    .sub-card-steam:hover { border-color: #00adee; box-shadow: 0 15px 35px rgba(0, 173, 238, 0.35); }
-
-    .sub-header-bar {
-      height: 6px;
-      width: 100%;
-    }
-
-    .bar-ps { background: linear-gradient(90deg, #003791, #0070d1); }
-    .bar-xbox { background: linear-gradient(90deg, #0e5a0e, #107c10); }
-    .bar-nintendo { background: linear-gradient(90deg, #99000c, #e60012); }
-    .bar-steam { background: linear-gradient(90deg, #171a21, #00adee); }
-
-    .sub-body {
-      padding: 1.5rem;
-    }
-
-    .sub-icon-badge {
-      width: 48px;
-      height: 48px;
-      border-radius: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
+    .section-card-glow::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(13, 110, 253, 0.25) 0%, transparent 70%);
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
 
-  <!-- NAVBAR CON PESTAÑA SUSCRIPCIONES -->
+  <!-- ELEMENTOS DE LUZ AMBIENTAL EN MOVIMIENTO -->
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+  <div class="ambient-glow-3"></div>
+
+  <!-- NAVBAR UNIFICADO -->
   <header class="sticky-top nexus-navbar">
     <nav class="navbar navbar-expand-lg navbar-dark container-fluid px-lg-5 py-2">
-      
-      <!-- Logo -->
       <a class="navbar-brand d-flex align-items-center gap-2 nav-brand-logo text-light" href="index.html">
         <i class="bi bi-controller fs-3 text-primary"></i>
         <span>Nexus</span>
       </a>
 
-      <!-- Buscador en Vivo -->
-      <div class="search-wrapper d-none d-md-block ms-lg-3">
-        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary" style="font-size: 0.85rem; pointer-events: none;"></i>
-        <input type="text" id="inputBuscarNav" class="form-control nav-search-input" placeholder="Buscar juego, suscripción..." autocomplete="off">
-        <div id="liveSearchDropdown" class="search-results-dropdown d-none"></div>
+      <!-- BUSCADOR CON ACCESO RÁPIDO -->
+      <div class="position-relative ms-3 d-none d-md-block">
+        <i class="bi bi-search text-secondary position-absolute top-50 start-0 translate-middle-y ms-3" style="font-size: 0.85rem;"></i>
+        <input type="text" id="inputBuscarNav" class="search-input-pill" placeholder="Buscar juego, suscripción..." onkeypress="manejarBusquedaNav(event)">
       </div>
 
-      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <button class="navbar-toggler border-0 ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarContent">
+      <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navbarContent">
         <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-1">
           <li class="nav-item"><a class="nav-link active text-primary fw-bold px-3" href="index.html">Descubrir</a></li>
           <li class="nav-item"><a class="nav-link text-light text-opacity-75 px-3" href="juegos.html">Juegos</a></li>
-          <!-- PESTAÑA SUSCRIPCIONES AÑADIDA -->
-          <li class="nav-item"><a class="nav-link text-light text-opacity-75 px-3" href="#seccion-suscripciones"><i class="bi bi-credit-card-2-front me-1 text-info"></i> Suscripciones</a></li>
+          <li class="nav-item"><a class="nav-link text-light text-opacity-75 px-3" href="#seccion-suscripciones">Suscripciones</a></li>
           <li class="nav-item"><a class="nav-link text-light text-opacity-75 px-3" href="contacto.html">Contacto</a></li>
           <li class="nav-item"><a class="nav-link text-light text-opacity-75 px-3" href="biblioteca.html">Biblioteca</a></li>
           <li class="nav-item"><a class="nav-link text-light text-opacity-75 px-3" href="cuenta.html">Cuenta</a></li>
         </ul>
 
-        <div class="d-flex align-items-center gap-3">
-          <a href="juegos.html" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-1 border-opacity-50 text-light d-none d-xl-inline-block small">
-            <i class="bi bi-grid-fill me-1"></i> Catálogo
+        <div class="d-flex align-items-center gap-2">
+          <a href="juegos.html" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-2 border-opacity-50 text-light d-flex align-items-center gap-1">
+            <i class="bi bi-grid-fill"></i> Catálogo
           </a>
+
           <a href="cuenta.html" class="user-pill-badge" id="btnPerfilNav">
             <span class="status-dot"></span>
-            <span id="navUserAlias">fludigth</span>
+            <span id="navUserAlias">Usuario</span>
           </a>
         </div>
       </div>
     </nav>
   </header>
 
-  <main class="container-fluid px-lg-5 py-4">
-
-    <!-- SECCIÓN HERO ESTILO EPIC GAMES -->
-    <div class="row g-4 mb-5 align-items-center">
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="container-fluid px-lg-5 py-4 flex-grow-1 hero-container">
+    
+    <!-- SECCIÓN SHOWCASE / HERO CAROUSEL ANIMADO -->
+    <div class="row g-4 align-items-stretch mb-5">
+      
+      <!-- BANNER GRANDE IZQUIERDO -->
       <div class="col-xl-9 col-lg-8">
-        <div class="hero-wrapper d-flex align-items-center p-4 p-md-5">
-          <div class="hero-bg" id="heroBannerPrincipal"></div>
-          <div class="hero-overlay"></div>
-          
-          <div class="hero-content" id="heroContentWrapper">
+        <div class="hero-main-banner" id="heroBannerMain">
+          <img id="heroImage" src="grandTheftAuto6Banner.jpg" alt="GTA VI" class="hero-main-bg">
+          <div class="hero-overlay-gradient"></div>
+
+          <div class="hero-content">
             <div class="d-flex align-items-center gap-2 mb-3">
-              <span class="badge bg-primary text-uppercase fw-bold px-3 py-1 rounded-pill small" id="heroBadge">DESTACADO</span>
-              <span class="badge bg-danger d-none px-2 py-1 fw-bold rounded-pill small" id="heroDescuento"></span>
-              <span class="text-secondary small d-none d-md-inline">• PC Digital</span>
+              <span class="badge bg-primary px-3 py-1 text-uppercase fw-bold rounded-pill shadow-sm" id="heroBadge" style="font-size: 0.72rem; letter-spacing: 0.8px;">
+                EDICIÓN ESPECIAL
+              </span>
+              <span class="text-secondary small fw-semibold" id="heroPlataforma">• PC Digital</span>
             </div>
+
+            <h1 class="hero-title text-light mb-3" id="heroTitulo">Grand Theft Auto VI</h1>
             
-            <h1 class="display-4 fw-bolder text-light mb-3" id="heroTitulo" style="text-shadow: 0 4px 20px rgba(0,0,0,0.85);">Cargando...</h1>
-            
-            <p class="text-secondary lead fs-6 mb-4 line-clamp-3" id="heroDescripcion" style="max-width: 95%;">
-              Preparando el catálogo oficial de Nexus Store...
+            <p class="hero-desc mb-4" id="heroDescripcion">
+              Explora el estado de Leonida y sus calles bañadas en neón en un mundo abierto masivo y cinematográfico de última generación.
             </p>
 
             <div class="d-flex flex-wrap align-items-center gap-3">
-              <a href="#" id="heroBtnComprar" class="btn btn-primary btn-lg btn-glow fw-bold rounded-3 px-4 py-3 d-flex align-items-center gap-2">
-                <i class="bi bi-bag-fill"></i> COMPRAR AHORA
+              <a href="detalle-juego.html?id=1" class="btn-buy-hero" id="heroBtnComprar">
+                <i class="bi bi-bag-check-fill"></i>
+                <span id="heroBtnTexto">COMPRAR AHORA US$99.99</span>
               </a>
-              <a href="juegos.html" class="btn btn-outline-light btn-lg rounded-3 px-4 py-3 fw-semibold border-opacity-50 hover-white">
+              <a href="juegos.html" class="btn-outline-hero">
                 Ver Catálogo
               </a>
             </div>
@@ -459,444 +442,239 @@
         </div>
       </div>
 
+      <!-- LISTA LATERAL DERECHA (SELECTOR CON BARRA DE PROGRESO) -->
       <div class="col-xl-3 col-lg-4">
-        <div class="d-flex flex-column gap-2" id="heroListaLateral"></div>
-      </div>
-    </div>
-
-    <!-- SECCIÓN 1: NUEVOS LANZAMIENTOS -->
-    <div class="mb-5">
-      <div class="d-flex justify-content-between align-items-end mb-4 border-bottom border-secondary border-opacity-25 pb-3">
-        <div class="section-header-badge">
-          <i class="bi bi-stars text-primary"></i> Nuevos Lanzamientos
-        </div>
-        <a href="juegos.html" class="btn btn-sm btn-outline-secondary rounded-pill border-opacity-50 text-light fw-semibold px-3">
-          Ver todo <i class="bi bi-arrow-right ms-1"></i>
-        </a>
-      </div>
-      <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4" id="gridNuevos"></div>
-    </div>
-
-    <!-- BANNER PROMOCIONAL CENTRAL -->
-    <div class="mb-5 py-2">
-      <div class="promo-banner">
-        <div class="promo-overlay"></div>
-        <div class="promo-content">
-          <span class="badge bg-danger text-uppercase fw-bold px-3 py-1 mb-3 rounded-pill">EVENTO ESPECIAL</span>
-          <h2 class="display-5 fw-bold text-light mb-3" style="text-shadow: 0 4px 15px rgba(0,0,0,0.8);">Mundos Abiertos y Acción</h2>
-          <p class="text-secondary fs-6 mb-4" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8);">
-            Disfruta de descuentos por tiempo limitado en los títulos más aclamados de exploración y aventura.
-          </p>
-          <a href="juegos.html" class="btn btn-outline-light fw-bold px-4 py-2 rounded-3 hover-white border-2">
-            Ver todas las ofertas <i class="bi bi-arrow-right ms-2"></i>
-          </a>
+        <div class="d-flex flex-column gap-2 h-100 justify-content-between" id="playlistContenedor">
+          <!-- Se inyecta dinámicamente con JavaScript -->
         </div>
       </div>
+
     </div>
 
-    <!-- SECCIÓN 2: OFERTAS DESTACADAS -->
-    <div class="mb-5">
-      <div class="d-flex justify-content-between align-items-end mb-4 border-bottom border-secondary border-opacity-25 pb-3">
-        <div class="section-header-badge">
-          <i class="bi bi-tag-fill text-danger"></i> Ofertas Destacadas
-        </div>
-        <a href="juegos.html" class="btn btn-sm btn-outline-secondary rounded-pill border-opacity-50 text-light fw-semibold px-3">
-          Ver más descuentos <i class="bi bi-arrow-right ms-1"></i>
-        </a>
-      </div>
-      <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4" id="gridOfertas"></div>
-    </div>
-
-    <!-- NUEVA SECCIÓN: SUSCRIPCIONES Y TARJETAS DIGITALES -->
-    <div class="mb-5 pt-3" id="seccion-suscripciones">
-      <div class="d-flex justify-content-between align-items-end mb-4 border-bottom border-secondary border-opacity-25 pb-3">
+    <!-- SECCIÓN DE SUSCRIPCIONES Y SERVICIOS DIGITALES -->
+    <div class="pt-3 mb-5" id="seccion-suscripciones">
+      <div class="d-flex justify-content-between align-items-end mb-4">
         <div>
-          <div class="section-header-badge">
-            <i class="bi bi-credit-card-2-front-fill text-info"></i> Suscripciones y Tarjetas de Saldo
-          </div>
-          <small class="text-secondary">Códigos digitales oficiales con activación instantánea en tu cuenta.</small>
+          <h3 class="fw-bold text-light mb-1"><i class="bi bi-box2-heart text-primary me-2"></i>Suscripciones y Tarjetas de Saldo</h3>
+          <small class="text-secondary">Pases de temporada y códigos prepagados con entrega inmediata garantizada.</small>
         </div>
-        <span class="badge bg-dark border border-secondary border-opacity-50 text-info px-3 py-2 rounded-pill d-none d-md-inline-block">
-          <i class="bi bi-shield-check me-1"></i> Entrega Digital Inmediata
-        </span>
+        <a href="juegos.html" class="btn btn-outline-secondary btn-sm rounded-pill text-light px-3">Ver Todos</a>
       </div>
 
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4" id="gridSuscripciones">
-        
-        <!-- PlayStation Plus -->
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        <!-- Xbox -->
         <div class="col">
-          <div class="sub-card sub-card-ps">
-            <div class="sub-header-bar bar-ps"></div>
-            <div class="sub-body">
-              <div class="sub-icon-badge bg-primary bg-opacity-20 text-primary">
-                <i class="bi bi-playstation"></i>
-              </div>
-              <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 small mb-2">PLAYSTATION</span>
-              <h5 class="fw-bold text-light mb-1">PlayStation Plus Deluxe</h5>
-              <p class="text-secondary small mb-3">Membresía trimestral con catálogo de cientos de juegos, multijugador online y clásicos.</p>
-              
-              <div class="d-flex justify-content-between align-items-baseline mb-3">
-                <span class="text-secondary small">3 Meses</span>
-                <span class="fs-5 fw-bold text-light">US$39.99</span>
-              </div>
-              <button class="btn btn-outline-primary w-100 rounded-3 py-2 fw-semibold" onclick="comprarSuscripcion('PlayStation Plus Deluxe - 3 Meses', 39.99)">
-                <i class="bi bi-bag-plus me-1"></i> Adquirir Código
-              </button>
+          <div class="section-card-glow h-100 d-flex flex-column" style="border-left: 4px solid #107c10;">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <span class="badge bg-success px-3 py-1 rounded-pill small">XBOX NETWORK</span>
+              <span class="text-light fw-bold fs-5">US$16.99</span>
             </div>
+            <h5 class="fw-bold text-light mb-2">Xbox Game Pass Ultimate</h5>
+            <p class="text-secondary small mb-4 flex-grow-1">
+              Accede a más de 100 juegos de consola y PC, multijugador online y EA Play integrado en tu suscripción mensual.
+            </p>
+            <a href="juegos.html" class="btn btn-outline-success fw-bold w-100 rounded-3">Obtener Pase</a>
           </div>
         </div>
 
-        <!-- Xbox Game Pass -->
+        <!-- PlayStation -->
         <div class="col">
-          <div class="sub-card sub-card-xbox">
-            <div class="sub-header-bar bar-xbox"></div>
-            <div class="sub-body">
-              <div class="sub-icon-badge bg-success bg-opacity-20 text-success">
-                <i class="bi bi-xbox"></i>
-              </div>
-              <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 small mb-2">XBOX / PC</span>
-              <h5 class="fw-bold text-light mb-1">Xbox Game Pass Ultimate</h5>
-              <p class="text-secondary small mb-3">Acceso a más de 400 juegos en PC, consola, EA Play y juego en la nube Cloud Gaming.</p>
-              
-              <div class="d-flex justify-content-between align-items-baseline mb-3">
-                <span class="text-secondary small">1 Mes</span>
-                <span class="fs-5 fw-bold text-light">US$16.99</span>
-              </div>
-              <button class="btn btn-outline-success w-100 rounded-3 py-2 fw-semibold" onclick="comprarSuscripcion('Xbox Game Pass Ultimate - 1 Mes', 16.99)">
-                <i class="bi bi-bag-plus me-1"></i> Adquirir Código
-              </button>
+          <div class="section-card-glow h-100 d-flex flex-column" style="border-left: 4px solid #00439c;">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <span class="badge bg-primary px-3 py-1 rounded-pill small">PLAYSTATION PLUS</span>
+              <span class="text-light fw-bold fs-5">US$17.99</span>
             </div>
+            <h5 class="fw-bold text-light mb-2">PlayStation Plus Deluxe</h5>
+            <p class="text-secondary small mb-4 flex-grow-1">
+              Catálogo clásico remasterizado, pruebas de títulos exclusivos y partidas guardadas en la nube de PSN.
+            </p>
+            <a href="juegos.html" class="btn btn-outline-primary fw-bold w-100 rounded-3">Obtener Pase</a>
           </div>
         </div>
 
-        <!-- Steam Wallet -->
+        <!-- Steam -->
         <div class="col">
-          <div class="sub-card sub-card-steam">
-            <div class="sub-header-bar bar-steam"></div>
-            <div class="sub-body">
-              <div class="sub-icon-badge bg-info bg-opacity-20 text-info">
-                <i class="bi bi-steam"></i>
-              </div>
-              <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 small mb-2">VALVE / STEAM</span>
-              <h5 class="fw-bold text-light mb-1">Steam Wallet Gift Card</h5>
-              <p class="text-secondary small mb-3">Recarga de saldo digital directo para adquirir cualquier juego o DLC en la tienda de Steam.</p>
-              
-              <div class="d-flex justify-content-between align-items-baseline mb-3">
-                <span class="text-secondary small">Saldo US$50</span>
-                <span class="fs-5 fw-bold text-light">US$50.00</span>
-              </div>
-              <button class="btn btn-outline-info w-100 rounded-3 py-2 fw-semibold" onclick="comprarSuscripcion('Steam Wallet Gift Card US$50', 50.00)">
-                <i class="bi bi-bag-plus me-1"></i> Adquirir Código
-              </button>
+          <div class="section-card-glow h-100 d-flex flex-column" style="border-left: 4px solid #38bdf8;">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <span class="badge bg-dark border border-secondary text-light px-3 py-1 rounded-pill small">VALVE STEAM</span>
+              <span class="text-light fw-bold fs-5">US$20.00</span>
             </div>
+            <h5 class="fw-bold text-light mb-2">Steam Wallet Gift Card</h5>
+            <p class="text-secondary small mb-4 flex-grow-1">
+              Recarga saldo directo a tu billetera de Steam sin ingresar tarjetas bancarias para comprar juegos y skins.
+            </p>
+            <a href="juegos.html" class="btn btn-outline-info fw-bold w-100 rounded-3">Comprar Tarjeta</a>
           </div>
         </div>
-
-        <!-- Nintendo eShop -->
-        <div class="col">
-          <div class="sub-card sub-card-nintendo">
-            <div class="sub-header-bar bar-nintendo"></div>
-            <div class="sub-body">
-              <div class="sub-icon-badge bg-danger bg-opacity-20 text-danger">
-                <i class="bi bi-nintendo-switch"></i>
-              </div>
-              <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 small mb-2">NINTENDO</span>
-              <h5 class="fw-bold text-light mb-1">Nintendo eShop Card</h5>
-              <p class="text-secondary small mb-3">Saldo oficial para Nintendo Switch canjeable directamente por juegos y pases en la eShop.</p>
-              
-              <div class="d-flex justify-content-between align-items-baseline mb-3">
-                <span class="text-secondary small">Saldo US$35</span>
-                <span class="fs-5 fw-bold text-light">US$35.00</span>
-              </div>
-              <button class="btn btn-outline-danger w-100 rounded-3 py-2 fw-semibold" onclick="comprarSuscripcion('Nintendo eShop Card US$35', 35.00)">
-                <i class="bi bi-bag-plus me-1"></i> Adquirir Código
-              </button>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
 
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-black text-secondary py-4 mt-auto border-top border-dark">
-    <div class="container-fluid px-lg-5">
-      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-        <p class="m-0 small">© 2026 Nexus Store. Todos los derechos reservados.</p>
-        <div class="d-flex gap-4">
-          <i class="bi bi-twitter-x fs-5 text-secondary hover-white" style="cursor: pointer;"></i>
-          <i class="bi bi-discord fs-5 text-secondary hover-white" style="cursor: pointer;"></i>
-          <i class="bi bi-youtube fs-5 text-secondary hover-white" style="cursor: pointer;"></i>
-        </div>
-      </div>
+  <footer class="bg-black text-secondary py-4 border-top border-dark mt-auto position-relative z-10">
+    <div class="container-fluid px-lg-5 text-center text-md-start d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <small>© 2026 Nexus Store. Todos los derechos reservados. Desarrollado con Spring Boot y Oracle DB.</small>
+      <small class="text-secondary">Entrega digital instantánea y encriptación de 256 bits</small>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+  <!-- LÓGICA DEL CARRUSEL DINÁMICO Y PLAYLIST -->
   <script>
-    const usuarioActual = localStorage.getItem('nexus_user_alias') || 'fludigth';
-    const navAlias = document.getElementById('navUserAlias');
-    if (navAlias) navAlias.textContent = usuarioActual;
-
-    let todosLosJuegos = [];
-    let juegosHero = [];
-    let indiceActual = 0;
-    let autoPlayInterval;
-    const TIEMPO_ROTACION = 6000;
-
-    async function cargarInicio() {
-      try {
-        const res = await fetch('/api/juegos');
-        if (!res.ok) throw new Error('Error al conectar con la API');
-        todosLosJuegos = await res.json();
-
-        if (todosLosJuegos.length > 0) {
-          juegosHero = todosLosJuegos.slice(0, 5);
-          montarListaLateral();
-          seleccionarItemHero(0);
-
-          const nuevosLanzamientos = todosLosJuegos.slice(5, 10);
-          montarCuadricula(nuevosLanzamientos, 'gridNuevos');
-
-          const juegosEnOferta = todosLosJuegos.filter(j => j.descuento && j.descuento > 0).slice(0, 5);
-          montarCuadricula(juegosEnOferta, 'gridOfertas');
-
-          iniciarBuscadorEnVivo();
-        }
-      } catch (err) {
-        console.error('Error al cargar la portada:', err);
+    // 1. CATÁLOGO DEL HERO SHOWCASE (CON PORTADAS Y PRECIOS REALES)
+    const HERO_ITEMS = [
+      {
+        id: 1,
+        titulo: 'Grand Theft Auto VI',
+        badge: 'EDICIÓN ESPECIAL',
+        plataforma: 'PC Digital',
+        precio: 'US$99.99',
+        banner: 'grandTheftAuto6Banner.jpg',
+        thumb: 'grandTheftAuto6Banner.jpg',
+        descripcion: 'Explora el estado de Leonida y sus calles bañadas en neón en un mundo abierto masivo y cinematográfico de última generación.'
+      },
+      {
+        id: 2,
+        titulo: 'Cyberpunk 2077',
+        badge: 'OFERTA DESTACADA',
+        plataforma: 'GOG / PC',
+        precio: 'US$44.99',
+        descuento: '-10%',
+        banner: 'CyberPunk.avif',
+        thumb: 'CyberPunk.avif',
+        descripcion: 'Conviértete en V, un mercenario urbano en Night City. Mejorado con Ray Tracing Overdrive y gatillos hápticos.'
+      },
+      {
+        id: 3,
+        titulo: 'EA SPORTS FC™ 27',
+        badge: 'NOVEDAD',
+        plataforma: 'EA App',
+        precio: 'US$80.99',
+        descuento: '-10%',
+        banner: 'football.png',
+        thumb: 'football.png',
+        descripcion: 'La experiencia de fútbol definitiva con la tecnología HyperMotionV más realista hasta la fecha y Ultimate Team renovado.'
+      },
+      {
+        id: 4,
+        titulo: 'God of War Ragnarök',
+        badge: 'ÉXITO EN VENTAS',
+        plataforma: 'PlayStation PC',
+        precio: 'US$50.99',
+        descuento: '-15%',
+        banner: 'god.avif',
+        thumb: 'god.avif',
+        descripcion: 'Kratos y Atreus se embarcan en un viaje mítico a través de los Nueve Reinos en busca de respuestas antes del Ragnarök.'
+      },
+      {
+        id: 5,
+        titulo: "Marvel's Spider-Man 2",
+        badge: 'EXCLUSIVO PC',
+        plataforma: 'Steam / Epic',
+        precio: 'US$69.99',
+        banner: 'SpiderMan2.avif',
+        thumb: 'SpiderMan2.avif',
+        descripcion: 'Balancéate por Nueva York como Peter Parker y Miles Morales para enfrentar la temible amenaza de Venom y Kraven.'
       }
+    ];
+
+    let indiceActivo = 0;
+    let timerShowcase = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      sincronizarUsuarioNav();
+      construirPlaylistLateral();
+      mostrarItemHero(0);
+      iniciarCicloAutomatico();
+    });
+
+    // Sincronizar el nombre del usuario en la barra
+    function sincronizarUsuarioNav() {
+      const alias = localStorage.getItem('nexus_user_alias') || 'vicentetomasgonzalez690';
+      const label = document.getElementById('navUserAlias');
+      if (label) label.textContent = alias;
     }
 
-    // Comprar / canjear código de suscripción rápido
-    window.comprarSuscripcion = async function(titulo, precio) {
-      const confirmacion = confirm(`¿Deseas procesar la orden para ${titulo} por US$${precio.toFixed(2)} a la cuenta ${usuarioActual}?`);
-      if (!confirmacion) return;
+    // Construir la lista derecha idéntica a tu captura
+    function construirPlaylistLateral() {
+      const contenedor = document.getElementById('playlistContenedor');
+      if (!contenedor) return;
 
-      const payload = {
-        nombreCliente: usuarioActual,
-        metodoPago: 'Tarjeta de Crédito / Débito',
-        tipoTarjeta: 'Transbank Webpay',
-        total: precio,
-        juegoTitulo: titulo
-      };
-
-      try {
-        const res = await fetch('/api/pedidos', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        if (res.ok) {
-          alert(`¡Compra exitosa! El código de activación de ${titulo} ha sido vinculado a tu Biblioteca.`);
-          window.location.href = 'biblioteca.html';
-        } else {
-          alert('Error procesando la orden en Oracle. Intenta nuevamente.');
-        }
-      } catch (e) {
-        alert('No se pudo conectar al servidor Spring Boot.');
-      }
-    };
-
-    function iniciarBuscadorEnVivo() {
-      const input = document.getElementById('inputBuscarNav');
-      const dropdown = document.getElementById('liveSearchDropdown');
-
-      input.addEventListener('input', (e) => {
-        const query = e.target.value.trim().toLowerCase();
-
-        if (query.length === 0) {
-          dropdown.classList.add('d-none');
-          dropdown.innerHTML = '';
-          return;
-        }
-
-        const filtrados = todosLosJuegos.filter(j => 
-          j.titulo.toLowerCase().includes(query) || 
-          (j.categoria && j.categoria.toLowerCase().includes(query))
-        ).slice(0, 6);
-
-        if (filtrados.length === 0) {
-          dropdown.innerHTML = `
-            <div class="p-3 text-center text-secondary small">
-              <i class="bi bi-search me-1"></i> No se encontraron resultados para "${query}"
-            </div>
-          `;
-          dropdown.classList.remove('d-none');
-          return;
-        }
-
-        dropdown.innerHTML = filtrados.map(juego => {
-          const esGratis = !juego.precio || juego.precio === 0;
-          let precioTxt = esGratis ? 'Gratis' : `US$${Number(juego.precio).toFixed(2)}`;
-          if (juego.descuento && juego.descuento > 0) {
-            const finalP = (juego.precio * (1 - juego.descuento / 100)).toFixed(2);
-            precioTxt = `US$${finalP}`;
-          }
-
-          return `
-            <a href="detalle-juego.html?id=${juego.id}" class="search-item">
-              <img src="${juego.imagenUrl}" class="search-item-thumb" alt="${juego.titulo}" onerror="this.src='CyberPunk.avif'">
-              <div class="flex-grow-1 overflow-hidden">
-                <span class="d-block fw-bold text-light text-truncate small">${juego.titulo}</span>
-                <span class="text-secondary small" style="font-size: 0.72rem;">${juego.categoria || 'Juego PC'}</span>
-              </div>
-              <span class="badge ${esGratis ? 'bg-info text-dark' : 'bg-primary'} fw-bold">${precioTxt}</span>
-            </a>
-          `;
-        }).join('');
-
-        dropdown.classList.remove('d-none');
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!input.contains(e.target) && !dropdown.contains(e.target)) {
-          dropdown.classList.add('d-none');
-        }
-      });
-    }
-
-    function montarListaLateral() {
-      const contenedor = document.getElementById('heroListaLateral');
-      contenedor.innerHTML = '';
-
-      juegosHero.forEach((juego, index) => {
-        const item = document.createElement('div');
-        item.className = 'hero-nav-item d-flex align-items-center gap-3';
-        item.id = `nav-item-${index}`;
-        
-        const esGratis = !juego.precio || juego.precio === 0;
-        let precioTxt = esGratis ? 'Gratuito' : `US$${Number(juego.precio).toFixed(2)}`;
-        if (juego.descuento && juego.descuento > 0) {
-          const finalP = (juego.precio * (1 - juego.descuento / 100)).toFixed(2);
-          precioTxt = `US$${finalP}`;
-        }
-
-        const badgeDesc = (juego.descuento && juego.descuento > 0)
-          ? `<span class="badge bg-danger rounded-pill px-2 py-0 ms-1" style="font-size: 0.65rem;">-${juego.descuento}%</span>`
-          : '';
-
-        item.innerHTML = `
-          <img src="${juego.imagenUrl}" class="hero-thumb" alt="${juego.titulo}" onerror="this.src='CyberPunk.avif'">
-          <div class="flex-grow-1 overflow-hidden">
-            <span class="d-block fw-bold text-light text-truncate mb-1" style="font-size: 0.88rem;">${juego.titulo}</span>
-            <div class="d-flex align-items-center">
-              <span class="text-secondary small fw-semibold" style="font-size: 0.75rem;">${precioTxt}</span>
-              ${badgeDesc}
-            </div>
-          </div>
-          <div class="progress-bar-bg"><div class="progress-bar-fill"></div></div>
-        `;
-
-        item.addEventListener('click', () => {
-          seleccionarItemHero(index);
-          reiniciarAutoPlay();
-        });
-
-        contenedor.appendChild(item);
-      });
-    }
-
-    function seleccionarItemHero(index) {
-      indiceActual = index;
-      const juego = juegosHero[index];
-
-      const wrapper = document.getElementById('heroContentWrapper');
-      wrapper.style.opacity = '0';
-      setTimeout(() => {
-        wrapper.style.transition = 'opacity 0.4s ease';
-        wrapper.style.opacity = '1';
-      }, 50);
-
-      document.querySelectorAll('.hero-nav-item').forEach((el, i) => {
-        if (i === index) el.classList.add('active');
-        else el.classList.remove('active');
-      });
-
-      const banner = document.getElementById('heroBannerPrincipal');
-      banner.style.backgroundImage = `url('${juego.imagenUrl}')`;
-
-      document.getElementById('heroTitulo').textContent = juego.titulo;
-      document.getElementById('heroDescripcion').textContent = juego.descripcion || 'Explora este título en Nexus Store.';
-      document.getElementById('heroBadge').textContent = juego.tipoJuego || 'DESTACADO';
-      
-      const badgeDesc = document.getElementById('heroDescuento');
-      const btnComprar = document.getElementById('heroBtnComprar');
-
-      btnComprar.href = `detalle-juego.html?id=${juego.id}`;
-
-      const precioBase = Number(juego.precio) || 0;
-      const descuento = Number(juego.descuento) || 0;
-
-      if (precioBase === 0) {
-        badgeDesc.classList.add('d-none');
-        btnComprar.innerHTML = `<i class="bi bi-controller"></i> JUGAR AHORA`;
-      } else if (descuento > 0) {
-        const precioFinal = (precioBase * (1 - descuento / 100)).toFixed(2);
-        badgeDesc.textContent = `-${descuento}%`;
-        badgeDesc.classList.remove('d-none');
-        btnComprar.innerHTML = `<i class="bi bi-bag-fill"></i> COMPRAR AHORA <span class="ms-1 border-start border-light border-opacity-25 ps-2">US$${precioFinal}</span>`;
-      } else {
-        badgeDesc.classList.add('d-none');
-        btnComprar.innerHTML = `<i class="bi bi-bag-fill"></i> COMPRAR AHORA <span class="ms-1 border-start border-light border-opacity-25 ps-2">US$${precioBase.toFixed(2)}</span>`;
-      }
-    }
-
-    function iniciarAutoPlay() {
-      autoPlayInterval = setInterval(() => {
-        let siguienteIndex = (indiceActual + 1) % juegosHero.length;
-        seleccionarItemHero(siguienteIndex);
-      }, TIEMPO_ROTACION);
-    }
-
-    function reiniciarAutoPlay() {
-      clearInterval(autoPlayInterval);
-      iniciarAutoPlay();
-    }
-
-    function montarCuadricula(lista, contenedorId) {
-      const grid = document.getElementById(contenedorId);
-      grid.innerHTML = lista.map(juego => {
-        const esGratis = !juego.precio || juego.precio === 0;
-        let precioTxt = esGratis ? 'Gratuito' : `US$${Number(juego.precio).toFixed(2)}`;
-        
-        let badgeDescuento = '';
-        if (juego.descuento && juego.descuento > 0) {
-          const precioRebajado = (juego.precio * (1 - juego.descuento / 100)).toFixed(2);
-          precioTxt = `US$${precioRebajado} <span class="text-decoration-line-through text-secondary small ms-1" style="font-size: 0.72rem;">US$${Number(juego.precio).toFixed(2)}</span>`;
-          badgeDescuento = `<span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1 rounded-pill shadow-sm">-${juego.descuento}%</span>`;
+      contenedor.innerHTML = HERO_ITEMS.map((item, index) => {
+        let precioHtml = `<span class="text-secondary small fw-bold">${item.precio}</span>`;
+        if (item.descuento) {
+          precioHtml += ` <span class="badge bg-danger rounded-pill" style="font-size: 0.65rem;">${item.descuento}</span>`;
         }
 
         return `
-          <div class="col">
-            <a href="detalle-juego.html?id=${juego.id}" class="featured-card position-relative text-light">
-              ${badgeDescuento}
-              <div class="card-img-wrapper">
-                <img src="${juego.imagenUrl}" alt="${juego.titulo}" onerror="this.src='CyberPunk.avif'">
-              </div>
-              <div class="p-3 d-flex flex-column flex-grow-1">
-                <small class="text-primary text-uppercase fw-bold mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">${juego.categoria || 'JUEGO'}</small>
-                <h6 class="fw-bold mb-3 text-truncate text-light">${juego.titulo}</h6>
-                <div class="mt-auto pt-2 border-top border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
-                  <span class="${esGratis ? 'text-info' : 'text-light'} fw-bold small">${precioTxt}</span>
-                  <i class="bi bi-chevron-right text-secondary small"></i>
-                </div>
-              </div>
-            </a>
+          <div class="playlist-card ${index === 0 ? 'active' : ''}" onclick="seleccionarHeroManual(${index})" id="cardPlaylist${index}">
+            <div class="playlist-progress-bar"></div>
+            <img src="${item.thumb}" class="playlist-thumb" alt="${item.titulo}" onerror="this.src='CyberPunk.avif'">
+            <div class="overflow-hidden flex-grow-1">
+              <span class="d-block fw-bold text-light text-truncate small">${item.titulo}</span>
+              ${precioHtml}
+            </div>
           </div>
         `;
       }).join('');
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      cargarInicio().then(() => {
-        if (juegosHero.length > 0) iniciarAutoPlay();
+    // Cambiar los textos y portada del banner grande
+    function mostrarItemHero(index) {
+      indiceActivo = index;
+      const item = HERO_ITEMS[index];
+
+      // Actualizar tarjetas laterales
+      document.querySelectorAll('.playlist-card').forEach((card, idx) => {
+        card.classList.toggle('active', idx === index);
       });
-    });
+
+      // Efecto de desvanecimiento suave en la imagen
+      const img = document.getElementById('heroImage');
+      img.style.opacity = '0.3';
+
+      setTimeout(() => {
+        img.src = item.banner;
+        img.onerror = () => { img.src = 'CyberPunk.avif'; };
+        img.style.opacity = '1';
+
+        document.getElementById('heroBadge').textContent = item.badge;
+        document.getElementById('heroPlataforma').textContent = `• ${item.plataforma}`;
+        document.getElementById('heroTitulo').textContent = item.titulo;
+        document.getElementById('heroDescripcion').textContent = item.descripcion;
+        document.getElementById('heroBtnTexto').textContent = `COMPRAR AHORA ${item.precio}`;
+        document.getElementById('heroBtnComprar').href = `detalle-juego.html?id=${item.id}`;
+      }, 200);
+    }
+
+    // Rotación automática cada 6 segundos
+    function iniciarCicloAutomatico() {
+      if (timerShowcase) clearInterval(timerShowcase);
+      timerShowcase = setInterval(() => {
+        const siguiente = (indiceActivo + 1) % HERO_ITEMS.length;
+        mostrarItemHero(siguiente);
+      }, 6000);
+    }
+
+    // Selección al hacer clic en un juego de la lista
+    window.seleccionarHeroManual = function(index) {
+      mostrarItemHero(index);
+      iniciarCicloAutomatico(); // Reinicia el temporizador de 6 segundos
+    };
+
+    // Buscador del Navbar
+    function manejarBusquedaNav(e) {
+      if (e.key === 'Enter') {
+        const q = e.target.value.trim();
+        if (q) window.location.href = `juegos.html?buscar=${encodeURIComponent(q)}`;
+      }
+    }
   </script>
+
+  <!-- Efectos de Audio/Logros y Asistente Virtual -->
+  <script src="js/nexus-effects.js"></script>
+  <script src="js/nexus-bot.js"></script>
 </body>
 </html>

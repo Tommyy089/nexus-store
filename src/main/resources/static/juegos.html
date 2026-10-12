@@ -3,164 +3,402 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexus - Todos los juegos</title>
+  <title>Nexus - Catálogo de Juegos</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="css/estilos.css">
   <style>
-    /* 1. Animación de entrada inicial para las tarjetas */
+    :root {
+      --nexus-blue: #0d6efd;
+      --nexus-blue-glow: rgba(13, 110, 253, 0.45);
+      --nexus-dark: #080b11;
+      --nexus-surface: #0f1523;
+      --nexus-card: #111726;
+      --nexus-border: rgba(255, 255, 255, 0.08);
+    }
+
+    body {
+      background-color: var(--nexus-dark);
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- NAVBAR GLASSMORPHISM --- */
+    .nexus-navbar {
+      background: rgba(8, 11, 17, 0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--nexus-border);
+      z-index: 1050;
+    }
+
+    .nav-brand-logo {
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      font-size: 1.35rem;
+    }
+
+    .user-pill-badge {
+      background: rgba(18, 25, 41, 0.85);
+      border: 1px solid rgba(13, 110, 253, 0.4);
+      color: #e2e8f0;
+      padding: 0.35rem 0.85rem;
+      border-radius: 2rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #10b981;
+    }
+
+    /* --- TARJETAS DE JUEGOS Y POSTERS --- */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     .card-juego {
-      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      opacity: 0;
+      animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    
-    .card-juego:nth-child(1) { animation-delay: 0.05s; }
-    .card-juego:nth-child(2) { animation-delay: 0.10s; }
-    .card-juego:nth-child(3) { animation-delay: 0.15s; }
-    .card-juego:nth-child(4) { animation-delay: 0.20s; }
-    .card-juego:nth-child(5) { animation-delay: 0.25s; }
-    .card-juego:nth-child(6) { animation-delay: 0.30s; }
-    .card-juego:nth-child(7) { animation-delay: 0.35s; }
-    .card-juego:nth-child(8) { animation-delay: 0.40s; }
-    .card-juego:nth-child(n+9) { animation-delay: 0.45s; }
 
-    /* 2. Efecto Hover Profesional para las Tarjetas */
     .game-clean-card {
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-      display: block;
+      transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      background: var(--nexus-card);
+      border: 1px solid var(--nexus-border);
+      border-radius: 1.15rem;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
     }
-    
+
     .game-clean-card:hover {
       transform: translateY(-8px);
+      border-color: rgba(13, 110, 253, 0.5);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(13, 110, 253, 0.2);
     }
 
-    .ratio {
+    .poster-wrapper {
+      position: relative;
+      aspect-ratio: 3/4;
       overflow: hidden;
-      transition: box-shadow 0.4s ease;
+      background-color: #0b0e14;
     }
-    
-    .ratio img {
-      transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    .poster-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
     }
-    
-    .game-clean-card:hover .ratio img {
+
+    .game-clean-card:hover .poster-wrapper img {
       transform: scale(1.08);
-    
     }
 
-    .game-clean-card:hover .ratio {
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(13, 110, 253, 0.2);
+    /* Botón flotante de lista de deseos (Corazón) */
+    .btn-wishlist {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(8, 11, 17, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      transition: all 0.25s ease;
+      z-index: 5;
+      cursor: pointer;
     }
 
-    .text-muted-custom {
-      color: #9ca3af !important;
+    .btn-wishlist:hover {
+      background: rgba(13, 110, 253, 0.3);
+      border-color: var(--nexus-blue);
+      transform: scale(1.15);
     }
 
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.5); }
-      70% { box-shadow: 0 0 0 10px rgba(13, 110, 253, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
-    }
-    #carritoLateral .btn-primary {
-      animation: pulseGlow 2s infinite;
-      transition: all 0.3s ease;
-    }
-    #carritoLateral .btn-primary:hover {
-      transform: scale(1.03);
-      background-color: #0b5ed7;
+    .btn-wishlist.active {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: #ef4444;
+      color: #ef4444;
     }
 
-    .input-group:focus-within {
-      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-      border-color: rgba(13, 110, 253, 0.5) !important;
-      transition: all 0.3s ease;
+    /* Botón flotante para agregar rápido al carrito */
+    .btn-quick-cart {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--nexus-blue);
+      border: none;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      z-index: 5;
+      cursor: pointer;
+    }
+
+    .btn-quick-cart:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 15px var(--nexus-blue);
+    }
+
+    /* --- FILTROS Y CONTROLES --- */
+    .filter-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      padding: 0.45rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .filter-pill:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .filter-pill.active {
+      background: var(--nexus-blue);
+      border-color: var(--nexus-blue);
+      color: #fff;
+      box-shadow: 0 0 15px var(--nexus-blue-glow);
+    }
+
+    .select-sort {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      border-radius: 0.75rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.88rem;
+    }
+
+    .select-sort:focus {
+      background: #111726;
+      border-color: var(--nexus-blue);
+      color: #fff;
+      box-shadow: 0 0 10px var(--nexus-blue-glow);
+    }
+
+    /* --- OFFCANVAS CARRITO --- */
+    .offcanvas-nexus {
+      background: rgba(11, 15, 24, 0.98);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid var(--nexus-border);
+      color: #e2e8f0;
+      width: 420px !important;
+    }
+
+    .cart-item-row {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 0.85rem;
+      padding: 0.75rem;
+      transition: all 0.2s ease;
+    }
+
+    .cart-item-row:hover {
+      border-color: rgba(13, 110, 253, 0.3);
+      background: rgba(13, 110, 253, 0.05);
+    }
+
+    .cart-thumb {
+      width: 55px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 0.5rem;
     }
   </style>
 </head>
-<body class="bg-dark text-light">
+<body>
 
-  <header class="sticky-top bg-black border-bottom border-dark">
-    <nav class="navbar navbar-expand-lg navbar-dark container-fluid px-4 py-2">
-      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html">
+  <!-- NAVBAR -->
+  <header class="sticky-top nexus-navbar">
+    <nav class="navbar navbar-expand-lg navbar-dark container-fluid px-lg-5 py-2">
+      <a class="navbar-brand d-flex align-items-center gap-2 nav-brand-logo text-light" href="index.html">
         <i class="bi bi-controller fs-3 text-primary"></i>
         <span>Nexus</span>
       </a>
       
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navbarContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
-          <li class="nav-item"><a class="nav-link" href="index.html">Descubrir</a></li>
-          <li class="nav-item"><a class="nav-link active text-primary fw-bold" href="juegos.html">Juegos</a></li>
-          <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
-          <li class="nav-item"><a class="nav-link" href="biblioteca.html">Biblioteca</a></li>
-          <li class="nav-item"><a class="nav-link" href="cuenta.html">Cuenta</a></li>
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-1">
+          <li class="nav-item"><a class="nav-link text-light text-opacity-75 px-3" href="index.html">Descubrir</a></li>
+          <li class="nav-item"><a class="nav-link active text-primary fw-bold px-3" href="juegos.html">Juegos</a></li>
+          <li class="nav-item"><a class="nav-link text-light text-opacity-75 px-3" href="index.html#seccion-suscripciones">Suscripciones</a></li>
+          <li class="nav-item"><a class="nav-link text-light text-opacity-75 px-3" href="contacto.html">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link text-light text-opacity-75 px-3" href="biblioteca.html">Biblioteca</a></li>
+          <li class="nav-item"><a class="nav-link text-light text-opacity-75 px-3" href="cuenta.html">Cuenta</a></li>
         </ul>
 
         <div class="d-flex align-items-center gap-3">
-          <button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2 px-3 py-2 position-relative" data-bs-toggle="offcanvas" data-bs-target="#carritoLateral" aria-controls="carritoLateral">
+          <!-- BOTÓN TRIGGER DEL CARRITO -->
+          <button class="btn btn-outline-light btn-sm rounded-pill d-flex align-items-center gap-2 px-3 py-2 position-relative" data-bs-toggle="offcanvas" data-bs-target="#carritoLateral" aria-controls="carritoLateral">
             <i class="bi bi-cart3 fs-6"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary badge-contador-carrito" style="display: none;">0</span>
+            <span class="d-none d-sm-inline">Carrito</span>
+            <span class="badge rounded-pill bg-primary badge-contador-carrito">0</span>
           </button>
           
-          <a href="cuenta.html" class="btn btn-primary btn-sm d-flex align-items-center gap-2 px-3 py-2">
-            <i class="bi bi-person-fill fs-6"></i><span>Mi Perfil</span>
+          <a href="cuenta.html" class="user-pill-badge">
+            <span class="status-dot"></span>
+            <span id="navUserAlias">fludigth</span>
           </a>
         </div>
       </div>
     </nav>
   </header>
 
-  <main class="container-fluid px-4 py-5">
+  <main class="container-fluid px-lg-5 py-4 flex-grow-1">
     
     <div class="mb-4">
-      <h1 class="fw-light mb-4" style="font-size: 2.5rem;">Todos los juegos</h1>
-      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center text-muted-custom pb-3 border-bottom border-secondary border-opacity-25">
-        <span class="mb-2 mb-md-0" id="contadorResultados">Cargando catálogo desde Oracle...</span>
+      <h1 class="fw-bold text-light mb-1" style="font-size: 2.2rem;">Catálogo de Juegos</h1>
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center text-secondary pb-3 border-bottom border-secondary border-opacity-25">
+        <span id="contadorResultados">Cargando catálogo desde Oracle...</span>
+        
+        <!-- SELECTOR DE ORDENAMIENTO -->
+        <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+          <small class="text-secondary fw-semibold">Ordenar por:</small>
+          <select id="selectOrden" class="select-sort">
+            <option value="defecto">Recomendados</option>
+            <option value="precio-menor">Precio: menor a mayor</option>
+            <option value="precio-mayor">Precio: mayor a menor</option>
+            <option value="descuento">Mayor descuento</option>
+            <option value="alfabetico">Alfabético (A - Z)</option>
+          </select>
+        </div>
       </div>
     </div>
 
-    <!-- BARRA DE BÚSQUEDA Y FILTROS -->
-    <div class="row mb-5 g-3 align-items-center">
-      <div class="col-lg-6">
-        <div class="input-group input-group-lg bg-secondary bg-opacity-10 rounded-3 overflow-hidden border border-secondary border-opacity-25">
-          <span class="input-group-text bg-transparent border-0 text-secondary ps-3">
+    <!-- BARRA DE BÚSQUEDA Y BOTONES DE FILTRO -->
+    <div class="row mb-4 g-3 align-items-center">
+      <div class="col-lg-5">
+        <div class="input-group bg-secondary bg-opacity-10 rounded-pill overflow-hidden border border-secondary border-opacity-25 px-2">
+          <span class="input-group-text bg-transparent border-0 text-secondary ps-2">
             <i class="bi bi-search"></i>
           </span>
-          <input type="text" id="inputBuscarJuego" class="form-control bg-transparent text-light border-0 shadow-none ps-2" placeholder="Buscar juego por título...">
+          <input type="text" id="inputBuscarJuego" class="form-control bg-transparent text-light border-0 shadow-none ps-2" placeholder="Buscar por título o categoría...">
         </div>
       </div>
 
-      <div class="col-lg-6 d-flex flex-wrap gap-2 justify-content-lg-end" id="grupoFiltros">
-        <button class="btn btn-primary btn-sm px-3 py-2 fw-semibold" data-filtro="todos">Todos</button>
-        <button class="btn btn-outline-secondary btn-sm px-3 py-2 fw-semibold border-opacity-50 text-light" data-filtro="accion">Acción / Aventura</button>
-        <button class="btn btn-outline-secondary btn-sm px-3 py-2 fw-semibold border-opacity-50 text-light" data-filtro="deportes">Deportes</button>
-        <button class="btn btn-outline-secondary btn-sm px-3 py-2 fw-semibold border-opacity-50 text-light" data-filtro="mundo-abierto">Mundo Abierto</button>
+      <!-- BOTONES DE FILTROS -->
+      <div class="col-lg-7 d-flex flex-wrap gap-2 justify-content-lg-end" id="grupoFiltros">
+        <button class="filter-pill active" data-filtro="todos">Todos</button>
+        <button class="filter-pill" data-filtro="accion">Acción / Aventura</button>
+        <button class="filter-pill" data-filtro="deportes">Deportes</button>
+        <button class="filter-pill" data-filtro="mundo-abierto">Mundo Abierto</button>
+        <button class="filter-pill" data-filtro="gratis">Free to Play</button>
+        <button class="filter-pill" data-filtro="suscripcion">Suscripciones / Gift</button>
       </div>
     </div>
 
-    <!-- GRILLA DE JUEGOS DINÁMICA -->
+    <!-- GRILLA DINÁMICA DE JUEGOS -->
     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-4 pt-2" id="gridJuegos">
       <!-- Los juegos se insertan automáticamente vía API -->
     </div>
   </main>
 
+  <!-- ============================================== -->
+  <!-- OFFCANVAS: CARRITO LATERAL DESLIZANTE -->
+  <!-- ============================================== -->
+  <div class="offcanvas offcanvas-end offcanvas-nexus" tabindex="-1" id="carritoLateral" aria-labelledby="carritoLateralLabel">
+    <div class="offcanvas-header border-bottom border-secondary border-opacity-25 p-3">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-cart3 fs-4 text-primary"></i>
+        <h5 class="offcanvas-title fw-bold text-light" id="carritoLateralLabel">Tu Carrito de Compras</h5>
+      </div>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div class="offcanvas-body d-flex flex-column p-3">
+      <!-- Lista de Productos en el Carrito -->
+      <div id="contenedorItemsCarrito" class="flex-grow-1 overflow-y-auto d-flex flex-column gap-2 pe-1">
+        <!-- Render dinámico del carrito -->
+      </div>
+
+      <!-- Resumen de Costos y Pago -->
+      <div class="border-top border-secondary border-opacity-25 pt-3 mt-3">
+        <div class="d-flex justify-content-between text-secondary small mb-1">
+          <span>Subtotal:</span>
+          <span id="cartSubtotal" class="text-light">US$0.00</span>
+        </div>
+        <div class="d-flex justify-content-between text-secondary small mb-2">
+          <span>Ahorro por descuentos:</span>
+          <span id="cartDescuentoTotal" class="text-danger">-US$0.00</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-baseline mb-3">
+          <span class="fs-5 fw-bold text-light">Total a Pagar:</span>
+          <span id="cartTotal" class="fs-4 fw-bold text-primary">US$0.00</span>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button id="btnPagarCarrito" class="btn btn-primary fw-bold py-2 rounded-3" onclick="finalizarCompraCarrito()">
+            <i class="bi bi-shield-lock-fill me-1"></i> Proceder al Pago
+          </button>
+          <button class="btn btn-outline-secondary btn-sm border-0 text-secondary" onclick="vaciarCarrito()">
+            Vaciar carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-black text-secondary py-3 border-top border-dark mt-auto">
+    <div class="container-fluid px-lg-5 text-center text-md-start d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <small>© 2026 Nexus Store. Todos los derechos reservados.</small>
+      <small class="text-secondary">Precios en dólares estadounidenses (USD)</small>
+    </div>
+  </footer>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- INTEGRACIÓN CON ORACLE -->
+  <!-- INTEGRACIÓN ORACLE, CARRITO, WISHLIST Y FILTROS -->
   <script>
+    const usuarioActual = localStorage.getItem('nexus_user_alias') || 'fludigth';
+    const navAlias = document.getElementById('navUserAlias');
+    if (navAlias) navAlias.textContent = usuarioActual;
+
     let todosLosJuegos = [];
     let filtroActual = 'todos';
+    let ordenActual = 'defecto';
 
+    // Manejo de Carrito y Wishlist en LocalStorage
+    let carrito = JSON.parse(localStorage.getItem('nexus_carrito')) || [];
+    let wishlist = JSON.parse(localStorage.getItem('nexus_wishlist')) || [];
+
+    // --- CARGA DESDE LA API ---
     async function cargarJuegosDesdeOracle() {
-      const contenedor = document.getElementById('gridJuegos');
       const contador = document.getElementById('contadorResultados');
 
       try {
@@ -168,69 +406,318 @@
         if (!res.ok) throw new Error('Error al conectar con la API');
         
         todosLosJuegos = await res.json();
-        renderizarJuegos(todosLosJuegos);
         
-        if (contador) {
-          contador.textContent = `Mostrando ${todosLosJuegos.length} juegos cargados desde la base de datos Oracle.`;
+        // Verificar si la URL trae un término de búsqueda (ej: juegos.html?buscar=wukong)
+        const params = new URLSearchParams(window.location.search);
+        const queryBuscar = params.get('buscar');
+        if (queryBuscar) {
+          document.getElementById('inputBuscarJuego').value = queryBuscar;
         }
+
+        aplicarFiltrosYOrden();
+        actualizarUIBadgeCarrito();
+        renderizarCarrito();
       } catch (err) {
         console.error('Error cargando juegos:', err);
       }
     }
 
+    // --- FILTRADO Y ORDENAMIENTO COMBINADO ---
+    function aplicarFiltrosYOrden() {
+      const termino = document.getElementById('inputBuscarJuego').value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+      
+      let resultado = [...todosLosJuegos];
+
+      // 1. Filtrar por término de búsqueda
+      if (termino) {
+        resultado = resultado.filter(j => 
+          (j.titulo || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(termino) ||
+          (j.categoria || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(termino)
+        );
+      }
+
+      // 2. Filtrar por Categoría seleccionada
+      if (filtroActual !== 'todos') {
+        resultado = resultado.filter(juego => {
+          const cat = (juego.categoria || '').toLowerCase();
+          const tipo = (juego.tipoJuego || '').toLowerCase();
+
+          if (filtroActual === 'accion') return cat.includes('accion') || cat.includes('aventura');
+          if (filtroActual === 'deportes') return cat.includes('deporte') || cat.includes('carrera');
+          if (filtroActual === 'mundo-abierto') return cat.includes('mundo abierto') || cat.includes('abierto');
+          if (filtroActual === 'gratis') return (!juego.precio || juego.precio === 0);
+          if (filtroActual === 'suscripcion') return cat.includes('suscrip') || cat.includes('gift') || tipo.includes('suscrip') || tipo.includes('gift');
+          return true;
+        });
+      }
+
+      // 3. Ordenamiento
+      if (ordenActual === 'precio-menor') {
+        resultado.sort((a, b) => (Number(a.precio) || 0) - (Number(b.precio) || 0));
+      } else if (ordenActual === 'precio-mayor') {
+        resultado.sort((a, b) => (Number(b.precio) || 0) - (Number(a.precio) || 0));
+      } else if (ordenActual === 'descuento') {
+        resultado.sort((a, b) => (Number(b.descuento) || 0) - (Number(a.descuento) || 0));
+      } else if (ordenActual === 'alfabetico') {
+        resultado.sort((a, b) => (a.titulo || '').localeCompare(b.titulo || ''));
+      }
+
+      renderizarJuegos(resultado);
+    }
+
+    // --- RENDER DE TARJETAS EN EL CATÁLOGO ---
     function renderizarJuegos(lista) {
       const contenedor = document.getElementById('gridJuegos');
+      const contador = document.getElementById('contadorResultados');
+
+      if (contador) {
+        contador.textContent = `Mostrando ${lista.length} títulos disponibles en Nexus Store.`;
+      }
+
       if (!contenedor) return;
 
       if (lista.length === 0) {
-        contenedor.innerHTML = `<div class="col-12 py-5 text-center text-secondary"><p>No se encontraron juegos.</p></div>`;
+        contenedor.innerHTML = `
+          <div class="col-12 py-5 text-center text-secondary">
+            <i class="bi bi-search fs-1 text-secondary opacity-50 mb-3 d-block"></i>
+            <h5 class="fw-bold">No se encontraron juegos</h5>
+            <p class="small">Prueba cambiando los filtros o el término de búsqueda.</p>
+          </div>
+        `;
         return;
       }
 
       contenedor.innerHTML = lista.map((juego, index) => {
         const esGratis = !juego.precio || juego.precio === 0;
-        const precioDisplay = esGratis ? 'Gratuito' : `US$${Number(juego.precio).toFixed(2)}`;
+        let precioDisplay = esGratis ? 'Gratuito' : `US$${Number(juego.precio).toFixed(2)}`;
         
-        const badgeDescuento = (juego.descuento && juego.descuento > 0) 
-          ? `<span class="text-danger mb-1"><i class="bi bi-tag-fill"></i> Ahorra un ${juego.descuento} %</span>` 
-          : '';
+        let badgeDescuento = '';
+        if (juego.descuento && juego.descuento > 0) {
+          const precioFinal = (juego.precio * (1 - juego.descuento / 100)).toFixed(2);
+          precioDisplay = `US$${precioFinal} <span class="text-decoration-line-through text-secondary small" style="font-size:0.75rem;">US$${Number(juego.precio).toFixed(2)}</span>`;
+          badgeDescuento = `<span class="badge bg-danger position-absolute top-0 start-0 m-2 px-2 py-1 rounded-pill shadow-sm" style="font-size:0.65rem; z-index:4;">-${juego.descuento}%</span>`;
+        }
 
-        const categoriaNorm = (juego.categoria || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-        let categoriaSlug = "otros";
-        if (categoriaNorm.includes("accion")) categoriaSlug = "accion";
-        else if (categoriaNorm.includes("mundo")) categoriaSlug = "mundo-abierto";
-        else if (categoriaNorm.includes("deportes")) categoriaSlug = "deportes";
+        const esDeseado = wishlist.includes(juego.id);
 
-        const delay = Math.min((index + 1) * 0.05, 0.45).toFixed(2);
-
-        /* AQUÍ ESTÁ LA MAGIA: Eliminado el onerror problemático y reemplazado por un placeholder elegante */
         return `
-          <div class="col card-juego" data-titulo="${(juego.titulo || '').toLowerCase()}" data-genero="${categoriaSlug}" style="animation-delay: ${delay}s;">
-            <a href="detalle-juego.html?id=${juego.id}" class="text-decoration-none text-light game-clean-card d-block">
-              <div class="ratio ratio-1x1 mb-3">
-                <img src="${juego.imagenUrl}" class="rounded-4 object-fit-cover w-100 h-100" alt="${juego.titulo}" onerror="this.src='https://placehold.co/400x400/1a1a1a/e2e8f0?text=Nexus+Store'">
-              </div>
-              <h6 class="mb-1 text-truncate fw-normal fs-6">${juego.titulo}</h6>
-              <div class="d-flex flex-column text-muted-custom small">
-                ${badgeDescuento}
-                <span>${precioDisplay}</span>
-              </div>
-            </a>
+          <div class="col card-juego">
+            <div class="game-clean-card">
+              
+              <!-- Badge Descuento -->
+              ${badgeDescuento}
+
+              <!-- Botón Lista de Deseos (Corazón) -->
+              <button class="btn-wishlist ${esDeseado ? 'active' : ''}" onclick="toggleWishlist(${juego.id}, event)" title="${esDeseado ? 'Quitar de deseados' : 'Agregar a deseados'}">
+                <i class="bi ${esDeseado ? 'bi-heart-fill' : 'bi-heart'}"></i>
+              </button>
+
+              <!-- Botón Rápido de Carrito -->
+              <button class="btn-quick-cart" onclick="agregarAlCarrito(${juego.id}, event)" title="Añadir al carrito">
+                <i class="bi bi-bag-plus"></i>
+              </button>
+
+              <a href="detalle-juego.html?id=${juego.id}" class="text-decoration-none text-light d-block flex-grow-1">
+                <div class="poster-wrapper">
+                  <img src="${juego.imagenUrl}" alt="${juego.titulo}" onerror="this.onerror=null; this.src='CyberPunk.avif';">
+                </div>
+                
+                <div class="p-3 d-flex flex-column">
+                  <small class="text-primary text-uppercase fw-bold mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">${juego.categoria || 'JUEGO'}</small>
+                  <h6 class="mb-2 text-truncate fw-bold text-light" title="${juego.titulo}">${juego.titulo}</h6>
+                  <div class="mt-auto d-flex flex-column">
+                    <span class="${esGratis ? 'text-info' : 'text-light'} fw-bold small">${precioDisplay}</span>
+                  </div>
+                </div>
+              </a>
+            </div>
           </div>
         `;
       }).join('');
     }
 
-    document.getElementById('inputBuscarJuego')?.addEventListener('input', (e) => {
-      const termino = e.target.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-      const filtrados = todosLosJuegos.filter(j => (j.titulo || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(termino));
-      renderizarJuegos(filtrados);
+    // --- EVENTOS DE INTERFAZ ---
+    document.getElementById('inputBuscarJuego')?.addEventListener('input', aplicarFiltrosYOrden);
+
+    document.getElementById('selectOrden')?.addEventListener('change', (e) => {
+      ordenActual = e.target.value;
+      aplicarFiltrosYOrden();
     });
+
+    document.querySelectorAll('.filter-pill').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        filtroActual = e.target.getAttribute('data-filtro');
+        aplicarFiltrosYOrden();
+      });
+    });
+
+    // --- LÓGICA DE LISTA DE DESEOS (WISHLIST) ---
+    window.toggleWishlist = function(id, event) {
+      event.stopPropagation();
+      event.preventDefault();
+
+      const index = wishlist.indexOf(id);
+      if (index > -1) {
+        wishlist.splice(index, 1);
+      } else {
+        wishlist.push(id);
+      }
+      localStorage.setItem('nexus_wishlist', JSON.stringify(wishlist));
+      aplicarFiltrosYOrden();
+    };
+
+    // --- LÓGICA DEL CARRITO LATERAL ---
+    window.agregarAlCarrito = function(id, event) {
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+
+      const juego = todosLosJuegos.find(j => j.id === id);
+      if (!juego) return;
+
+      const existe = carrito.find(item => item.id === id);
+      if (existe) {
+        alert(`"${juego.titulo}" ya se encuentra en tu carrito.`);
+        return;
+      }
+
+      carrito.push(juego);
+      localStorage.setItem('nexus_carrito', JSON.stringify(carrito));
+      
+      actualizarUIBadgeCarrito();
+      renderizarCarrito();
+
+      // Abrir automáticamente el panel del carrito para dar feedback inmediato
+      const offcanvasEl = document.getElementById('carritoLateral');
+      const bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+      bsOffcanvas.show();
+    };
+
+    window.eliminarDelCarrito = function(id) {
+      carrito = carrito.filter(item => item.id !== id);
+      localStorage.setItem('nexus_carrito', JSON.stringify(carrito));
+      actualizarUIBadgeCarrito();
+      renderizarCarrito();
+    };
+
+    window.vaciarCarrito = function() {
+      if (carrito.length === 0) return;
+      if (confirm('¿Deseas quitar todos los productos del carrito?')) {
+        carrito = [];
+        localStorage.setItem('nexus_carrito', JSON.stringify(carrito));
+        actualizarUIBadgeCarrito();
+        renderizarCarrito();
+      }
+    };
+
+    function actualizarUIBadgeCarrito() {
+      const badge = document.querySelector('.badge-contador-carrito');
+      if (badge) {
+        badge.textContent = carrito.length;
+        badge.style.display = carrito.length > 0 ? 'inline-block' : 'none';
+      }
+    }
+
+    function renderizarCarrito() {
+      const contenedor = document.getElementById('contenedorItemsCarrito');
+      const subtotalEl = document.getElementById('cartSubtotal');
+      const descEl = document.getElementById('cartDescuentoTotal');
+      const totalEl = document.getElementById('cartTotal');
+      const btnPagar = document.getElementById('btnPagarCarrito');
+
+      if (!contenedor) return;
+
+      if (carrito.length === 0) {
+        contenedor.innerHTML = `
+          <div class="text-center py-5 text-secondary">
+            <i class="bi bi-cart-x fs-1 opacity-50 mb-2 d-block"></i>
+            <p class="small">Tu carrito de compras está vacío.</p>
+          </div>
+        `;
+        if (subtotalEl) subtotalEl.textContent = 'US$0.00';
+        if (descEl) descEl.textContent = '-US$0.00';
+        if (totalEl) totalEl.textContent = 'US$0.00';
+        if (btnPagar) btnPagar.disabled = true;
+        return;
+      }
+
+      if (btnPagar) btnPagar.disabled = false;
+
+      let subtotal = 0;
+      let descuentoTotal = 0;
+      let total = 0;
+
+      contenedor.innerHTML = carrito.map(item => {
+        const precioBase = Number(item.precio) || 0;
+        const descPorcentaje = Number(item.descuento) || 0;
+        const precioFinal = descPorcentaje > 0 ? (precioBase * (1 - descPorcentaje / 100)) : precioBase;
+        const ahorro = precioBase - precioFinal;
+
+        subtotal += precioBase;
+        descuentoTotal += ahorro;
+        total += precioFinal;
+
+        return `
+          <div class="cart-item-row d-flex align-items-center gap-3">
+            <img src="${item.imagenUrl}" class="cart-thumb" alt="${item.titulo}" onerror="this.src='CyberPunk.avif';">
+            <div class="flex-grow-1 overflow-hidden">
+              <span class="d-block fw-bold text-light text-truncate small">${item.titulo}</span>
+              <span class="text-secondary small" style="font-size:0.75rem;">US$${precioFinal.toFixed(2)}</span>
+            </div>
+            <button class="btn btn-outline-danger btn-sm border-0" onclick="eliminarDelCarrito(${item.id})" title="Eliminar">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      if (subtotalEl) subtotalEl.textContent = `US$${subtotal.toFixed(2)}`;
+      if (descEl) descEl.textContent = `-US$${descuentoTotal.toFixed(2)}`;
+      if (totalEl) totalEl.textContent = `US$${total.toFixed(2)}`;
+    }
+
+    // --- FINALIZAR COMPRA DEL CARRITO (CONECTADO A ORACLE VÍA SPRING BOOT) ---
+    window.finalizarCompraCarrito = async function() {
+      if (carrito.length === 0) return;
+
+      const confirmacion = confirm(`¿Deseas procesar el pago de ${carrito.length} artículo(s) a la cuenta de ${usuarioActual}?`);
+      if (!confirmacion) return;
+
+      try {
+        for (const item of carrito) {
+          const precioBase = Number(item.precio) || 0;
+          const desc = Number(item.descuento) || 0;
+          const precioFinal = desc > 0 ? (precioBase * (1 - desc / 100)) : precioBase;
+
+          await fetch('/api/pedidos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              nombreCliente: usuarioActual,
+              metodoPago: 'Nexus Wallet / Tarjeta',
+              tipoTarjeta: 'Transbank Webpay',
+              total: precioFinal,
+              juegoTitulo: item.titulo
+            })
+          });
+        }
+
+        alert('¡Compra completada con éxito! Todos los títulos se han añadido a tu Biblioteca.');
+        carrito = [];
+        localStorage.setItem('nexus_carrito', JSON.stringify(carrito));
+        window.location.href = 'biblioteca.html';
+      } catch (err) {
+        alert('Hubo un problema registrando el pedido en Oracle.');
+        console.error(err);
+      }
+    };
 
     document.addEventListener('DOMContentLoaded', cargarJuegosDesdeOracle);
   </script>
-
-  <script src="js/buscador.js"></script>
-  <script src="js/carrito.js"></script>
+  <script src="js/nexus-effects.js"></script>
+  <script src="js/nexus-bot.js"></script>
 </body>
 </html>

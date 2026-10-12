@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus - Centro de Control Administrativo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --nexus-blue: #0d6efd;
+      --nexus-blue-glow: rgba(13, 110, 253, 0.45);
+      --nexus-cyan: #0dcaf0;
+      --nexus-dark: #080b11;
+      --nexus-card: #0f1523;
+      --nexus-border: rgba(255, 255, 255, 0.08);
+    }
+
+    body {
+      background-color: var(--nexus-dark);
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nexus-navbar {
+      background: rgba(8, 11, 17, 0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--nexus-border);
+      z-index: 1050;
+    }
+
+    .admin-card {
+      background: var(--nexus-card);
+      border: 1px solid var(--nexus-border);
+      border-radius: 1.15rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .kpi-card {
+      background: linear-gradient(145deg, rgba(17, 23, 38, 0.95), rgba(11, 15, 24, 0.98));
+      border: 1px solid var(--nexus-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(13, 110, 253, 0.4);
+    }
+
+    .kpi-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .kpi-blue::after { background: var(--nexus-blue); }
+    .kpi-cyan::after { background: var(--nexus-cyan); }
+    .kpi-green::after { background: #10b981; }
+    .kpi-purple::after { background: #a855f7; }
+
+    .form-control-dark, .form-select-dark {
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-radius: 0.65rem;
+      padding: 0.65rem 0.9rem;
+    }
+
+    .form-control-dark:focus, .form-select-dark:focus {
+      background-color: rgba(0, 0, 0, 0.75);
+      border-color: var(--nexus-blue);
+      box-shadow: 0 0 12px var(--nexus-blue-glow);
+      color: #fff;
+    }
+
+    .table-transparent th, .table-transparent td {
+      background-color: transparent !important;
+      color: #e2e8f0 !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      vertical-align: middle;
+      padding: 0.9rem 0.6rem;
+    }
+
+    .admin-thumb {
+      width: 45px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR ADMINISTRADOR -->
+  <header class="sticky-top nexus-navbar">
+    <nav class="navbar navbar-dark container-fluid px-lg-5 py-2">
+      <div class="d-flex align-items-center gap-3">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-light m-0" href="index.html">
+          <i class="bi bi-shield-lock-fill fs-3 text-warning"></i>
+          <span>Nexus Admin</span>
+        </a>
+        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill px-3 py-1 small">
+          Entorno de Control Oracle
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-secondary btn-sm rounded-pill text-light px-3" onclick="cargarTodo()">
+          <i class="bi bi-arrow-clockwise me-1"></i> Sincronizar Datos
+        </button>
+        <a href="index.html" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+          <i class="bi bi-box-arrow-up-right me-1"></i> Ir a la Tienda
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container-fluid px-lg-5 py-4 flex-grow-1">
+
+    <!-- KPI ROW -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3 mb-4">
+      <div class="col">
+        <div class="kpi-card kpi-green">
+          <span class="text-secondary small fw-bold text-uppercase d-block mb-1">Ingresos Totales</span>
+          <h3 class="fw-bold text-light m-0" id="kpiIngresos">US$0.00</h3>
+          <small class="text-success"><i class="bi bi-graph-up-arrow me-1"></i>Procesado en tiempo real</small>
+        </div>
+      </div>
+      <div class="col">
+        <div class="kpi-card kpi-blue">
+          <span class="text-secondary small fw-bold text-uppercase d-block mb-1">Órdenes Registradas</span>
+          <h3 class="fw-bold text-light m-0" id="kpiPedidos">0</h3>
+          <small class="text-info"><i class="bi bi-receipt me-1"></i>Transacciones guardadas</small>
+        </div>
+      </div>
+      <div class="col">
+        <div class="kpi-card kpi-cyan">
+          <span class="text-secondary small fw-bold text-uppercase d-block mb-1">Catálogo Activo</span>
+          <h3 class="fw-bold text-light m-0" id="kpiJuegos">0</h3>
+          <small class="text-secondary"><i class="bi bi-controller me-1"></i>Títulos en base Oracle</small>
+        </div>
+      </div>
+      <div class="col">
+        <div class="kpi-card kpi-purple">
+          <span class="text-secondary small fw-bold text-uppercase d-block mb-1">Conexión Oracle DB</span>
+          <h3 class="fw-bold text-success m-0" id="kpiEstadoDB">ONLINE</h3>
+          <small class="text-secondary"><i class="bi bi-hdd-network me-1"></i>Puerto 8080 / Spring Boot</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRÁFICOS ANALÍTICOS -->
+    <div class="row g-4 mb-4">
+      <div class="col-lg-8">
+        <div class="admin-card h-100">
+          <h5 class="fw-bold text-light mb-3"><i class="bi bi-bar-chart-fill text-primary me-2"></i>Historial de Facturación por Pedido (USD)</h5>
+          <div style="height: 260px;">
+            <canvas id="graficoVentas"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="admin-card h-100">
+          <h5 class="fw-bold text-light mb-3"><i class="bi bi-pie-chart-fill text-info me-2"></i>Métodos de Pago Utilizados</h5>
+          <div style="height: 260px;">
+            <canvas id="graficoMetodos"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- FORMULARIO CREAR JUEGO -->
+      <div class="col-xl-4">
+        <div class="admin-card">
+          <h5 class="fw-bold text-light mb-3"><i class="bi bi-plus-circle-fill text-success me-2"></i>Registrar Nuevo Título</h5>
+          <form id="formCrearJuego" onsubmit="crearJuego(event)">
+            <div class="mb-3">
+              <label class="form-label small text-secondary fw-bold">Título del Juego / Suscripción</label>
+              <input type="text" class="form-control form-control-dark" id="juegoTitulo" required placeholder="Ej. Horizon Forbidden West">
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small text-secondary fw-bold">Precio (USD)</label>
+                <input type="number" step="0.01" class="form-control form-control-dark" id="juegoPrecio" required placeholder="59.99">
+              </div>
+              <div class="col-6">
+                <label class="form-label small text-secondary fw-bold">Descuento (%)</label>
+                <input type="number" min="0" max="100" class="form-control form-control-dark" id="juegoDescuento" value="0">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small text-secondary fw-bold">Categoría</label>
+              <select class="form-select form-select-dark" id="juegoCategoria">
+                <option value="Acción / Aventura" selected>Acción / Aventura</option>
+                <option value="Deportes">Deportes</option>
+                <option value="Mundo Abierto">Mundo Abierto</option>
+                <option value="Suscripciones">Suscripciones / Gift Cards</option>
+                <option value="RPG / Estrategia">RPG / Estrategia</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small text-secondary fw-bold">Archivo de Imagen o URL</label>
+              <input type="text" class="form-control form-control-dark" id="juegoImagen" required placeholder="Ej. CyberPunk.avif o URL">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 fw-bold py-2 rounded-3" id="btnGuardarJuego">
+              <i class="bi bi-database-add me-1"></i> Guardar en Oracle
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- TABLA GESTOR DE INVENTARIO -->
+      <div class="col-xl-8">
+        <div class="admin-card">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-light m-0"><i class="bi bi-table text-primary me-2"></i>Inventario de Juegos Activo</h5>
+            <small class="text-secondary" id="lblTotalTabla">Cargando...</small>
+          </div>
+
+          <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+            <table class="table table-transparent w-100">
+              <thead>
+                <tr>
+                  <th>Portada</th>
+                  <th>Título</th>
+                  <th>Categoría</th>
+                  <th>Precio</th>
+                  <th>Descuento</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="tablaJuegosBody">
+                <tr><td colspan="6" class="text-center py-4 text-secondary">Consultando catálogo...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="bg-black text-secondary py-3 border-top border-dark mt-auto text-center">
+    <small>© 2026 Nexus Store. Panel de Control y Auditoría de Base de Datos.</small>
+  </footer>
+
+  <script>
+    let chartVentas = null;
+    let chartMetodos = null;
+
+    document.addEventListener('DOMContentLoaded', cargarTodo);
+
+    async function cargarTodo() {
+      await Promise.all([cargarMetricasYPedidos(), cargarCatalogoJuegos()]);
+    }
+
+    // 1. CARGA DE PEDIDOS Y RENDER DE GRÁFICOS
+    async function cargarMetricasYPedidos() {
+      try {
+        const res = await fetch('/api/pedidos');
+        if (!res.ok) throw new Error();
+        const pedidos = await res.json();
+
+        let totalIngresos = 0;
+        const metodosCount = {};
+        const ultimosMontos = [];
+        const ultimasEtiquetas = [];
+
+        pedidos.forEach((p, idx) => {
+          const monto = Number(p.total) || 0;
+          totalIngresos += monto;
+
+          // Métodos
+          const metodo = p.metodoPago || 'Otros';
+          metodosCount[metodo] = (metodosCount[metodo] || 0) + 1;
+
+          if (idx >= pedidos.length - 10) {
+            ultimosMontos.push(monto);
+            ultimasEtiquetas.push(`#${p.id}`);
+          }
+        });
+
+        document.getElementById('kpiIngresos').textContent = `US$${totalIngresos.toFixed(2)}`;
+        document.getElementById('kpiPedidos').textContent = pedidos.length;
+        document.getElementById('kpiEstadoDB').textContent = 'ONLINE';
+
+        renderizarGraficoVentas(ultimasEtiquetas, ultimosMontos);
+        renderizarGraficoMetodos(metodosCount);
+      } catch (err) {
+        document.getElementById('kpiEstadoDB').textContent = 'FALLO CONEXIÓN';
+        document.getElementById('kpiEstadoDB').className = 'fw-bold text-danger m-0';
+      }
+    }
+
+    // 2. CARGA DEL CATÁLOGO DE JUEGOS
+    async function cargarCatalogoJuegos() {
+      const tbody = document.getElementById('tablaJuegosBody');
+      try {
+        const res = await fetch('/api/juegos');
+        if (!res.ok) throw new Error();
+        const juegos = await res.json();
+
+        document.getElementById('kpiJuegos').textContent = juegos.length;
+        document.getElementById('lblTotalTabla').textContent = `${juegos.length} títulos listados`;
+
+        if (juegos.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-secondary">No hay títulos en la tabla JUEGOS.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = juegos.map(j => {
+          const precio = Number(j.precio) || 0;
+          return `
+            <tr>
+              <td><img src="${j.imagenUrl || 'CyberPunk.avif'}" class="admin-thumb" onerror="this.src='CyberPunk.avif'"></td>
+              <td class="fw-semibold text-light">${j.titulo}</td>
+              <td><span class="badge bg-secondary bg-opacity-25 text-light">${j.categoria || 'General'}</span></td>
+              <td class="fw-bold text-info">${precio === 0 ? 'Gratuito' : `US$${precio.toFixed(2)}`}</td>
+              <td>${j.descuento > 0 ? `<span class="badge bg-danger">-${j.descuento}%</span>` : '<span class="text-secondary small">0%</span>'}</td>
+              <td>
+                <button class="btn btn-outline-danger btn-sm border-0" onclick="eliminarJuego(${j.id}, '${j.titulo}')" title="Eliminar de Oracle">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        }).reverse().join('');
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-danger">Error cargando catálogo desde Oracle.</td></tr>`;
+      }
+    }
+
+    // 3. INSERTAR JUEGO (POST /api/juegos)
+    async function crearJuego(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnGuardarJuego');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Registrando...`;
+
+      const nuevoJuego = {
+        titulo: document.getElementById('juegoTitulo').value.trim(),
+        precio: parseFloat(document.getElementById('juegoPrecio').value) || 0,
+        descuento: parseInt(document.getElementById('juegoDescuento').value) || 0,
+        categoria: document.getElementById('juegoCategoria').value,
+        imagenUrl: document.getElementById('juegoImagen').value.trim()
+      };
+
+      try {
+        const res = await fetch('/api/juegos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(nuevoJuego)
+        });
+
+        if (res.ok) {
+          alert(`¡Juego "${nuevoJuego.titulo}" guardado exitosamente en Oracle!`);
+          document.getElementById('formCrearJuego').reset();
+          cargarCatalogoJuegos();
+        } else {
+          alert('El servidor rechazó el registro. Verifica que el endpoint POST esté implementado.');
+        }
+      } catch (err) {
+        alert('Error de conexión con el backend Spring Boot.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="bi bi-database-add me-1"></i> Guardar en Oracle`;
+      }
+    }
+
+    // 4. ELIMINAR JUEGO (DELETE /api/juegos/{id})
+    async function eliminarJuego(id, titulo) {
+      if (!confirm(`¿Deseas eliminar permanentemente "${titulo}" de la base de datos Oracle?`)) return;
+
+      try {
+        const res = await fetch(`/api/juegos/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          cargarCatalogoJuegos();
+        } else {
+          alert('No se pudo eliminar el registro. Puede tener órdenes vinculadas por clave foránea.');
+        }
+      } catch (e) {
+        alert('Error conectando a la API.');
+      }
+    }
+
+    // 5. CHART.JS: GRÁFICOS
+    function renderizarGraficoVentas(etiquetas, datos) {
+      const ctx = document.getElementById('graficoVentas');
+      if (chartVentas) chartVentas.destroy();
+
+      chartVentas = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: etiquetas.length ? etiquetas : ['#0'],
+          datasets: [{
+            label: 'Total Pagado (USD)',
+            data: datos.length ? datos : [0],
+            backgroundColor: 'rgba(13, 110, 253, 0.65)',
+            borderColor: '#0d6efd',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+          }
+        }
+      });
+    }
+
+    function renderizarGraficoMetodos(metodosMap) {
+      const ctx = document.getElementById('graficoMetodos');
+      if (chartMetodos) chartMetodos.destroy();
+
+      const labels = Object.keys(metodosMap);
+      const data = Object.values(metodosMap);
+
+      chartMetodos = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labels.length ? labels : ['Sin datos'],
+          datasets: [{
+            data: data.length ? data : [1],
+            backgroundColor: ['#0d6efd', '#0dcaf0', '#10b981', '#f59e0b', '#a855f7'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { size: 11 } } }
+          }
+        }
+      });
+    }
+  </script>
+  <script src="js/nexus-effects.js"></script>
+  <script src="js/nexus-bot.js"></script>
+</body>
+</html>
