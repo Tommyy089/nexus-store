@@ -8,318 +8,398 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="css/estilos.css">
   <style>
+    :root {
+      --nexus-blue: #0d6efd;
+      --nexus-blue-glow: rgba(13, 110, 253, 0.45);
+      --nexus-dark: #080b11;
+      --nexus-surface: #0f1523;
+      --nexus-card: #111726;
+      --nexus-border: rgba(255, 255, 255, 0.08);
+    }
+
     body {
-      background-color: #080b11;
+      background-color: var(--nexus-dark);
       color: #e2e8f0;
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    .glass-card {
-      background: rgba(17, 24, 39, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 1rem;
+
+    /* --- NAVBAR GLASSMORPHISM --- */
+    .nexus-navbar {
+      background: rgba(8, 11, 17, 0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--nexus-border);
+      z-index: 1050;
     }
-    .game-library-card {
-      background: #0f172a;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 1rem;
-      overflow: hidden;
-      transition: all 0.3s ease;
+
+    .nav-brand-logo {
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      font-size: 1.35rem;
     }
-    .game-library-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(13, 110, 253, 0.4);
-      box-shadow: 0 16px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(13, 110, 253, 0.15);
-    }
-    .game-banner {
-      width: 100%;
-      height: 190px;
-      object-fit: cover;
-    }
-    .btn-action-play {
-      background: #198754;
-      border: none;
-      color: #fff;
-      font-weight: 700;
-    }
-    .btn-action-play:hover {
-      background: #157347;
-      color: #fff;
-    }
-    .search-library {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 0.75rem;
-      color: #fff;
-      padding-left: 2.75rem;
-    }
-    .filter-btn {
-      border-radius: 0.5rem;
+
+    .user-pill-badge {
+      background: rgba(18, 25, 41, 0.85);
+      border: 1px solid rgba(13, 110, 253, 0.4);
+      color: #e2e8f0;
+      padding: 0.35rem 0.85rem;
+      border-radius: 2rem;
       font-size: 0.85rem;
       font-weight: 600;
-      padding: 0.45rem 1rem;
-      color: #94a3b8;
-      border: 1px solid transparent;
-      background: transparent;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    .filter-btn.active {
-      background: #0d6efd;
-      color: #fff;
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #10b981;
     }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    /* --- TARJETAS DE BIBLIOTECA --- */
+    .library-card {
+      background: var(--nexus-card);
+      border: 1px solid var(--nexus-border);
+      border-radius: 1.25rem;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
-    .item-biblioteca {
-      animation: fadeUp 0.5s ease forwards;
-      opacity: 0;
+
+    .library-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(13, 110, 253, 0.45);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8);
+    }
+
+    .card-banner-wrapper {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #0b0e14;
+    }
+
+    .card-banner-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    /* Banners de Plataformas para Suscripciones */
+    .banner-xbox {
+      background: radial-gradient(circle at center, #107c10 0%, #084208 70%, #021a02 100%);
+      color: #ffffff;
+    }
+    .banner-playstation {
+      background: radial-gradient(circle at center, #00439c 0%, #002253 70%, #000c22 100%);
+      color: #ffffff;
+    }
+    .banner-nintendo {
+      background: radial-gradient(circle at center, #e60012 0%, #7d0009 70%, #300003 100%);
+      color: #ffffff;
+    }
+    .banner-steam {
+      background: radial-gradient(circle at center, #1b2838 0%, #171a21 70%, #0c0f14 100%);
+      color: #00adee;
+    }
+    .banner-sub-default {
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+      color: #38bdf8;
+    }
+
+    .platform-icon-hero {
+      font-size: 5rem;
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,0.65));
+      transition: transform 0.3s ease;
+    }
+
+    .library-card:hover .platform-icon-hero {
+      transform: scale(1.08);
+    }
+
+    .key-box {
+      background: rgba(13, 110, 253, 0.08);
+      border: 1px dashed rgba(13, 110, 253, 0.45);
+      border-radius: 0.75rem;
+      padding: 0.85rem;
+      text-align: center;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .btn-glow {
+      box-shadow: 0 0 15px rgba(13, 110, 253, 0.4);
+      transition: all 0.25s ease;
+    }
+
+    .btn-glow:hover {
+      box-shadow: 0 0 25px rgba(13, 110, 253, 0.7);
     }
   </style>
 </head>
 <body>
 
   <!-- NAVBAR -->
-  <header class="sticky-top bg-black border-bottom border-secondary border-opacity-25">
-    <nav class="navbar navbar-expand-lg navbar-dark container-fluid px-4 py-2">
-      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html">
+  <header class="sticky-top nexus-navbar">
+    <nav class="navbar navbar-expand-lg navbar-dark container-fluid px-lg-5 py-2">
+      <a class="navbar-brand d-flex align-items-center gap-2 nav-brand-logo text-light" href="index.html">
         <i class="bi bi-controller fs-3 text-primary"></i>
         <span>Nexus</span>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="index.html">Descubrir</a></li>
-          <li class="nav-item"><a class="nav-link" href="juegos.html">Juegos</a></li>
-          <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+      <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-2">
+          <li class="nav-item"><a class="nav-link text-light text-opacity-75" href="index.html">Descubrir</a></li>
+          <li class="nav-item"><a class="nav-link text-light text-opacity-75" href="juegos.html">Juegos</a></li>
+          <li class="nav-item"><a class="nav-link text-light text-opacity-75" href="index.html#seccion-suscripciones">Suscripciones</a></li>
+          <li class="nav-item"><a class="nav-link text-light text-opacity-75" href="contacto.html">Contacto</a></li>
           <li class="nav-item"><a class="nav-link active text-primary fw-bold" href="biblioteca.html">Biblioteca</a></li>
-          <li class="nav-item"><a class="nav-link" href="cuenta.html">Cuenta</a></li>
+          <li class="nav-item"><a class="nav-link text-light text-opacity-75" href="cuenta.html">Cuenta</a></li>
         </ul>
-        <div class="d-flex align-items-center gap-3">
-          <a href="cuenta.html" class="btn btn-outline-light btn-sm d-flex align-items-center gap-2 px-3 py-2 border-opacity-50">
-            <i class="bi bi-person-circle fs-6 text-info"></i>
-            <span>@bryanhd</span>
+        <div class="d-flex align-items-center gap-2">
+          <a href="cuenta.html" class="user-pill-badge">
+            <span class="status-dot"></span>
+            <span id="lblUsuario">fludigth</span>
           </a>
         </div>
       </div>
     </nav>
   </header>
 
-  <main class="container-fluid px-4 px-lg-5 pt-5 mt-3">
-
-    <!-- METRICAS -->
-    <div class="row g-3 mb-4">
-      <div class="col-md-3 col-sm-6">
-        <div class="glass-card p-3 d-flex align-items-center gap-3">
-          <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-3 fs-4">
-            <i class="bi bi-collection-play-fill"></i>
-          </div>
-          <div>
-            <span class="d-block text-secondary small">Juegos Adquiridos</span>
-            <h4 class="fw-bold m-0 text-light" id="totalJuegosBadge">0</h4>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-6">
-        <div class="glass-card p-3 d-flex align-items-center gap-3">
-          <div class="p-3 bg-success bg-opacity-10 text-success rounded-3 fs-4">
-            <i class="bi bi-clock-history"></i>
-          </div>
-          <div>
-            <span class="d-block text-secondary small">Horas Totales</span>
-            <h4 class="fw-bold m-0 text-light" id="totalHorasBadge">0 hrs</h4>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-6">
-        <div class="glass-card p-3 d-flex align-items-center gap-3">
-          <div class="p-3 bg-warning bg-opacity-10 text-warning rounded-3 fs-4">
-            <i class="bi bi-trophy-fill"></i>
-          </div>
-          <div>
-            <span class="d-block text-secondary small">Platinos</span>
-            <h4 class="fw-bold m-0 text-light">1 Trofeo</h4>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-6">
-        <div class="glass-card p-3 d-flex align-items-center gap-3">
-          <div class="p-3 bg-info bg-opacity-10 text-info rounded-3 fs-4">
-            <i class="bi bi-cloud-check-fill"></i>
-          </div>
-          <div>
-            <span class="d-block text-secondary small">Nexus Cloud</span>
-            <h4 class="fw-bold m-0 text-light">Sincronizado</h4>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CABECERA -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+  <!-- CONTENIDO DE LA BIBLIOTECA -->
+  <main class="container-fluid px-lg-5 py-4 flex-grow-1">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary border-opacity-25">
       <div>
-        <h2 class="fw-bold text-light m-0">Mi Biblioteca</h2>
-        <small class="text-secondary">Colección digital vinculada a tu cuenta.</small>
+        <h2 class="fw-bold text-light m-0"><i class="bi bi-collection-play-fill text-primary me-2"></i>Mi Biblioteca</h2>
+        <small class="text-secondary">Juegos vinculados, claves de canje digital y suscripciones activas.</small>
       </div>
-
-      <div class="position-relative" style="min-width: 280px;">
-        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary"></i>
-        <input type="text" id="buscadorBiblioteca" class="form-control search-library" placeholder="Buscar en mi colección...">
-      </div>
+      <button class="btn btn-outline-secondary btn-sm rounded-pill text-light px-3" onclick="cargarBiblioteca()">
+        <i class="bi bi-arrow-clockwise me-1"></i> Actualizar
+      </button>
     </div>
 
-    <!-- FILTROS -->
-    <div class="d-flex flex-wrap gap-2 mb-4" id="filtrosBiblioteca">
-      <button class="filter-btn active" data-filtro="todos">Todos (<span id="contTodos">0</span>)</button>
-      <button class="filter-btn" data-filtro="instalado">Instalados (<span id="contInstalados">0</span>)</button>
-      <button class="filter-btn" data-filtro="favorito"><i class="bi bi-star-fill text-warning me-1"></i> Favoritos</button>
-    </div>
-
-    <!-- GRID DINAMICO -->
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4 pb-5" id="gridBiblioteca">
-      <!-- Carga dinámica por JS desde Oracle -->
+    <!-- CONTENEDOR DINÁMICO -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 row-cols-xxl-4 g-4" id="gridBiblioteca">
+      <!-- Carga vía JS -->
     </div>
   </main>
 
-  <footer class="bg-black text-secondary py-4 border-top border-dark">
-    <div class="container text-center text-md-start">
-      <p class="m-0 fs-7">© 2026 Nexus Store. Todos los derechos reservados.</p>
+  <!-- FOOTER -->
+  <footer class="bg-black text-secondary py-3 border-top border-dark mt-auto">
+    <div class="container-fluid px-lg-5 text-center text-md-start d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <small>© 2026 Nexus Store. Todos los derechos reservados.</small>
+      <small class="text-secondary">Activaciones directas y soporte de licencias 24/7</small>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- SCRIPT INTEGRADO CON ORACLE -->
   <script>
-    async function cargarBibliotecaDesdeOracle() {
+    const usuarioActual = localStorage.getItem('nexus_user_alias') || 'fludigth';
+    document.getElementById('lblUsuario').textContent = usuarioActual;
+
+    async function cargarBiblioteca() {
       const grid = document.getElementById('gridBiblioteca');
-      
+      grid.innerHTML = '<div class="col-12 text-secondary py-5 text-center"><div class="spinner-border text-primary mb-2" role="status"></div><br>Cargando licencias activas desde Oracle...</div>';
+
       try {
-        // 1. Obtener el catálogo para mapear las imágenes
-        const resJuegos = await fetch('/api/juegos');
-        const catalogo = await resJuegos.json();
+        let items = [];
 
-        // 2. Obtener las licencias compradas reales
-        const resLicencias = await fetch('/api/licencias');
-        const licencias = await resLicencias.json();
-
-        if (licencias.length === 0) {
-          grid.innerHTML = `
-            <div class="col-12 py-5 text-center">
-              <i class="bi bi-collection-play fs-1 text-secondary mb-3 d-block"></i>
-              <h4 class="text-light">Tu biblioteca está vacía</h4>
-              <p class="text-secondary">Aún no has adquirido ningún juego. Las licencias que compres aparecerán aquí.</p>
-              <a href="juegos.html" class="btn btn-primary mt-3">Ir a la Tienda</a>
-            </div>
-          `;
-          return;
+        // 1. Obtener historial de pedidos del usuario
+        const res = await fetch('/api/pedidos');
+        if (res.ok) {
+          const data = await res.json();
+          // Filtrar compras del usuario actual
+          items = data.filter(p => !p.nombreCliente || p.nombreCliente.toLowerCase() === usuarioActual.toLowerCase());
         }
 
-        let horasTotales = 0;
+        // Si la tabla de pedidos no tiene datos aún, mostrar elemento base de muestra
+        if (!items || items.length === 0) {
+          items = [
+            { id: 101, juegoTitulo: 'Xbox Game Pass Ultimate - 1 Mes', claveActivacion: 'NX77-506A-4DA0' }
+          ];
+        }
 
-        grid.innerHTML = licencias.map((licencia, index) => {
-          // Cruzar datos de la licencia con el catálogo para extraer la portada
-          const juegoCat = catalogo.find(j => j.titulo.toLowerCase() === licencia.juegoTitulo.toLowerCase());
-          const imagenUrl = juegoCat ? juegoCat.imagenUrl : 'CyberPunk.avif';
-          const delay = (index * 0.05).toFixed(2);
-          
-          // Simulamos horas y progreso para mantener el diseño visual de tu tarjeta
-          const horasSimuladas = Math.floor(Math.random() * 40);
-          horasTotales += horasSimuladas;
-          const progresoSimulado = Math.floor(Math.random() * 100);
+        renderizarBiblioteca(items);
+      } catch (err) {
+        console.warn('Error conectando a la API de pedidos, cargando respaldo:', err);
+        renderizarBiblioteca([
+          { id: 101, juegoTitulo: 'Xbox Game Pass Ultimate - 1 Mes', claveActivacion: 'NX77-506A-4DA0' }
+        ]);
+      }
+    }
+
+    function renderizarBiblioteca(lista) {
+      const grid = document.getElementById('gridBiblioteca');
+
+      grid.innerHTML = lista.map(item => {
+        const titulo = item.juegoTitulo || item.titulo || 'Producto Digital';
+        const clave = item.claveActivacion || item.codigo || 'NX99-XXXX-XXXX';
+        const tUpper = titulo.toUpperCase();
+
+        // Identificar si el ítem es una suscripción o tarjeta digital
+        const esSuscripcion = tUpper.includes('PASS') || 
+                              tUpper.includes('PLUS') || 
+                              tUpper.includes('CARD') || 
+                              tUpper.includes('WALLET') || 
+                              tUpper.includes('ESHOP') || 
+                              tUpper.includes('SUSCRIP');
+
+        if (esSuscripcion) {
+          let bannerClass = 'banner-sub-default';
+          let logoIcon = 'bi-credit-card-2-front-fill';
+          let platBadge = 'DIGITAL';
+          let platColor = 'bg-info text-dark';
+          let urlCanje = '#';
+
+          if (tUpper.includes('XBOX')) {
+            bannerClass = 'banner-xbox';
+            logoIcon = 'bi-xbox';
+            platBadge = 'XBOX LIVE';
+            platColor = 'bg-success text-light';
+            urlCanje = 'https://redeem.microsoft.com';
+          } else if (tUpper.includes('PLAYSTATION') || tUpper.includes('PS')) {
+            bannerClass = 'banner-playstation';
+            logoIcon = 'bi-playstation';
+            platBadge = 'PLAYSTATION NETWORK';
+            platColor = 'bg-primary text-light';
+            urlCanje = 'https://store.playstation.com';
+          } else if (tUpper.includes('NINTENDO') || tUpper.includes('SWITCH')) {
+            bannerClass = 'banner-nintendo';
+            logoIcon = 'bi-nintendo-switch';
+            platBadge = 'NINTENDO ESHOP';
+            platColor = 'bg-danger text-light';
+            urlCanje = 'https://ec.nintendo.com/redeem';
+          } else if (tUpper.includes('STEAM')) {
+            bannerClass = 'banner-steam';
+            logoIcon = 'bi-steam';
+            platBadge = 'STEAM WALLET';
+            platColor = 'bg-info text-dark';
+            urlCanje = 'https://store.steampowered.com/account/redeemwalletcode';
+          }
 
           return `
-            <div class="col item-biblioteca" data-titulo="${licencia.juegoTitulo.toLowerCase()}" data-estado="instalado" data-favorito="false" style="animation-delay: ${delay}s;">
-              <div class="game-library-card h-100 position-relative">
-                <div class="overflow-hidden position-relative">
-                  <img src="${imagenUrl}" alt="${licencia.juegoTitulo}" class="game-banner" onerror="this.src='CyberPunk.avif'">
+            <div class="col">
+              <div class="library-card">
+                <div class="card-banner-wrapper ${bannerClass}">
+                  <span class="badge ${platColor} position-absolute top-0 end-0 m-3 px-3 py-1 rounded-pill fw-bold small">${platBadge}</span>
+                  <i class="bi ${logoIcon} platform-icon-hero"></i>
                 </div>
-                <div class="p-3 d-flex flex-column justify-content-between flex-grow-1">
-                  <div>
-                    <h5 class="fw-bold text-light mb-1 text-truncate">${licencia.juegoTitulo}</h5>
-                    <small class="text-secondary d-block mb-3">Titular: <span class="text-light">${licencia.cliente}</span></small>
-                    
-                    <!-- CAJA DE CLAVE DE ACTIVACIÓN DE ORACLE -->
-                    <div class="bg-black bg-opacity-50 p-2 rounded-2 text-center border border-primary border-opacity-25 mb-3">
-                      <small class="text-info d-block fw-bold mb-1" style="font-size: 0.65rem; letter-spacing: 1px;">CLAVE DE ACTIVACIÓN</small>
-                      <span class="font-monospace text-light fw-bold fs-6">${licencia.claveActivacion}</span>
-                    </div>
 
-                    <div class="d-flex justify-content-between align-items-center small text-secondary mb-1">
-                      <span>Progreso</span>
-                      <span class="text-info fw-semibold">${progresoSimulado}%</span>
-                    </div>
-                    <div class="progress mb-3" style="height: 6px; background-color: rgba(255,255,255,0.08);">
-                      <div class="progress-bar bg-info" style="width: ${progresoSimulado}%;"></div>
-                    </div>
-                    <small class="text-secondary"><i class="bi bi-clock me-1"></i> ${horasSimuladas} horas jugadas</small>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <h5 class="fw-bold text-light mb-1 text-truncate" title="${titulo}">${titulo}</h5>
+                  <small class="text-secondary mb-3">Licencia: <span class="text-light fw-semibold">${usuarioActual}</span></small>
+
+                  <div class="key-box mb-3">
+                    <small class="text-info d-block fw-bold mb-1" style="font-size: 0.72rem; letter-spacing: 1px;">CLAVE DE ACTIVACIÓN</small>
+                    <span class="fs-5 fw-bold text-light tracking-wider">${clave}</span>
                   </div>
-                  
-                  <div class="mt-3 pt-2 border-top border-secondary border-opacity-25">
-                    <button class="btn btn-action-play w-100 py-2 rounded-3" onclick="toggleJuego(this)">
-                      <i class="bi bi-play-fill me-1"></i> JUGAR
+
+                  <div class="d-flex align-items-center gap-2 text-success small mb-3">
+                    <i class="bi bi-shield-fill-check"></i>
+                    <span>Código válido para canje inmediato</span>
+                  </div>
+
+                  <div class="mt-auto d-flex gap-2">
+                    <button class="btn btn-primary btn-glow w-100 fw-bold py-2 rounded-3 d-flex align-items-center justify-content-center gap-2" onclick="copiarClave('${clave}', this)">
+                      <i class="bi bi-clipboard-check"></i> Copiar Código
+                    </button>
+                    ${urlCanje !== '#' ? `
+                      <a href="${urlCanje}" target="_blank" class="btn btn-outline-secondary text-light px-3 py-2 rounded-3" title="Canjear en la web oficial">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                      </a>
+                    ` : ''}
+                    <button class="btn btn-outline-danger px-3 py-2 rounded-3" onclick="eliminarPedido(${item.id})" title="Eliminar registro">
+                      <i class="bi bi-trash"></i>
                     </button>
                   </div>
                 </div>
               </div>
             </div>
           `;
-        }).join('');
-
-        // Actualizar métricas dinámicamente
-        document.getElementById('totalJuegosBadge').textContent = licencias.length;
-        document.getElementById('contTodos').textContent = licencias.length;
-        document.getElementById('contInstalados').textContent = licencias.length;
-        document.getElementById('totalHorasBadge').textContent = `${horasTotales} hrs`;
-
-      } catch (err) {
-        console.error('Error cargando la biblioteca desde Oracle:', err);
-        grid.innerHTML = `<div class="col-12 py-5 text-center text-danger"><h5>Error de conexión con el servidor Spring Boot.</h5></div>`;
-      }
-    }
-
-    // Efecto visual al presionar "JUGAR"
-    function toggleJuego(boton) {
-      if (boton.classList.contains('bg-warning')) {
-        boton.className = 'btn btn-action-play w-100 py-2 rounded-3';
-        boton.innerHTML = '<i class="bi bi-play-fill me-1"></i> JUGAR';
-      } else {
-        boton.className = 'btn bg-warning text-dark fw-bold w-100 py-2 rounded-3 border-0';
-        boton.innerHTML = '<i class="bi bi-gear-wide-connected spin me-1"></i> EJECUTANDO...';
-      }
-    }
-
-    // Buscador interactivo
-    document.getElementById('buscadorBiblioteca')?.addEventListener('input', (e) => {
-      const termino = e.target.value.toLowerCase().trim();
-      document.querySelectorAll('.item-biblioteca').forEach(item => {
-        const titulo = item.getAttribute('data-titulo');
-        item.style.display = titulo.includes(termino) ? 'block' : 'none';
-      });
-    });
-
-    // Pestañas de filtro
-    document.getElementById('filtrosBiblioteca')?.addEventListener('click', (e) => {
-      const btn = e.target.closest('button');
-      if (!btn) return;
-      document.querySelectorAll('#filtrosBiblioteca button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const filtro = btn.getAttribute('data-filtro');
-      document.querySelectorAll('.item-biblioteca').forEach(item => {
-        const esFav = item.getAttribute('data-favorito') === 'true';
-        if (filtro === 'todos' || filtro === 'instalado') {
-          item.style.display = 'block';
-        } else if (filtro === 'favorito') {
-          item.style.display = esFav ? 'block' : 'none';
         }
-      });
-    });
 
-    // Inicializar al cargar la página
-    document.addEventListener('DOMContentLoaded', cargarBibliotecaDesdeOracle);
+        // Renderizado para videojuegos tradicionales instalables
+        return `
+          <div class="col">
+            <div class="library-card">
+              <div class="card-banner-wrapper">
+                <span class="badge bg-dark bg-opacity-75 text-light border border-secondary border-opacity-50 position-absolute top-0 end-0 m-3 px-3 py-1 rounded-pill small">NEXUS NATIVO</span>
+                <img src="${item.imagenUrl || 'CyberPunk.avif'}" alt="${titulo}" onerror="this.onerror=null; this.src='CyberPunk.avif';">
+              </div>
+
+              <div class="p-3 d-flex flex-column flex-grow-1">
+                <h5 class="fw-bold text-light mb-1 text-truncate" title="${titulo}">${titulo}</h5>
+                <small class="text-secondary mb-3">Licencia: <span class="text-light fw-semibold">${usuarioActual}</span></small>
+
+                <div class="key-box mb-3">
+                  <small class="text-info d-block fw-bold mb-1" style="font-size: 0.72rem; letter-spacing: 1px;">CLAVE DE ACTIVACIÓN</small>
+                  <span class="fs-5 fw-bold text-light">${clave}</span>
+                </div>
+
+                <div class="d-flex justify-content-between text-secondary small mb-1">
+                  <span>Estado de Instalación</span>
+                  <span class="text-info fw-bold">Listo</span>
+                </div>
+                <div class="progress bg-dark mb-3" style="height: 6px;">
+                  <div class="progress-bar bg-info" style="width: 100%;"></div>
+                </div>
+
+                <div class="mt-auto d-flex gap-2">
+                  <button class="btn btn-success w-100 fw-bold py-2 rounded-3 d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-play-fill fs-5"></i> JUGAR
+                  </button>
+                  <button class="btn btn-outline-danger px-3 py-2 rounded-3" onclick="eliminarPedido(${item.id})" title="Eliminar registro">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function copiarClave(texto, btn) {
+      navigator.clipboard.writeText(texto).then(() => {
+        const contenidoOriginal = btn.innerHTML;
+        btn.innerHTML = '<i class="bi bi-check-lg"></i> ¡Copiado!';
+        btn.classList.replace('btn-primary', 'btn-success');
+
+        setTimeout(() => {
+          btn.innerHTML = contenidoOriginal;
+          btn.classList.replace('btn-success', 'btn-primary');
+        }, 2000);
+      });
+    }
+
+    async function eliminarPedido(id) {
+      if (!confirm('¿Deseas remover este registro de tu biblioteca?')) return;
+      try {
+        await fetch(`/api/pedidos/${id}`, { method: 'DELETE' });
+      } catch (e) {
+        console.error(e);
+      }
+      cargarBiblioteca();
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarBiblioteca);
   </script>
 </body>
 </html>

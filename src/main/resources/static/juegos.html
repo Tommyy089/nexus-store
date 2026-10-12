@@ -50,6 +50,7 @@
     
     .game-clean-card:hover .ratio img {
       transform: scale(1.08);
+    
     }
 
     .game-clean-card:hover .ratio {
@@ -104,12 +105,9 @@
         </ul>
 
         <div class="d-flex align-items-center gap-3">
-          <!-- Botón del Carrito -->
           <button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2 px-3 py-2 position-relative" data-bs-toggle="offcanvas" data-bs-target="#carritoLateral" aria-controls="carritoLateral">
             <i class="bi bi-cart3 fs-6"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary badge-contador-carrito" style="display: none;">
-              0
-            </span>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary badge-contador-carrito" style="display: none;">0</span>
           </button>
           
           <a href="cuenta.html" class="btn btn-primary btn-sm d-flex align-items-center gap-2 px-3 py-2">
@@ -150,152 +148,13 @@
 
     <!-- GRILLA DE JUEGOS DINÁMICA -->
     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-4 pt-2" id="gridJuegos">
-      <!-- Los juegos se insertan automáticamente vía API desde Oracle -->
+      <!-- Los juegos se insertan automáticamente vía API -->
     </div>
   </main>
 
-  <!-- OFFCANVAS DEL CARRITO -->
-  <div class="offcanvas offcanvas-end bg-dark text-light border-start border-secondary border-opacity-25 shadow-lg" tabindex="-1" id="carritoLateral" aria-labelledby="carritoLabel">
-    <div class="offcanvas-header border-bottom border-secondary border-opacity-25 bg-black">
-      <h5 class="offcanvas-title fw-bold d-flex align-items-center gap-2" id="carritoLabel">
-        <i class="bi bi-cart-check-fill text-primary"></i> Tu Carrito
-      </h5>
-      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
-    </div>
-    
-    <div class="offcanvas-body d-flex flex-column bg-black">
-      <div class="flex-grow-1" id="contenedorCarritoItems"></div>
-      
-      <div class="mt-auto pt-3 border-top border-secondary border-opacity-25">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <span class="text-secondary fw-semibold">Subtotal</span>
-          <span class="fs-4 fw-bold text-light" id="carritoSubtotal">US$0.00</span>
-        </div>
-        <button class="btn btn-primary w-100 py-3 fw-bold mb-2 d-flex justify-content-center align-items-center gap-2">
-          <i class="bi bi-credit-card-fill"></i> PROCEDER AL PAGO
-        </button>
-        <button class="btn btn-outline-secondary w-100 py-2 fw-semibold border-opacity-50 hover-white" data-bs-dismiss="offcanvas">
-          Seguir comprando
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DE PASARELA DE PAGO (CHECKOUT) -->
-  <div class="modal fade" id="modalPago" tabindex="-1" aria-labelledby="modalPagoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content bg-dark text-light border border-secondary border-opacity-25 shadow-lg rounded-4">
-        
-        <div class="modal-header border-bottom border-secondary border-opacity-25 bg-black rounded-top-4">
-          <h5 class="modal-title fw-bold d-flex align-items-center gap-2" id="modalPagoLabel">
-            <i class="bi bi-shield-lock-fill text-primary"></i> Pasarela de Pago Segura
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-
-        <div class="modal-body p-4">
-          <form id="formCheckout">
-            <div class="bg-secondary bg-opacity-10 p-3 rounded-3 mb-4 d-flex justify-content-between align-items-center">
-              <span class="text-secondary">Total a Pagar:</span>
-              <span class="fs-4 fw-bold text-light" id="modalTotalPagar">US$0.00</span>
-            </div>
-
-            <label class="form-label text-secondary small fw-bold text-uppercase mb-2">Método de pago</label>
-            <div class="row g-2 mb-4">
-              <div class="col-4">
-                <input type="radio" class="btn-check" name="metodoPago" id="pagoCredito" checked>
-                <label class="btn btn-outline-secondary w-100 py-2 border-opacity-50 text-light d-flex flex-column align-items-center gap-1" for="pagoCredito">
-                  <i class="bi bi-credit-card fs-5"></i> <span style="font-size: 0.75rem;">Crédito</span>
-                </label>
-              </div>
-              <div class="col-4">
-                <input type="radio" class="btn-check" name="metodoPago" id="pagoDebito">
-                <label class="btn btn-outline-secondary w-100 py-2 border-opacity-50 text-light d-flex flex-column align-items-center gap-1" for="pagoDebito">
-                  <i class="bi bi-credit-card-2-front fs-5"></i> <span style="font-size: 0.75rem;">Débito</span>
-                </label>
-              </div>
-              <div class="col-4">
-                <input type="radio" class="btn-check" name="metodoPago" id="pagoPaypal">
-                <label class="btn btn-outline-secondary w-100 py-2 border-opacity-50 text-light d-flex flex-column align-items-center gap-1" for="pagoPaypal">
-                  <i class="bi bi-paypal fs-5"></i> <span style="font-size: 0.75rem;">PayPal</span>
-                </label>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="tipoTarjeta" class="form-label text-secondary small">Tipo de Tarjeta</label>
-              <select class="form-select bg-secondary bg-opacity-25 text-light border-0 shadow-none" id="tipoTarjeta" required>
-                <option value="" class="text-dark" selected disabled>Selecciona tu tarjeta...</option>
-                <option value="visa" class="text-dark">Visa</option>
-                <option value="mastercard" class="text-dark">Mastercard</option>
-                <option value="amex" class="text-dark">American Express</option>
-                <option value="redcompra" class="text-dark">Redcompra / Cuenta RUT</option>
-                <option value="mach" class="text-dark">MACH / Tarjeta Digital</option>
-              </select>
-            </div>
-
-            <div class="mb-3">
-              <label for="nombreTitular" class="form-label text-secondary small">Nombre del Titular</label>
-              <input type="text" class="form-control bg-secondary bg-opacity-25 text-light border-0 shadow-none" id="nombreTitular" placeholder="Ej. Vicente González" required>
-            </div>
-
-            <div class="mb-3">
-              <label for="numeroTarjeta" class="form-label text-secondary small">Número de Tarjeta</label>
-              <input type="text" class="form-control bg-secondary bg-opacity-25 text-light border-0 shadow-none" id="numeroTarjeta" placeholder="4532 •••• •••• 8890" maxlength="19" required>
-            </div>
-
-            <div class="row">
-              <div class="col-6 mb-3">
-                <label for="expTarjeta" class="form-label text-secondary small">Expiración</label>
-                <input type="text" class="form-control bg-secondary bg-opacity-25 text-light border-0 shadow-none" id="expTarjeta" placeholder="MM/AA" maxlength="5" required>
-              </div>
-              <div class="col-6 mb-3">
-                <label for="cvvTarjeta" class="form-label text-secondary small">CVV</label>
-                <input type="password" class="form-control bg-secondary bg-opacity-25 text-light border-0 shadow-none" id="cvvTarjeta" placeholder="123" maxlength="4" required>
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold mt-2 d-flex align-items-center justify-content-center gap-2">
-              <i class="bi bi-check-circle-fill"></i> CONFIRMAR Y PAGAR
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOAST DE NOTIFICACIÓN FLOTANTE -->
-  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
-    <div id="toastCarrito" class="toast bg-dark text-light border border-secondary border-opacity-50 shadow-lg rounded-3" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header bg-black text-light border-bottom border-secondary border-opacity-25 rounded-top-3">
-        <i class="bi bi-cart-check-fill text-primary me-2 fs-6"></i>
-        <strong class="me-auto">Nexus Store</strong>
-        <small class="text-secondary">Justo ahora</small>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Cerrar"></button>
-      </div>
-      <div class="toast-body py-3" id="toastMensajeTexto">
-        ¡Juego añadido al carrito con éxito!
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="bg-black text-secondary py-4 mt-5 border-top border-dark">
-    <div class="container text-center text-md-start">
-      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-        <p class="m-0 fs-7">© 2026 GameZone Store. Todos los derechos reservados.</p>
-        <div class="d-flex gap-3">
-          <a href="#" class="text-secondary text-decoration-none hover-white"><i class="bi bi-twitter-x fs-5"></i></a>
-          <a href="#" class="text-secondary text-decoration-none hover-white"><i class="bi bi-discord fs-5"></i></a>
-          <a href="#" class="text-secondary text-decoration-none hover-white"><i class="bi bi-youtube fs-5"></i></a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- INTEGRACIÓN CON ORACLE Y FILTROS NORMALIZADOS -->
+  <!-- INTEGRACIÓN CON ORACLE -->
   <script>
     let todosLosJuegos = [];
     let filtroActual = 'todos';
@@ -316,15 +175,6 @@
         }
       } catch (err) {
         console.error('Error cargando juegos:', err);
-        if (contenedor) {
-          contenedor.innerHTML = `
-            <div class="col-12 py-5 text-center text-secondary">
-              <i class="bi bi-exclamation-triangle fs-1 text-warning d-block mb-3"></i>
-              <h5>No se pudieron cargar los juegos desde la base de datos</h5>
-              <p class="small">Verifica que el servidor de Spring Boot siga ejecutándose.</p>
-            </div>
-          `;
-        }
       }
     }
 
@@ -333,12 +183,7 @@
       if (!contenedor) return;
 
       if (lista.length === 0) {
-        contenedor.innerHTML = `
-          <div class="col-12 py-5 text-center text-secondary">
-            <i class="bi bi-search fs-2 d-block mb-2"></i>
-            <p>No se encontraron juegos que coincidan con la búsqueda.</p>
-          </div>
-        `;
+        contenedor.innerHTML = `<div class="col-12 py-5 text-center text-secondary"><p>No se encontraron juegos.</p></div>`;
         return;
       }
 
@@ -350,7 +195,6 @@
           ? `<span class="text-danger mb-1"><i class="bi bi-tag-fill"></i> Ahorra un ${juego.descuento} %</span>` 
           : '';
 
-        // Mapeo preciso de categoría para coincidir con data-genero
         const categoriaNorm = (juego.categoria || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
         let categoriaSlug = "otros";
         if (categoriaNorm.includes("accion")) categoriaSlug = "accion";
@@ -359,11 +203,12 @@
 
         const delay = Math.min((index + 1) * 0.05, 0.45).toFixed(2);
 
+        /* AQUÍ ESTÁ LA MAGIA: Eliminado el onerror problemático y reemplazado por un placeholder elegante */
         return `
           <div class="col card-juego" data-titulo="${(juego.titulo || '').toLowerCase()}" data-genero="${categoriaSlug}" style="animation-delay: ${delay}s;">
             <a href="detalle-juego.html?id=${juego.id}" class="text-decoration-none text-light game-clean-card d-block">
               <div class="ratio ratio-1x1 mb-3">
-                <img src="${juego.imagenUrl}" class="rounded-4 object-fit-cover w-100 h-100" alt="${juego.titulo}" onerror="this.src='CyberPunk.avif'">
+                <img src="${juego.imagenUrl}" class="rounded-4 object-fit-cover w-100 h-100" alt="${juego.titulo}" onerror="this.src='https://placehold.co/400x400/1a1a1a/e2e8f0?text=Nexus+Store'">
               </div>
               <h6 class="mb-1 text-truncate fw-normal fs-6">${juego.titulo}</h6>
               <div class="d-flex flex-column text-muted-custom small">
@@ -376,56 +221,11 @@
       }).join('');
     }
 
-    // Buscador interactivo en tiempo real
     document.getElementById('inputBuscarJuego')?.addEventListener('input', (e) => {
-      const termino = e.target.value;
-      aplicarFiltros(termino, filtroActual);
-    });
-
-    // Filtros por categorías
-    document.getElementById('grupoFiltros')?.addEventListener('click', (e) => {
-      const boton = e.target.closest('button');
-      if (!boton) return;
-
-      document.querySelectorAll('#grupoFiltros button').forEach(b => {
-        b.classList.remove('btn-primary');
-        b.classList.add('btn-outline-secondary', 'border-opacity-50', 'text-light');
-      });
-
-      boton.classList.remove('btn-outline-secondary', 'border-opacity-50', 'text-light');
-      boton.classList.add('btn-primary');
-
-      filtroActual = boton.getAttribute('data-filtro');
-      const termino = document.getElementById('inputBuscarJuego')?.value || '';
-      aplicarFiltros(termino, filtroActual);
-    });
-
-    function aplicarFiltros(termino, filtro) {
-      // Normalizar texto del input quitando tildes
-      const terminoNorm = termino.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-
-      const filtrados = todosLosJuegos.filter(j => {
-        // Normalizar los textos de la base de datos
-        const tituloNorm = (j.titulo || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-        const categoriaNorm = (j.categoria || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-        
-        const coincideTitulo = tituloNorm.includes(terminoNorm);
-        
-        let coincideCategoria = false;
-        if (filtro === 'todos') {
-          coincideCategoria = true;
-        } else if (filtro === 'accion' && categoriaNorm.includes('accion')) {
-          coincideCategoria = true;
-        } else if (filtro === 'deportes' && categoriaNorm.includes('deportes')) {
-          coincideCategoria = true;
-        } else if (filtro === 'mundo-abierto' && categoriaNorm.includes('mundo')) {
-          coincideCategoria = true;
-        }
-
-        return coincideTitulo && coincideCategoria;
-      });
+      const termino = e.target.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+      const filtrados = todosLosJuegos.filter(j => (j.titulo || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(termino));
       renderizarJuegos(filtrados);
-    }
+    });
 
     document.addEventListener('DOMContentLoaded', cargarJuegosDesdeOracle);
   </script>

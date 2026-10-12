@@ -111,7 +111,7 @@
           </a>
           <a href="cuenta.html" class="btn btn-outline-light btn-sm d-flex align-items-center gap-2 px-3 py-2 border-opacity-50">
             <i class="bi bi-person-circle fs-6 text-info"></i>
-            <span>@bryanhd</span>
+            <span id="navUserAlias">@Usuario</span>
           </a>
         </div>
       </div>
@@ -170,10 +170,9 @@
 
     <div class="row g-4">
       
-      <!-- COLUMNA IZQUIERDA: IMAGEN PRINCIPAL, EDICIONES Y PESTAÑAS -->
+      <!-- COLUMNA IZQUIERDA -->
       <div class="col-xl-8 col-lg-7">
         
-        <!-- Una Sola Imagen Principal -->
         <div class="mb-4">
           <img id="imgPrincipal" src="" alt="Portada" class="hero-banner-main">
         </div>
@@ -344,7 +343,6 @@
           <div class="tab-pane fade" id="tab-reviews">
             <div class="glass-panel p-4 mb-4">
               
-              <!-- Desglose de estrellas -->
               <div class="row g-4 align-items-center mb-4 pb-4 border-bottom border-secondary border-opacity-25">
                 <div class="col-md-4 text-center border-end border-secondary border-opacity-25">
                   <h1 class="display-3 fw-bold text-light mb-0">4.8</h1>
@@ -438,7 +436,7 @@
             <small class="text-secondary d-block mt-1">Precio aplicable a la <span class="text-light fw-bold" id="labelEdicionActual">Edición Estándar</span></small>
           </div>
 
-          <!-- Botones de compra -->
+          <!-- Botones de compra / Obtener Gratis -->
           <div class="d-flex flex-column gap-2 mb-4">
             <button class="btn btn-primary btn-lg py-3 fw-bold d-flex justify-content-center align-items-center gap-2" id="btnComprarAhora">
               <i class="bi bi-lightning-charge-fill"></i> COMPRAR AHORA
@@ -448,7 +446,6 @@
             </button>
           </div>
 
-          <!-- Ficha de entrega e información de compra -->
           <div class="border-top border-secondary border-opacity-25 pt-3 d-flex flex-column gap-3 text-secondary small">
             <div class="d-flex align-items-center gap-3">
               <i class="bi bi-key-fill text-primary fs-4"></i>
@@ -479,7 +476,7 @@
     </div>
   </main>
 
-  <!-- MODAL DE CHECKOUT DIRECTO (PERSISTENCIA ORACLE) -->
+  <!-- MODAL DE CHECKOUT DIRECTO -->
   <div class="modal fade" id="modalPagoDirecto" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content bg-dark text-light border border-secondary border-opacity-50 shadow-lg" style="border-radius: 1rem;">
@@ -491,7 +488,6 @@
         </div>
         <div class="modal-body p-4">
           
-          <!-- Resumen del Producto -->
           <div class="p-3 mb-3 rounded-3 bg-black border border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
             <div>
               <span class="fw-bold d-block text-light" id="modalJuegoTitulo">Cargando juego...</span>
@@ -500,7 +496,6 @@
             <span class="fs-4 fw-bold text-info" id="modalJuegoPrecio">US$0.00</span>
           </div>
 
-          <!-- Formulario de Transacción -->
           <form id="formCheckoutDirecto">
             <div class="mb-3">
               <label class="form-label text-secondary small fw-semibold">Nombre del Titular</label>
@@ -545,7 +540,7 @@
     </div>
   </div>
 
-  <!-- TOAST DE NOTIFICACIÓN FLOTANTE -->
+  <!-- TOAST DE NOTIFICACIÓN -->
   <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
     <div id="toastAviso" class="toast bg-dark text-light border border-secondary border-opacity-50 shadow-lg rounded-3" role="alert">
       <div class="toast-header bg-black text-light border-bottom border-secondary border-opacity-25">
@@ -559,11 +554,15 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- CONTROL DINÁMICO DE DETALLE Y CHECKOUT -->
+  <!-- CONTROL DINÁMICO Y CHECKOUT (CONEXIÓN ORACLE) -->
   <script>
     let juego = null;
     let edicionActual = 'estandar';
     let puntajeSeleccionado = 5;
+    
+    // AQUÍ ESTÁ LA CORRECCIÓN CLAVE: LEER EL USUARIO REAL
+    const usuarioActual = localStorage.getItem('nexus_user_alias') || '@JugadorInvitado'; 
+    document.getElementById('navUserAlias').textContent = usuarioActual;
 
     async function iniciar() {
       const params = new URLSearchParams(window.location.search);
@@ -579,25 +578,19 @@
         if (!res.ok) throw new Error('No encontrado');
         juego = await res.json();
 
-        // Títulos y etiquetas
         document.getElementById('paginaTitulo').textContent = `Nexus - ${juego.titulo}`;
         document.getElementById('juegoTitulo').textContent = juego.titulo;
         document.getElementById('juegoDescripcion').textContent = juego.descripcion || 'Sin descripción disponible.';
         document.getElementById('juegoTipo').textContent = juego.tipoJuego || 'JUEGO BASE';
         document.getElementById('juegoCategoria').textContent = juego.categoria || 'ACCIÓN';
 
-        // Imagen principal
         const imgEl = document.getElementById('imgPrincipal');
         imgEl.src = juego.imagenUrl || 'CyberPunk.avif';
         imgEl.onerror = () => { imgEl.src = 'CyberPunk.avif'; };
 
-        // Precios en las ediciones
         actualizarPreciosEdicion();
-
-        // Estado inicial Wishlist
         comprobarWishlist();
 
-        // Mostrar pantalla principal
         document.getElementById('seccionCargando').classList.add('d-none');
         document.getElementById('seccionDetalle').classList.remove('d-none');
 
@@ -606,14 +599,13 @@
           <div class="py-5">
             <i class="bi bi-exclamation-triangle-fill text-warning display-2 mb-3"></i>
             <h3>No pudimos cargar los datos del juego</h3>
-            <p class="text-secondary">El juego con identificador ${id} no existe en la base de datos Oracle.</p>
+            <p class="text-secondary">El juego con identificador ${id} no existe en Oracle.</p>
             <a href="juegos.html" class="btn btn-primary mt-2">Regresar a la Tienda</a>
           </div>
         `;
       }
     }
 
-    // Alternar Edición (Estándar vs Deluxe)
     function seleccionarEdicion(tipo) {
       edicionActual = tipo;
       document.getElementById('edicionEstandar').classList.toggle('selected', tipo === 'estandar');
@@ -631,42 +623,49 @@
       const precioDeluxeBase = basePrice > 0 ? basePrice + 24.99 : 19.99;
       const precioDeluxeFinal = descuento > 0 ? (precioDeluxeBase * (1 - descuento / 100)) : precioDeluxeBase;
 
-      // Actualizar precios en las tarjetas de edición
       document.getElementById('precioEdicionEstandar').textContent = basePrice === 0 ? 'Gratuito' : `US$${precioEstandarFinal.toFixed(2)}`;
       document.getElementById('precioEdicionDeluxe').textContent = `US$${precioDeluxeFinal.toFixed(2)}`;
 
-      // Actualizar precio en la barra lateral
       const precioLateral = document.getElementById('juegoPrecio');
       const precioOriginalEl = document.getElementById('juegoPrecioOriginal');
       const badgeDescuento = document.getElementById('juegoBadgeDescuento');
-
       const precioFinalActual = edicionActual === 'estandar' ? precioEstandarFinal : precioDeluxeFinal;
       const precioOriginalActual = edicionActual === 'estandar' ? basePrice : precioDeluxeBase;
+      
+      const btnComprarUI = document.getElementById('btnComprarAhora');
+      const btnCarritoUI = document.getElementById('btnCarrito');
 
       if (precioFinalActual === 0) {
         precioLateral.textContent = 'Gratuito';
         precioOriginalEl.classList.add('d-none');
         badgeDescuento.classList.add('d-none');
+        
+        btnComprarUI.innerHTML = '<i class="bi bi-controller"></i> JUGAR AHORA';
+        btnCarritoUI.innerHTML = '<i class="bi bi-collection"></i> AÑADIR A BIBLIOTECA';
       } else if (descuento > 0) {
         precioLateral.textContent = `US$${precioFinalActual.toFixed(2)}`;
         precioOriginalEl.textContent = `US$${precioOriginalActual.toFixed(2)}`;
         precioOriginalEl.classList.remove('d-none');
         badgeDescuento.textContent = `AHORRA UN ${descuento}%`;
         badgeDescuento.classList.remove('d-none');
+        
+        btnComprarUI.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> COMPRAR AHORA';
+        btnCarritoUI.innerHTML = '<i class="bi bi-cart-plus"></i> AÑADIR AL CARRO';
       } else {
         precioLateral.textContent = `US$${precioFinalActual.toFixed(2)}`;
         precioOriginalEl.classList.add('d-none');
         badgeDescuento.classList.add('d-none');
+        
+        btnComprarUI.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> COMPRAR AHORA';
+        btnCarritoUI.innerHTML = '<i class="bi bi-cart-plus"></i> AÑADIR AL CARRO';
       }
     }
 
-    // Copiar enlace al portapapeles
     document.getElementById('btnCompartir')?.addEventListener('click', () => {
       navigator.clipboard.writeText(window.location.href);
       mostrarNotificacion('¡Enlace del juego copiado al portapapeles!');
     });
 
-    // Lista de Deseos (Wishlist) con almacenamiento local
     const btnWish = document.getElementById('btnWishlist');
     btnWish?.addEventListener('click', () => {
       let deseos = JSON.parse(localStorage.getItem('nexus_wishlist') || '[]');
@@ -674,13 +673,12 @@
 
       if (index === -1) {
         deseos.push(juego.id);
-        localStorage.setItem('nexus_wishlist', JSON.stringify(deseos));
         mostrarNotificacion(`"${juego.titulo}" agregado a tu lista de deseados ❤️`);
       } else {
         deseos.splice(index, 1);
-        localStorage.setItem('nexus_wishlist', JSON.stringify(deseos));
         mostrarNotificacion(`"${juego.titulo}" eliminado de deseados`);
       }
+      localStorage.setItem('nexus_wishlist', JSON.stringify(deseos));
       comprobarWishlist();
     });
 
@@ -700,7 +698,6 @@
       }
     }
 
-    // Selector de estrellas para reseña
     document.querySelectorAll('.star-select-btn').forEach(star => {
       star.addEventListener('click', () => {
         puntajeSeleccionado = parseInt(star.getAttribute('data-v'));
@@ -712,7 +709,6 @@
       });
     });
 
-    // Publicar comentario
     document.getElementById('btnPublicarResena')?.addEventListener('click', () => {
       const nombre = document.getElementById('nombreResena').value.trim() || 'Jugador Nexus';
       const mensaje = document.getElementById('mensajeResena').value.trim();
@@ -754,14 +750,54 @@
       mostrarNotificacion('¡Tu reseña ha sido publicada con éxito!');
     });
 
-    // Añadir al Carro (Persistencia en localStorage)
+    // --- PROCESAR JUEGO GRATIS EN ORACLE ---
+    async function registrarJuegoGratisEnOracle() {
+      const payload = {
+        nombreCliente: usuarioActual, // USA EL USUARIO REAL AQUÍ
+        metodoPago: 'Licencia Gratuita (Free to Play)',
+        tipoTarjeta: 'N/A',
+        total: 0,
+        juegoTitulo: juego.titulo
+      };
+
+      try {
+        const btn1 = document.getElementById('btnComprarAhora');
+        const btn2 = document.getElementById('btnCarrito');
+        if (btn1) btn1.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Registrando...`;
+        if (btn2) btn2.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Registrando...`;
+
+        const respuesta = await fetch('/api/pedidos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (respuesta.ok) {
+          mostrarNotificacion(`¡Licencia de ${juego.titulo} generada con éxito para ${usuarioActual}!`);
+          setTimeout(() => {
+            window.location.href = 'biblioteca.html';
+          }, 1500);
+        } else {
+          alert('Hubo un problema al registrar la licencia gratuita en el servidor.');
+          location.reload();
+        }
+      } catch (err) {
+        console.error('Error de red al registrar juego gratis:', err);
+      }
+    }
+
+    // Botón secundario
     document.getElementById('btnCarrito')?.addEventListener('click', () => {
       if (!juego) return;
-      
-      let carrito = JSON.parse(localStorage.getItem('nexus_carrito') || '[]');
       const textoPrecio = document.getElementById('juegoPrecio').textContent;
       const precioNumerico = parseFloat(textoPrecio.replace(/[^0-9.]/g, '')) || 0;
 
+      if (precioNumerico === 0 || textoPrecio === 'Gratuito') {
+        registrarJuegoGratisEnOracle();
+        return;
+      }
+
+      let carrito = JSON.parse(localStorage.getItem('nexus_carrito') || '[]');
       carrito.push({
         id: juego.id,
         titulo: `${juego.titulo} (${edicionActual.toUpperCase()})`,
@@ -769,11 +805,9 @@
         imagenUrl: juego.imagenUrl
       });
       localStorage.setItem('nexus_carrito', JSON.stringify(carrito));
-
-      mostrarNotificacion(`¡${juego.titulo} (${edicionActual.toUpperCase()}) añadido al carrito!`);
+      mostrarNotificacion(`¡${juego.titulo} añadido al carrito!`);
     });
 
-    // Notificación Toast
     function mostrarNotificacion(texto) {
       document.getElementById('toastTexto').textContent = texto;
       const el = document.getElementById('toastAviso');
@@ -781,13 +815,16 @@
       toast.show();
     }
 
-    // --- INTEGRACIÓN CHECKOUT Y PERSISTENCIA ORACLE / BIBLIOTECA ---
-
-    // Abrir Modal de Checkout al pulsar "COMPRAR AHORA"
+    // Botón principal
     document.getElementById('btnComprarAhora')?.addEventListener('click', () => {
       if (!juego) return;
-
       const precioTexto = document.getElementById('juegoPrecio').textContent;
+      const esGratis = precioTexto === 'Gratuito' || (parseFloat(precioTexto.replace(/[^0-9.]/g, '')) === 0);
+
+      if (esGratis) {
+        registrarJuegoGratisEnOracle();
+        return;
+      }
       
       document.getElementById('modalJuegoTitulo').textContent = juego.titulo;
       document.getElementById('modalJuegoEdicion').textContent = edicionActual === 'estandar' ? 'Edición Estándar' : 'Edición Deluxe';
@@ -797,13 +834,11 @@
       modal.show();
     });
 
-    // Formateo visual del número de tarjeta
     document.getElementById('inputNumTarjeta')?.addEventListener('input', (e) => {
       let val = e.target.value.replace(/\D/g, '').substring(0, 16);
       e.target.value = val.replace(/(\d{4})(?=\d)/g, '$1 ');
     });
 
-    // Formateo visual de fecha MM/AA
     document.getElementById('inputVencimiento')?.addEventListener('input', (e) => {
       let val = e.target.value.replace(/\D/g, '').substring(0, 4);
       if (val.length >= 3) {
@@ -813,7 +848,6 @@
       }
     });
 
-    // Enviar el pedido a Spring Boot, registrar en Oracle y sincronizar Biblioteca
     document.getElementById('formCheckoutDirecto')?.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -821,14 +855,13 @@
       btn.disabled = true;
       btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Procesando en Oracle...`;
 
-      const nombre = document.getElementById('titularNombre').value.trim();
+      // Se usa el nombre real del usuario logueado en la orden para mantener consistencia
       const metodo = document.getElementById('metodoSeleccionado').value;
       const textoPrecio = document.getElementById('modalJuegoPrecio').textContent;
       const totalNumerico = parseFloat(textoPrecio.replace(/[^0-9.]/g, '')) || 0;
 
-      // 1. AÑADIMOS JUEGO TITULO AL PAYLOAD PARA EL BACKEND
       const payload = {
-        nombreCliente: nombre,
+        nombreCliente: usuarioActual, // CORRECCIÓN: Usar la sesión activa, no el input del formulario
         metodoPago: metodo,
         tipoTarjeta: 'Transbank / Webpay',
         total: totalNumerico,
@@ -844,38 +877,17 @@
 
         if (respuesta.ok) {
           const orden = await respuesta.json();
-          
-          // Sincronizar juego adquirido con la biblioteca en localStorage
-          let biblioteca = JSON.parse(localStorage.getItem('nexus_mis_juegos') || '[]');
-          const yaExiste = biblioteca.some(j => j.titulo.toLowerCase() === juego.titulo.toLowerCase());
-          
-          if (!yaExiste) {
-            biblioteca.unshift({
-              id: juego.id,
-              titulo: juego.titulo,
-              imagenUrl: juego.imagenUrl || 'CyberPunk.avif',
-              horas: 0,
-              logros: '0/50',
-              porcentaje: 0,
-              estado: 'instalado',
-              favorito: false
-            });
-            localStorage.setItem('nexus_mis_juegos', JSON.stringify(biblioteca));
-          }
-
-          // Cerrar modal
           const modalEl = document.getElementById('modalPagoDirecto');
           const instModal = bootstrap.Modal.getInstance(modalEl);
           if (instModal) instModal.hide();
 
-          // 2. LLAMAR AL GENERADOR DE PDF CON LOS DATOS DE LA ORDEN
-          generarComprobantePDF(orden.id, nombre, juego.titulo, totalNumerico, metodo);
+          // El comprobante sí puede llevar el nombre escrito en la tarjeta para mayor realismo
+          const nombreTitularTarjeta = document.getElementById('titularNombre').value.trim();
+          generarComprobantePDF(orden.id, nombreTitularTarjeta, juego.titulo, totalNumerico, metodo);
 
-          // 3. REDIRIGIR A LA BIBLIOTECA DESPUÉS DE 3 SEGUNDOS
           setTimeout(() => {
             window.location.href = 'biblioteca.html';
           }, 3000);
-
         } else {
           alert('Error: El backend no pudo registrar la transacción en la base de datos.');
           btn.disabled = false;
@@ -889,7 +901,6 @@
       }
     });
 
-    // Función para generar y mostrar el comprobante PDF
     function generarComprobantePDF(ordenId, cliente, juego, total, metodo) {
       const ventanaTicket = window.open('', '_blank', 'width=800,height=600');
       ventanaTicket.document.write(`
