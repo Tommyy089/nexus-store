@@ -1,0 +1,16 @@
+/* Reseteo completo para ocupar toda la pantalla */
+html, body, #root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #080b11 !important;
+  color: #e2e8f0;
+  overflow-x: hidden;
+}
+
+/* Evitar que Vite restrinja el ancho */
+#root {
+  max-width: 100% !important;
+  text-align: left !important;
+}
